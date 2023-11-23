@@ -146,7 +146,13 @@
 
         \textbf{Computational Constraints}: Another significant barrier is the computational demand required to train large, complex networks. This requirement often exceeds the resources available to many researchers, restricting exploration in this field and slowing the advancement of more sophisticated fusion methods.
 
-        \textbf{General Guidelines for Network Architecture}: As identified by Feng et al. \cite{feng2020deep}, there is an absence of a universally accepted framework or guidelines for designing network architectures in multimodal sensor fusion. This leads to unanswered questions regarding the optimal choices for 'what to fuse' (e.g., LiDAR, radar, various camera types), 'how to fuse' (such as through addition, concatenation, or more complex methods), and 'when to fuse' (determining at which stage of the processing to integrate the different modalities).
+        \textbf{General Guidelines for Network Architecture}: Currently, there is no standard or widely accepted framework for the design of network architectures in multimodal sensor fusion, leading to several unanswered questions. Key considerations, as highlighted by Feng et al. \cite{feng2020deep}, include:
+        \begin{itemize}
+            \item "What to fuse," such as LiDAR, radar, various camera types (color, thermal, event), or ultrasonic sensors;
+            \item "How to fuse," with possibilities including addition or averaging, concatenation;
+            \item "When to fuse," which can range from early, mid, late, or a combination of these fusion stages.
+        \end{itemize}
+        This absence of a clear guideline results in uncertainties regarding the optimal choices for integrating different modalities in sensor fusion.
 
         \textbf{Limited Generalization from Previous Studies}: Many existing studies in multimodal sensor fusion have focused on results from their baseline models and custom datasets. This narrow scope limits the generalizability of their findings, as these models may not perform as well under different conditions or with alternative datasets.
 
