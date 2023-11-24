@@ -74,7 +74,7 @@
 
     After a comprehensive evaluation of these criteria, two datasets have been chosen for this research: DENSE and nuScenes. The DENSE dataset is particularly suited for this study as it includes data from various sensors under adverse weather conditions, which is crucial for testing the efficacy of multimodal sensor fusion in challenging environments. The nuScenes dataset, on the other hand, is widely used in the field, providing a rich source of data with camera, radar, and lidar sensors. Its extensive use in the community allows for a meaningful comparison with existing methods. Both datasets provide time-synchronized and calibrated data, which is essential for the accuracy of object detection algorithms in adverse weather conditions. The selection of these datasets aligns perfectly with the research objectives, offering a comprehensive platform for exploring and advancing the capabilities of data-driven multimodal sensor fusion in object detection under challenging weather scenarios.
 
-    \subsection{DENSE dataset \cite{bijelic2020seeing}}
+    \subsection{DENSE dataset}
 
     % The Dense dataset \cite{bijelic2020seeing} focused on evaluating multi-modal fusion algorithms under adverse weather. In addition to LiDAR and a stereo camera, it is also equipped with several all-weather sensors, including one frontal long-range radar, one gated camera working on the NIR band, one FIR camera, and one weather station sensor. The data are captured in various natural weather conditions, including rain, snow, light fog, and heavy fog, as well as in a controlled lab environment in a fog chamber. However, the dataset only provides sparse radar targets with limited FoV and low resolution. 
     % - The dataset is recorded in urban city, suburban, highway, and tunnel areas. 
@@ -89,7 +89,7 @@
 
     The dataset covers a broad spectrum of environments, encompassing urban cities, suburban areas, highways, and tunnels. Its geographical scope is extensive, with data collection spanning over two months and covering 10,000 km across Germany, Sweden, Denmark, and Finland. This diverse environmental range enhances the dataset's applicability in various real-world scenarios.
 
-    Technically, the DENSE dataset offers radar targets in a point cloud format, aligning well with the Lidar data. Given the inherent noise in radar data, preprocessing has been performed to eliminate false points, thereby bolstering the dataset's accuracy and reliability. The radar data includes 3D information - range, azimuth, and velocity. Moreover, it's noteworthy that the latest generation of radar sensors in the dataset provides 4D data, adding elevation to the existing dimensions. There are total 3 classes available in the dataset, including car, pedestrian, and cyclist. Object annotations in the DENSE dataset are provided in the COCO style format, with bounding box (bbox) parameters specified as x, y, width, and height. The annotation processed is well described in the supplementary material from the paper \cite{heide2023adverseweatherfusion}. This meticulous approach to data collection, processing, and annotation positions the DENSE dataset as a powerful and adaptable tool for research in adverse weather conditions, especially in the domain of data-driven multimodal sensor fusion.
+    Technically, the DENSE dataset offers radar targets in a point cloud format, aligning well with the Lidar data. Given the inherent noise in radar data, preprocessing has been performed to eliminate false points, thereby bolstering the dataset's accuracy and reliability. The radar data includes 3D information - range, azimuth, and velocity. Moreover, it's noteworthy that the latest generation of radar sensors in the dataset provides 4D data, adding elevation to the existing dimensions. There are total 3 classes available in the dataset, including car, pedestrian, and cyclist. Object annotations in the DENSE dataset are provided in the COCO style format \cite{lin2014microsoft}, with bounding box (bbox) parameters specified as x, y, width, and height. The annotation processed is well described in the supplementary material from the paper \cite{heide2023adverseweatherfusion}. This meticulous approach to data collection, processing, and annotation positions the DENSE dataset as a powerful and adaptable tool for research in adverse weather conditions, especially in the domain of data-driven multimodal sensor fusion.
 
         % \begin{figure}[h]
         %         \centering
@@ -134,7 +134,7 @@
         TODO: put two in 4x4 grid, random samples of the dataset, one for clean and other with adverse weather conditions 
 
 
-    \subsection{nuScenes dataset \cite{caesar2020nuscenes}}
+    \subsection{nuScenes dataset}
 
     % NuScenes \cite{caesar2020nuscenes} is the most popular dataset for its large-scale and diverse scenarios. The capturing vehicle is equipped with a 32-beam LiDAR, 6 cameras, 5 long-range multi-mode radars, and a GPS/IMU system. It provides 3D annotations of 23 classes of road users in 1000 scenes, with a total of 1.3 million frames. 
     % - Although, the Radar used in nuScenes has a sparse data, but it is good dataset to start with and also well documented. 
@@ -148,7 +148,7 @@
 
     In addition to the DENSE dataset, this project also uses the nuScenes dataset \cite{caesar2020nuscenes} as a benchmark. The nuScenes dataset stands out for its large-scale and diverse scenarios. The data collection vehicle for nuScenes, as depicted in Figure \ref{fig:nuscenes_test_vehicle_setup}, is equipped with a comprehensive set of sensors, including a 32-beam LiDAR, six cameras, five long-range multi-mode radars, and a GPS/IMU system. This dataset provides 3D annotations for 23 classes of road users across 1,000 scenes, accumulating to a total of 1.3 million frames. Although the radar data in nuScenes is sparse, its extensive documentation makes it a good starting point for research in object detection.
 
-    The nuScenes dataset focuses on urban, suburban, and highway areas, but it covers fewer adverse weather conditions compared to the DENSE dataset, primarily rain and night scenarios, as shown in Figure \ref{fig:nuscenes_distribution_of_weather_conditions}. Like DENSE, nuScenes also provides radar data in point cloud format. There are total 10 classes in the dataset, including car, truck, trailer, bus, construction vehicle, bicycle, motorcycle, pedestrian, traffic cone, and barrier. However, a notable distinction is that nuScenes does not provide 2D annotations. Researchers using this dataset typically generate their own 2D annotations based on the 3D annotations provided. Once these 2D annotations are created, the data is converted into the COCO style format, similar to DENSE, where the bbox format includes x, y, width, and height dimensions.
+    The nuScenes dataset focuses on urban, suburban, and highway areas, but it covers fewer adverse weather conditions compared to the DENSE dataset, primarily rain and night scenarios, as shown in Figure \ref{fig:nuscenes_distribution_of_weather_conditions}. Like DENSE, nuScenes also provides radar data in point cloud format. There are total 10 classes in the dataset, including car, truck, trailer, bus, construction vehicle, bicycle, motorcycle, pedestrian, traffic cone, and barrier. However, a notable distinction is that nuScenes does not provide 2D annotations. Researchers using this dataset typically generate their own 2D annotations based on the 3D annotations provided. Once these 2D annotations are created, the data is converted into the COCO style format \cite{lin2014microsoft}, similar to DENSE, where the bbox format includes x, y, width, and height dimensions.
 
 
         % \begin{figure}[h]
@@ -201,7 +201,6 @@
               \hline
               \textbf{Dataset} & \textbf{NuScenes \cite{caesar2020nuscenes}} & \textbf{DENSE \cite{bijelic2020seeing}} \\
               \hline
-              Sensor Setup & 6 & 2 \\
               RGB Cameras & 6 & 2 \\
               RGB Resolution & 1600x900 & 1920x1024 \\
               Lidar Sensors & 1 & 2 \\
@@ -219,16 +218,16 @@
               Night Time & \checkmark & \checkmark \\
               Light Weather & \checkmark & \checkmark \\
               Heavy Weather & x & \checkmark \\
-              Fog Chamber & x & x \\
+              Fog Chamber & x & \checkmark \\
               \hline
             \end{tabular}
             \label{tab:dataset_comparison}
           \end{table}
 
 
-    \section{Setup}
+    % \section{Setup}
 
-    \section{Experimental Design}
+    % \section{Experimental Design}
 
     \section{Evaluation Metrics}
 
