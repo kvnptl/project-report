@@ -82,21 +82,131 @@
 
     For standard perception systems in autonomous vehicles, the camera remains an indispensable, yet highly vulnerable sensor to adverse weather conditions. Despite its high resolution, a camera's functionality can be severely compromised by a single water drop on the lens or emitter during rain \cite{mardirosian2021LiDAR}, as illustrated in Figure \ref{fig:camera_in_rain}. In conditions like heavy snow or hail, image intensity can fluctuate, and object edges may become obscured, leading to detection failures \cite{zang2019impact}. Additionally, cameras are susceptible to strong light interference, either from direct sunlight or artificial sources like urban light pollution, causing significant operational challenges \cite{acarballo2020libre}.
 
-    TODO: refer table and update this content
-    % The effect level each phenomenon causes to sensors:
-    % 0 - negligible: influences that can almost be ignored;
-    % 1 - minor: influences that barely cause detection error;
-    % 2 - slight: influences that cause small errors on special occasions;
-    % 3 - moderate: influences that cause perception error up to 30\% of the time;
-    % 4 - serious: influences that cause perception error more than 30\% but lower than 50\% of the time;
-    % 5 - severe: noise or blockage that cause false detection or detection failure;
+    % The Table \ref{table:quantitative_effect_of_weather} highlights the quantitative effect of various weather conditions on various sensors. It is worth noticing that level 3, moderate influences, that cause perception error up to 30\% of the time in this table, could also mean up to 30\% of the LiDAR point cloud is affected by noise, or up to 30\% of the pixels in the camera images are affected by distortion or obscure. The same applies to level 4 influences, serious, as well.
+    Table \ref{table:quantitative_effect_of_weather} systematically presents the quantitative impact of different weather conditions on a range of sensors. Notably, the influence classified as level 3, termed as moderate, is associated with perception errors occurring up to 30\% of the time. This level of impact may translate to as much as 30\% of the LiDAR point cloud being compromised by noise, or a similar proportion of camera image pixels experiencing distortion or obscurity. Similarly, the implications categorized under level 4, identified as serious, follow this trend as well \cite{zhang2023perception}.
+
 
     % Lidar (a 850-950nm and 1550nm) & & & & & & & & \\
     % Radar (24, 77 and 122 GHz) & & & & & & & & \\
     % FIR Camera (a 800-950nm) & & & & & & & & \\
     % Thermal FIR Camera (a 2-10\textmu m) & & & & & & & & \\
-    \newgeometry{left=1cm,right=1cm}
-    \begin{table}[h]
+    % \newgeometry{left=1cm,right=1cm}
+    % \begin{table}[h]
+    %     \centering
+    %     \caption{The influence level of various weather conditions on sensors \cite{zhang2023perception}}
+    %     \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+    %     \hline
+    %     \textbf{Modality} & \textbf{Light rain} & \textbf{Heavy rain} & \textbf{Dense smoke} & \textbf{Fog} & \textbf{Haze} & \textbf{Snow} & \textbf{Strong light} & \textbf{Cost} \\
+    %     & $<$4mm/hr & $<$25mm/hr & vis$<$0.1km & vis$<$0.5km & vis$<$2km & & (over emitter) & \\
+    %     \hline
+    %     LiDAR & 2 & 3 & 5 & 4 & 0 & 5 & 2 & high \\
+    %     \hline
+    %     Radar & 0 & 1 & 2 & 0 & 0 & 2 & 0 & medium \\
+    %     \hline
+    %     Camera & 3 & 4 & 5 & 4 & 3 & 3 & 5 & lowest\\
+    %     \hline
+    %     NIR & 2 & 3 & 2 & 1 & 0 & 2 & 4 & low \\
+    %     \hline
+    %     FIR & 2 & 3 & 1 & 0 & 2 & 4 & 3 & low \\
+    %     \hline
+    %     \end{tabular}
+    %     \label{table:quantitative_effect_of_weather}
+    %     \end{table}
+    % % \restoregeometry
+    % The effect level of each phenomenon causes to sensors:
+    % \begin{itemize}
+    %     \item 0 - negligible: influences that can almost be ignored;
+    %     \item 1 - minor: influences that barely cause detection error;
+    %     \item 2 - slight: influences that cause small errors on special occasions;
+    %     \item 3 - moderate: influences that cause perception error up to 30\% of the time;
+    %     \item 4 - serious: influences that cause perception error more than 30\% but lower than 50\% of the time;
+    %     \item 5 - severe: noise or blockage that cause false detection or detection failure;
+    % \end{itemize}
+
+    % \begin{table}[h]
+    %     \centering
+    %     \caption{The influence level of various weather conditions on sensors (NIR: Near-Infrared Camera, FIR: Far-Infrared Camera) \cite{zhang2023perception}}
+    %     \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+    %     \hline
+    %     \textbf{Modality} & \textbf{Light rain} & \textbf{Heavy rain} & \textbf{Dense smoke} & \textbf{Fog} & \textbf{Haze} & \textbf{Snow} & \textbf{Strong light} & \textbf{Cost} \\
+    %     & $<$4mm/hr & $<$25mm/hr & vis$<$0.1km & vis$<$0.5km & vis$<$2km & & (over emitter) & \\
+    %     \hline
+    %     LiDAR & 2 & 3 & 5 & 4 & 0 & 5 & 2 & high \\
+    %     \hline
+    %     Radar & 0 & 1 & 2 & 0 & 0 & 2 & 0 & medium \\
+    %     \hline
+    %     Camera & 3 & 4 & 5 & 4 & 3 & 3 & 5 & lowest\\
+    %     \hline
+    %     NIR & 2 & 3 & 2 & 1 & 0 & 2 & 4 & low \\
+    %     \hline
+    %     FIR & 2 & 3 & 1 & 0 & 2 & 4 & 3 & low \\
+    %     \hline
+    %     \end{tabular}
+    %     \label{table:quantitative_effect_of_weather}
+    %     \begin{tablenotes}
+    %         \small
+    %         \item The effect level each phenomenon causes to sensors:
+    %         \begin{itemize}
+    %             \item 0 - negligible: influences that can almost be ignored;
+    %             \item 1 - minor: influences that barely cause detection error;
+    %             \item 2 - slight: influences that cause small errors on special occasions;
+    %             \item 3 - moderate: influences that cause perception error up to 30\% of the time;
+    %             \item 4 - serious: influences that cause perception error more than 30\% but lower than 50\% of the time;
+    %             \item 5 - severe: noise or blockage that cause false detection or detection failure;
+    %         \end{itemize}
+    %     \end{tablenotes}
+    % \end{table}
+
+    % \begin{table}[h]
+    %     \centering
+    %     \caption{The influence level of various weather conditions on sensors \cite{zhang2023perception}}
+    %     \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+    %     \hline
+    %     \textbf{Modality} & \textbf{Light rain} & \textbf{Heavy rain} & \textbf{Dense smoke} & \textbf{Fog} & \textbf{Haze} & \textbf{Snow} & \textbf{Strong light} & \textbf{Cost} \\
+    %     & $<$4mm/hr & $<$25mm/hr & vis$<$0.1km & vis$<$0.5km & vis$<$2km & & (over emitter) & \\
+    %     \hline
+    %     LiDAR & 2 & 3 & 5 & 4 & 0 & 5 & 2 & high \\
+    %     \hline
+    %     Radar & 0 & 1 & 2 & 0 & 0 & 2 & 0 & medium \\
+    %     \hline
+    %     Camera & 3 & 4 & 5 & 4 & 3 & 3 & 5 & lowest\\
+    %     \hline
+    %     NIR & 2 & 3 & 2 & 1 & 0 & 2 & 4 & low \\
+    %     \hline
+    %     FIR & 2 & 3 & 1 & 0 & 2 & 4 & 3 & low \\
+    %     \hline
+    %     \end{tabular}
+    %     \label{table:quantitative_effect_of_weather}
+    %     \begin{tablenotes}
+    %         \small
+    %         \item The effect level each phenomenon causes to sensors:
+    %         \begin{itemize}
+    %             \item 0 - negligible: influences that can almost be ignored;
+    %             \item 1 - minor: influences that barely cause detection error;
+    %             \item 2 - slight: influences that cause small errors on special occasions;
+    %             \item 3 - moderate: influences that cause perception error up to 30\% of the time;
+    %             \item 4 - serious: influences that cause perception error more than 30\% but lower than 50\% of the time;
+    %             \item 5 - severe: noise or blockage that cause false detection or detection failure;
+    %         \end{itemize}
+    %         \item Notes:
+    %         \begin{itemize}
+    %             \item NIR: Near-Infrared camera
+    %             \item FIR: Far-Infrared camera
+    %             \item Sensor's specifications:
+    %             \begin{itemize}
+    %                 \item LiDAR (850-950nm and 1550nm)
+    %                 \item Radar (24, 77, and 122 GHz)
+    %                 \item NIR Camera ($\lambda$ 800-950 nm)
+    %                 \item FIR Camera ($\lambda$ 2-10 \textmu m)
+    %             \end{itemize}
+    %         \end{itemize}
+    %     \end{tablenotes}
+    % \end{table}
+
+    % \restoregeometry
+
+
+    \begin{sidewaystable}
         \centering
         \caption{The influence level of various weather conditions on sensors \cite{zhang2023perception}}
         \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
@@ -116,9 +226,33 @@
         \hline
         \end{tabular}
         \label{table:quantitative_effect_of_weather}
-        \end{table}
-    % \restoregeometry
+        \begin{tablenotes}
+            \small
+            \item The effect level each phenomenon causes to sensors:
+            \begin{itemize}
+                \item 0 - negligible: influences that can almost be ignored;
+                \item 1 - minor: influences that barely cause detection error;
+                \item 2 - slight: influences that cause small errors on special occasions;
+                \item 3 - moderate: influences that cause perception error up to 30\% of the time;
+                \item 4 - serious: influences that cause perception error more than 30\% but lower than 50\% of the time;
+                \item 5 - severe: noise or blockage that cause false detection or detection failure;
+            \end{itemize}
+            \item Notes:
+            \begin{itemize}
+                \item NIR: Near-Infrared camera
+                \item FIR: Far-Infrared camera
+                \item Sensor's specifications:
+                \begin{itemize}
+                    \item LiDAR (850-950nm and 1550nm)
+                    \item Radar (24, 77, and 122 GHz)
+                    \item NIR Camera ($\lambda$ 800-950 nm)
+                    \item FIR Camera ($\lambda$ 2-10 \textmu m)
+                \end{itemize}
+            \end{itemize}
+        \end{tablenotes}
+    \end{sidewaystable}
 
+    
     \begin{figure}[h]
         \centering
         \includegraphics[width=0.5\textwidth]{images/rain_droplet.png}
@@ -255,9 +389,16 @@
     % \end{itemize}
 
 
-    The concept of multimodal sensor fusion has become increasingly pivotal in the field of object detection, particularly under adverse weather conditions. This approach integrates various sensor inputs to enhance perception and object detection capabilities, addressing the limitations inherent to individual sensors. A notable contribution in this field is the work of Radecki et al. \cite{radecki2016all}, who conducted a thorough review of sensor efficacy across diverse weather conditions, including wet environments, varying light conditions, and dusty atmospheres. They developed a sophisticated system capable of object tracking and classification through a real-time, joint probabilistic perception algorithm. This algorithm dynamically selects the most appropriate sensor subsets based on prevailing weather conditions. By intelligently weighting sensors and accurately quantifying parameters specific to each weather scenario, the system not only improves the baseline of perception ability but also enhances its robustness and reliability. This work underscores the importance of real-time strategy adaptation and smart sensor subset selection in maximizing the accuracy and dependability of multimodal perception systems.
+    The concept of multimodal sensor fusion has become increasingly pivotal in the field of object detection, particularly under adverse weather conditions. This approach integrates various sensor inputs to enhance perception and object detection capabilities, addressing the limitations inherent to individual sensors. A notable contribution in this field is the work of Radecki et al. \cite{radecki2016all}, who conducted a thorough review of sensor efficacy across diverse weather conditions, including wet environments, varying light conditions, and dusty atmospheres. They developed a sophisticated system capable of object tracking and classification through a real-time, joint probabilistic perception algorithm. This algorithm dynamically selects the most appropriate sensor subsets based on prevailing weather conditions. By intelligently weighting sensors and accurately quantifying parameters specific to each weather scenario, the system not only improves the baseline of perception ability but also enhances its robustness and reliability. This work shows that multimodal sensor fusion is effective compared to individual sensors especially in the context of adverse weather conditions. 
+    % This work underscores the importance of real-time strategy adaptation and smart sensor subset selection in maximizing the accuracy and dependability of multimodal perception systems.
 
-    However, Radecki et al.'s study \cite{radecki2016all} has certain limitations, notably its focus on optimal weather conditions and the omission of heavy traffic and urban environments. Additionally, the study does not explore deep learning-based fusion techniques. Future research could address these gaps by employing similar approach for object detection in challenging weather datasets.
+    % However, Radecki et al.'s study \cite{radecki2016all} has certain limitations, 
+    % - the omission of heavy traffic and urban environments. Additionally, 
+    % - the study does not explore deep learning-based fusion techniques.
+    % - limits the evaluation on limited weather samples on custom datasets, thereby limiting the applicability on the more real-world diverse weather conditions
+    % - only explores early fusion technique by hand-tuned pre-processing of the sensor data which limits the generalization of the findings
+
+    However, the research of Radecki et al. \cite{radecki2016all} presents certain limitations. Firstly, it overlooks scenarios involving heavy traffic and urban environments, contexts that are crucial for real-world applications \cite{cai2020probabilistic}. Furthermore, the study does not delve into deep learning-based fusion techniques, which could potentially offer more advanced data integration and interpretation capabilities \cite{diaby2021evidential}. Another constraint lies in the limited evaluation of weather samples on custom datasets, which may not accurately represent the more varied and unpredictable real-world weather conditions \cite{galvao2021pedestrian}. Lastly, the research primarily focuses on an early fusion approach with hand-tuned pre-processing of sensor data, which may impede the generalization of its findings to broader applications \cite{rizzoli2022multimodal}. To address these challenges, this project will focus on developing advanced data-driven multimodal sensor fusion techniques for object detection in a variety of adverse weather conditions, employing publicly available datasets for comprehensive validation.
 
     In 2019, FLIR System Inc. \cite{fused_aeb} and VSI Labs \cite{VSILabs} tested the first-ever fused Automated Emergency Braking (AEB) sensor suite, comprising a thermal long-wave infrared (LWIR) camera, a radar, and a visible camera. The LWIR camera, operating in the 8 µm to 14 µm range at ambient temperature, was part of this groundbreaking sensor suite. The suite's performance was evaluated against standard AEB systems using radar and visible cameras under various conditions, including daytime, nighttime, and transitions from tunnel exits into sun glare. The results revealed that while most AEB systems function effectively during the day, they almost invariably failed under adverse conditions, often colliding with mannequins. In stark contrast, the LWIR sensor suite successfully avoided collisions in these challenging scenarios, highlighting the efficacy of fusing camera and radar data in adverse weather conditions.
 
@@ -310,9 +451,7 @@
     % \end{itemize}
 
     The advent of autonomous driving technology, especially in challenging weather conditions, has significantly benefited from the utilization of simulation platforms and specialized experimental setups. One such noteworthy tool is the CARLA simulator \cite{dosovitskiy2017carla}, a widely recognized virtual platform. CARLA is particularly advantageous for researchers as it enables the creation of intricate road environments and the simulation of numerous non-ego entities in scenarios that would otherwise be impractical or prohibitively expensive to replicate in real-life experiments. This capability is crucial, considering that specific weather conditions, particularly those related to extreme climates or certain seasons, are not always readily available for testing. For example, tropical regions cannot easily conduct tests in snow conditions, and the unpredictability and brevity of natural rain showers may impede the collection of comprehensive experimental data. Most importantly, conducting tests in actual adverse weather conditions not only presents logistical challenges but also introduces significant safety risks. In contrast, simulators like CARLA offer a completely safe environment, eliminating the dangers associated with real-world testing \cite{zhang2023perception}.
-    
-    \restoregeometry
 
     However, the effectiveness of virtual datasets and simulation platforms in accurately representing real-world phenomena remains a topic of debate. The extent to which a simulator can truly mirror real-world conditions is an open question. Developing more realistic simulators is a key challenge in this domain. Additionally, determining the most effective methods for integrating real and virtual data is another critical area of ongoing research \cite{feng2020deep}. These aspects underline the need for continuous improvement in simulation technologies to ensure that they can effectively support the development and testing of autonomous driving systems, especially in the face of adverse weather conditions. The quest for more realistic simulators and the optimal blend of real and virtual data stand as important open questions, driving the future direction of research in autonomous driving simulations. Due to these reasons, this project will focus on the real-world datasets for adverse weather conditions.
-
+    
 \end{document}

@@ -40,7 +40,7 @@
 
     \begin{table}[!ht]
         \centering
-        \caption{Multimodal Adverse Weather Conditions Datasets. Sensors†: C-R-L-N-F denote Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively. Weather Conditions‡: F-SN-R-O-SL-N denote Fog, Snow, Rain, Overcast, Sleet, and Night conditions, respectively. Note that highlighted datasets are used for the project.}
+        \caption{Multimodal adverse weather conditions datasets. Sensors†: C-R-L-N-F denote Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively. Weather conditions‡: F-SN-R-O-SL-N denote Fog, Snow, Rain, Overcast, Sleet, and Night conditions, respectively. Note that highlighted datasets are used for the project.}
         \begin{tabular}{|l|l|l|l|l|l|l|}
         \hline
             \textbf{Name} & \textbf{Sensors†} & \textbf{Weather Cond.‡} & \textbf{Size (GB)} & \textbf{Year} & \textbf{Citation Cnt.} & \textbf{Ref.} \\ \hline
@@ -85,7 +85,7 @@
     % - As Radar data points are inherently noisy, so the both datasets have already been preprocessed to remove the false points.
     % - Radar data directly provide 3D information consisting of range, azimuth, and velocity. As an additional note, new generation Radar sensors provide 4D data with range, azimuth, velocity, and elevation.
     % - It provides 2D annotations in COCO style format, where bbox format is x, y, width, height.
-    The DENSE dataset, as detailed in Bijelic et al. (2020) \cite{bijelic2020seeing}, is a critical asset for evaluating multi-modal fusion algorithms in adverse weather conditions. Its standout feature is the extensive sensor array, including LiDAR, a stereo camera, a frontal long-range radar, a gated camera operating in the NIR band, a FIR camera, and a weather station sensor, as illustrated in Figure \ref{fig:dense_test_vehicle_setup}. These sensors allow for detailed data capture under various adverse weather conditions, such as rain, snow, light fog, and dense fog. Notably, the DENSE dataset uniquely offers a split for light and dense fog conditions, essential for assessing the detection performance of Lidar and Radar in varying visibility scenarios. The range of these conditions and their distribution are visually depicted in Figure \ref{fig:dense_distribution_of_weather_conditions}. Additionally, the dataset includes data from a controlled lab environment within a fog chamber, offering a distinct view of sensor performance under simulated conditions. However, it's important to note that for the purposes of this project, only real-world data from the DENSE dataset is utilized.
+    The DENSE dataset, as detailed in Bijelic et al. (2020) \cite{bijelic2020seeing}, is a critical asset for evaluating multi-modal fusion algorithms in adverse weather conditions. Its standout feature is the extensive sensor array, including LiDAR, a stereo camera, a frontal long-range radar, a gated camera operating in the NIR band, a FIR camera, and a weather station sensor, as illustrated in Figure \ref{fig:dense_test_vehicle_setup}. These sensors allow for detailed data capture under various adverse weather conditions, such as rain, snow, light fog, and dense fog. Notably, the DENSE dataset uniquely offers a split for light and dense fog conditions, essential for assessing the detection performance of Lidar and Radar in varying visibility scenarios. The range of these conditions and their distribution are visually depicted in Figure \ref{fig:dense_distribution_of_weather_conditions}. Additionally, the dataset includes data from a controlled lab environment within a fog chamber, offering a distinct view of sensor performance under simulated conditions. However, it's important to note that for the purposes of this project, only real-world data from the DENSE dataset is utilized. A few random samples from the dataset are shown in Figure \ref{fig:dense_samples}. Note that LiDAR and Radar points are projected onto the camera image for visualization purposes.
 
     The dataset covers a broad spectrum of environments, encompassing urban cities, suburban areas, highways, and tunnels. Its geographical scope is extensive, with data collection spanning over two months and covering 10,000 km across Germany, Sweden, Denmark, and Finland. This diverse environmental range enhances the dataset's applicability in various real-world scenarios.
 
@@ -110,20 +110,20 @@
             \begin{minipage}{0.45\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/dense/test_vehicle_setup.png}
-                \caption{Test Vehicle Setup \cite{bijelic2020seeing}}
+                \caption{Test vehicle setup \cite{bijelic2020seeing}}
                 \label{fig:dense_test_vehicle_setup}
             \end{minipage}
             \hfill
             \begin{minipage}{0.45\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/dense/distribution_of_weather_conditions.pdf}
-                \caption{Distribution of Weather Conditions \cite{bijelic2020seeing}}
+                \caption{Distribution of weather conditions \cite{bijelic2020seeing}}
                 \label{fig:dense_distribution_of_weather_conditions}
             \end{minipage}
         \end{figure}
         
 
-        TODO: add Classwise distribution
+        % TODO: add Classwise distribution
         % \begin{figure}[h]
         %     \centering
         %     \includegraphics[width=0.9\textwidth]{images/datasets/dense/classwise_distribution.png}
@@ -131,7 +131,37 @@
         %     \label{fig:dense_classwise_distribution}
         % \end{figure}
 
-        TODO: put two in 4x4 grid, random samples of the dataset, one for clean and other with adverse weather conditions 
+        \begin{figure}[ht!]
+            \centering
+            % Row 1
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/2018-02-05_12-07-39_00300.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_radar.png}
+          
+            % Row 2
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/2018-10-08_08-10-40_02160.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_radar.png}
+          
+            % % Row 3
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/2018-10-29_15-02-37_00580.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_radar.png}
+          
+            % % Row 4
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/2018-02-07_11-56-57_00520.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_radar.png}
+          
+            % % Row 5
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/2018-02-09_18-50-50_00300.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_radar.png}
+          
+            \caption{Random samples from the DENSE dataset, where 1st col is Camera with ground truth, 2nd is LiDAR, 3rd is Radar (1st Row: Day, 2nd Row: Light Fog, 3rd Row: Dense Fog, 4th Row: Snow, 5th Row: Night). Note: best viewed in zoomed-in view.}
+            \label{fig:dense_samples}
+          \end{figure}
+          
 
 
     \subsection{nuScenes dataset}
@@ -146,7 +176,7 @@
     % - Note that nuscenes dataset doesn't provide 2D annotations so the individual methods create their own 2D annotations based on the 3D annotations.
     % - After creating 2D annotations, the dataset is converted to COCO style format, where bbox format is x, y, width, height.
 
-    In addition to the DENSE dataset, this project also uses the nuScenes dataset \cite{caesar2020nuscenes} as a benchmark. The nuScenes dataset stands out for its large-scale and diverse scenarios. The data collection vehicle for nuScenes, as depicted in Figure \ref{fig:nuscenes_test_vehicle_setup}, is equipped with a comprehensive set of sensors, including a 32-beam LiDAR, six cameras, five long-range multi-mode radars, and a GPS/IMU system. This dataset provides 3D annotations for 23 classes of road users across 1,000 scenes, accumulating to a total of 1.3 million frames. Although the radar data in nuScenes is sparse, its extensive documentation makes it a good starting point for research in object detection.
+    In addition to the DENSE dataset, this project also uses the nuScenes dataset \cite{caesar2020nuscenes} as a benchmark. The nuScenes dataset stands out for its large-scale and diverse scenarios. The data collection vehicle for nuScenes, as depicted in Figure \ref{fig:nuscenes_test_vehicle_setup}, is equipped with a comprehensive set of sensors, including a 32-beam LiDAR, six cameras, five long-range multi-mode radars, and a GPS/IMU system. This dataset provides 3D annotations for 23 classes of road users across 1,000 scenes, accumulating to a total of 1.3 million frames. Although the radar data in nuScenes is sparse, its extensive documentation makes it a good starting point for research in object detection. A few random samples from the dataset are shown in Figure \ref{fig:nuscenes_samples}.
 
     The nuScenes dataset focuses on urban, suburban, and highway areas, but it covers fewer adverse weather conditions compared to the DENSE dataset, primarily rain and night scenarios, as shown in Figure \ref{fig:nuscenes_distribution_of_weather_conditions}. Like DENSE, nuScenes also provides radar data in point cloud format. There are total 10 classes in the dataset, including car, truck, trailer, bus, construction vehicle, bicycle, motorcycle, pedestrian, traffic cone, and barrier. However, a notable distinction is that nuScenes does not provide 2D annotations. Researchers using this dataset typically generate their own 2D annotations based on the 3D annotations provided. Once these 2D annotations are created, the data is converted into the COCO style format \cite{lin2014microsoft}, similar to DENSE, where the bbox format includes x, y, width, and height dimensions.
 
@@ -170,33 +200,76 @@
             \begin{minipage}{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/nuscenes/test_vehicle_setup.png}
-                \caption{Test Vehicle Setup \cite{caesar2020nuscenes}}
+                \caption{Test vehicle setup \cite{caesar2020nuscenes}}
                 \label{fig:nuscenes_test_vehicle_setup}
             \end{minipage}
             \hfill
             \begin{minipage}{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/nuscenes/distribution_of_weather_conditions.pdf}
-                \caption{Distribution of Weather Conditions \cite{caesar2020nuscenes}}
+                \caption{Distribution of weather conditions \cite{caesar2020nuscenes}}
                 \label{fig:nuscenes_distribution_of_weather_conditions}
             \end{minipage}
         \end{figure}
         
 
-        TODO: add Classwise distribution
+        % TODO: add Classwise distribution
         % \begin{figure}[h]
         %     \centering
         %     \includegraphics[width=0.9\textwidth]{images/datasets/nuscenes/classwise_distribution.png}
         %     \caption{Classwise Distribution \cite{bijelic2020seeing}}
         %     \label{fig:nuscenes_classwise_distribution}
         % \end{figure}
-        TODO: put two in 4x4 grid, random samples of the dataset, one for clean and other with adverse weather conditions
+
+        % \begin{figure}[ht!]
+        %     \centering
+        %     % Row 1
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/day_cam.png}
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/night_cam.png}
+          
+        %     % Row 2
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/rain_cam.png}
+          
+        %     \caption{A random samples from the nuScenes dataset Note: best viewed in color.}
+        %     \label{fig:dense_samples}
+        %   \end{figure}
+
+          \begin{figure}[ht]
+            \centering
+            % First Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/day_cam.png}
+                \caption{Day time}
+                \label{fig:sub1}
+            \end{subfigure}
+            \hfill
+            % Second Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/night_cam.png}
+                \caption{Night time}
+                \label{fig:sub2}
+            \end{subfigure}
+            \hfill
+            % Third Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/rain_cam.png}
+                \caption{Rain}
+                \label{fig:sub3}
+            \end{subfigure}
+        
+            \caption{Random samples from the nuScenes dataset}
+            \label{fig:nuscenes_samples}
+        \end{figure}
+        
 
         Table \ref{tab:dataset_comparison} highlights the overall comparison of the sensor setup and dataset statistics for datasets used in this project.
 
         \begin{table}[h!]
             \centering
-            \caption{Comparison of Dataset Features}
+            \caption{Comparison of datasets features}
             \begin{tabular}{|l|c|c|}
               \hline
               \textbf{Dataset} & \textbf{NuScenes \cite{caesar2020nuscenes}} & \textbf{DENSE \cite{bijelic2020seeing}} \\
@@ -281,7 +354,7 @@
 
     \begin{table}[!ht]
         \centering
-        \caption{COCO Metrics \cite{lin2014microsoft}}
+        \caption{COCO metrics \cite{lin2014microsoft}}
         \begin{tabular}{ll}
         \hline
             \textbf{Metric} & \textbf{Description} \\ \hline
@@ -313,6 +386,9 @@
     Given the project's focus on object detection in adverse weather conditions, we will extend the evaluation of AP and AR to include performance under specific weather scenarios like fog, rain, and snow. This will provide a more comprehensive understanding of the model's robustness and effectiveness in varying environmental conditions.
 
     In addition to these metrics, \textbf{Inference Time} and \textbf{FLOPs} (Floating Point Operations Per Second) or \textbf{GFLOPs} (GigaFLOPs) are crucial for assessing the computational efficiency and performance of the models. Inference time, significantly influenced by the hardware used, serves as a reliable indicator of a model's practical applicability in various scenarios. In this study, the inference time for all models is tested on an NVIDIA V100 GPU, ensuring a consistent and robust basis for comparison. Furthermore, the \textbf{Model Parameters} metric is instrumental in understanding the models' complexity, shedding light on their computational requirements and potential scalability.
+
+
+    \section{Selected Methods}
 
 
 
