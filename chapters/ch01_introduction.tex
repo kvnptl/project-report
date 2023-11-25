@@ -70,7 +70,7 @@
 
         In the realm of autonomous driving, the ability to detect objects in challenging weather conditions remains a critical area of research. Consider a scenario where a self-driving vehicle navigates a winding mountain road at night amidst fog and rain. The limitations of the vehicle's visual cameras become evident as they struggle to detect objects due to reduced visibility, highlighting the crucial need for advanced object detection methods in adverse weather conditions. This is particularly significant in emergency situations, like when a deer suddenly appears on the road, necessitating quick and accurate object detection to prevent accidents \cite{yurtsever2020survey} \cite{carballo2020libre} \cite{mcity2020}.
 
-        As depicted in Figure \ref{fig:sensors_intro_1}, the performance of various sensors in automated systems under different conditions has been extensively analyzed. Cameras, for instance, excel in recognizing colors and signs but falter in dark or distant object measurement. Conversely, thermal sensors maintain efficiency in poor weather but lack color detection and texture information. Radar sensors are adept at speed measurement and are less hindered by visual obstructions, though they produce sparse and noisy data. LiDAR sensors, meanwhile, provide excellent object shape and size mapping but underperform in poor weather conditions \cite{Sensor_modality_characteristics_1}.
+        As depicted in Figure \ref{fig:sensors_intro_1}, the performance of various sensors in automated systems under different conditions has been extensively analyzed. Cameras, for instance, excel in recognizing colors and signs but falter in dark or distant object measurement. Conversely, thermal sensors maintain efficiency in poor weather but lack color detection and texture information. Radar sensors are adept at speed measurement and are less hindered by visual obstructions, though they produce sparse and noisy data. LiDAR sensors, meanwhile, provide excellent object shape and size mapping but underperform in poor weather conditions \cite{yeong2021sensor}.
 
         \begin{figure}[h]
             \centering
@@ -79,7 +79,7 @@
             \label{fig:sensors_intro_1}
         \end{figure}
 
-        To overcome these limitations, this project proposes the development of a tightly-coupled multimodal sensor fusion system, as exemplified in Figure \ref{fig:sensors_intro_2}. By integrating cameras, radar, and LiDAR sensors, this approach harnesses the unique strengths of each to create a comprehensive and reliable object detection framework. The fusion of these complementary sensors, coupled with advanced machine learning algorithms, aims to significantly enhance the range, accuracy, and reliability of detection in adverse weather conditions. Effectively synthesizing diverse data sources enables the creation of a robust and responsive system that overcomes the weaknesses of any individual sensor type.
+        To overcome these limitations, this project proposes the development of a tightly-coupled multimodal sensor fusion system, as exemplified in Figure \ref{fig:sensors_intro_2}. By integrating cameras, radar, and LiDAR sensors, this approach harnesses the unique strengths of each to create a comprehensive and reliable object detection framework. The fusion of these complementary sensors, coupled with advanced machine learning algorithms, aims to significantly enhance the range, accuracy, and reliability of detection in adverse weather conditions. Effectively synthesizing diverse data sources enables the creation of a robust and responsive system that overcomes the weaknesses of any individual sensor type. A sample from DENSE dataset \cite{bijelic2020seeing} is shown in Figure \ref{fig:sensors_intro_3} to illustrate the importance of fusion in adverse weather conditions.
 
         \begin{figure}[h]
             \centering
@@ -89,6 +89,13 @@
         \end{figure}
 
         However, the integration of different sensor types presents its own set of challenges, such as varying resolutions, sampling rates, and the need for sophisticated calibration and alignment techniques. These hurdles necessitate the development of efficient and scalable algorithms and hardware architectures capable of processing large volumes of sensor data with minimal latency.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.5\textwidth]{images/introduction/fusion_in_adverse_weather.png}
+            \caption{Importance of sensor fusion in adverse weather conditions, *Fusion of Camera, Lidar, Radar \cite{bijelic2020seeing}}
+            \label{fig:sensors_intro_3}
+        \end{figure}
 
         Despite these challenges, the anticipated outcomes of this project are transformative, with potential applications extending beyond autonomous vehicles to drones, surveillance, and security systems. By enhancing situational awareness through optimized sensor fusion, the project aims to foster safer and more efficient operations across various sectors. The primary objective is to ensure safe and efficient autonomous driving in adverse weather conditions, prioritizing the safety of passengers, other drivers, and pedestrians. This will be achieved through a sensor fusion system designed for minimal latency, enabling the processing of data from multiple sensors in near real-time.
 

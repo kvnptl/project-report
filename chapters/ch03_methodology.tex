@@ -43,7 +43,7 @@
         \caption{Multimodal Adverse Weather Conditions Datasets. Sensors†: C-R-L-N-F denote Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively. Weather Conditions‡: F-SN-R-O-SL-N denote Fog, Snow, Rain, Overcast, Sleet, and Night conditions, respectively. Note that highlighted datasets are used for the project.}
         \begin{tabular}{|l|l|l|l|l|l|l|}
         \hline
-            \textbf{Name} & \textbf{Sensors†} & \textbf{Weather Cond.‡} & \textbf{Size (GB)} & \textbf{Year} & \textbf{Citation Cnt.} & \textbf{Reference} \\ \hline
+            \textbf{Name} & \textbf{Sensors†} & \textbf{Weather Cond.‡} & \textbf{Size (GB)} & \textbf{Year} & \textbf{Citation Cnt.} & \textbf{Ref.} \\ \hline
             \textbf{DENSE} & \textbf{CRLNF} & \textbf{F, SN, R, O, N} & \textbf{582} & \textbf{2020} & \textbf{269} & \textbf{\cite{bijelic2020seeing}} \\ \hline
             \textbf{nuScenes} & \textbf{CRL} & \textbf{R, N} & \textbf{400} & \textbf{2020} & \textbf{3459} & \textbf{\cite{caesar2020nuscenes}} \\ \hline
             The Oxford RobotCar & CRL & R, SN, F & 4700 & 2020 & 317 & \cite{barnes2020oxford} \\ \hline
@@ -231,6 +231,89 @@
 
     \section{Evaluation Metrics}
 
+    % Points:
+    % - Metrics are required to be able to compare the performance of different methods
+    % - In object detection task, Average Precision (AP) is the most commonly used metric
+    %       - IoU
+    %       - Precision
+    %       - Recall
+    %       - NOTE that it is often misunderstood that AP is the average of Precisions, which is not true
+    %         - For simplicity, it can be interpreted as the area under the precision-recall curve
+    %     - There are many different ways to calculate AP
+    %     - Mostly AP is calculated classwise and then averaged over all classes, which is then called mean Average Precision (mAP)
+    %     - Here, in this project, we are using COCO style benchmarking, where AP referred as mAP
+    %       - COCO AP is calculated over different IoU thresholds, and often written as AP[0.5:0.05:0.95] which means it considers multiple IoU thresholds from 0.5 to 0.95 with a step size of 0.05 for calculating AP.
+    %       - Mention formula for COCO AP
+    %       - COCO detection follows the following 12 metrics as shown in Table \ref{tab:coco_metrics}.
+
+    % - Average Recall (AR) is another metric that can be used to compare the performance of different methods
+    %       - Describe importance of AR in just two sentences
+    % - Inference time (it is highly dependent on the hardware)
+    % - FLOPs
+    % - Model parameters
+
+    Metrics provide a standardized scale for comparing various methods in object detection tasks. Among these, Average Precision (AP) and Average Recall (AR) stand out as the most prominent. The understanding and computation of AP and AR are deeply rooted in more fundamental concepts such as Precision and Recall, which form the basis for these advanced metrics.
     
+    \textbf{Average Precision (AP)} is a pivotal metric in object detection tasks, offering a comprehensive measure of a model's precision and recall at various thresholds. A common misconception is that AP represents the average of Precision values, which is not accurate. A more precise interpretation of AP is that it reflects the area under the Precision-Recall curve. Precision and recall are fundamental concepts in this context, defined as follows:
+
+    \textbf{Precision (P)} is the ratio of correctly predicted positive observations to the total predicted positive observations, formulated as 
+    \[
+    P = \frac{TP}{TP + FP},
+    \]
+    where \( TP \) is the number of true positives and \( FP \) is the number of false positives.
+
+    \textbf{Recall (R)} is the ratio of correctly predicted positive observations to all observations in the actual class, given by 
+    \[
+    R = \frac{TP}{TP + FN},
+    \]
+    with \( FN \) representing the number of false negatives.
+
+    In addition to these metrics, the COCO benchmark categorizes objects based on their size: small, medium, and large. Specifically, an object is considered \textit{small} if its bounding box area is less than \( 32^2 \) pixels, allowing for more detailed assessment of model performance across different object scales.
+
+    AP can be calculated in numerous ways, but in the realm of object detection, it is typically computed class-wise and then averaged over all classes, yielding the mean Average Precision (mAP). In this project, we adopt the COCO style benchmarking, where mAP is referred to as AP. The COCO AP is calculated over a range of Intersection over Union (IoU) thresholds and is often denoted as \( AP@[0.5:0.05:0.95] \), indicating multiple IoU thresholds from 0.5 to 0.95 with a step size of 0.05. The formula for calculating COCO AP is defined as:
+    \[
+    AP@[0.5:0.05:0.95] = \frac{AP_{0.5} + AP_{0.55} + \ldots + AP_{0.95}}{10},
+    \]
+    where \( AP_{0.5} \) is the area under the Precision-Recall curve for IoU \(\geq 0.5\). 
+
+    
+    The COCO detection benchmark encompasses 12 distinct metrics, as illustrated in Table \ref{tab:coco_metrics}.
+
+    \begin{table}[!ht]
+        \centering
+        \caption{COCO Metrics \cite{lin2014microsoft}}
+        \begin{tabular}{ll}
+        \hline
+            \textbf{Metric} & \textbf{Description} \\ \hline
+            Average Precision (AP): & ~ \\ \hline
+            AP\textsuperscript{IoU=.50:.05:.95} & AP at IoU=.50:.05:.95 (primary COCO metric) \\
+            AP\textsuperscript{IoU=.50} & AP at IoU=.50 (PASCAL VOC metric) \\
+            AP\textsuperscript{IoU=.75} & AP at IoU=.75 (strict metric) \\
+            ~ & ~ \\ \hline
+            AP Across Scales: & ~ \\ \hline
+            AP\textsuperscript{small} & AP for small objects: area $<$ $32^2$ \\
+            AP\textsuperscript{medium} & AP for medium objects: $32^2$ $<$ area $<$ $96^2$ \\
+            AP\textsuperscript{large} & AP for large objects: area $>$ $96^2$ \\
+            ~ & ~ \\ \hline
+            Average Recall (AR): & ~ \\ \hline
+            AR\textsuperscript{max=1} & AR given 1 detection per image \\ 
+            AR\textsuperscript{max=10} & AR given 10 detections per image \\ 
+            AR\textsuperscript{max=100} & AR given 100 detections per image \\ 
+            ~ & ~ \\ \hline
+            AR Across Scales: & ~ \\ \hline
+            AR\textsuperscript{small} & AR for small objects: area $<$ $32^2$ \\
+            AR\textsuperscript{medium} & AR for medium objects: $32^2$ $<$ area $<$ $96^2$ \\
+            AR\textsuperscript{large} & AR for large objects: area $>$ $96^2$ \\
+        \end{tabular}
+        \label{tab:coco_metrics}
+    \end{table}
+
+    \textbf{Average Recall (AR)} offers a vital alternative perspective to AP in the assessment of object detection models. AR evaluates the ability of a model to accurately recognize \textit{all} relevant examples of the specified categories, disregarding the incidence of false positives. In the COCO benchmark, AR is calculated with varying numbers of detections per image, specifically 1, 10, or 100. Notably, AR at 1 considers only the detection with the highest confidence score for each image, focusing on the model's precision in identifying the most probable object. This contrasts with AR at 10 or 100, where multiple detections per image are considered, reflecting the model's capability to identify numerous objects with varying confidence levels. The importance of achieving a high recall in all categories, as indicated by AR, is particularly critical in scenarios where overlooking an object could lead to severe consequences. For instance, in the context of self-driving vehicles operating under adverse weather conditions such as fog or heavy rain, the failure to detect a pedestrian or an approaching vehicle could pose a threat to human life. AR, by focusing exclusively on the rate of detection and excluding considerations of precision, emphasizes these types of missed detections that might be neglected when only considering AP. Consequently, AR provides crucial insights about the reliability and effectiveness of object detection systems, complementing the focus on precision embodied by AP.
+
+    Given the project's focus on object detection in adverse weather conditions, we will extend the evaluation of AP and AR to include performance under specific weather scenarios like fog, rain, and snow. This will provide a more comprehensive understanding of the model's robustness and effectiveness in varying environmental conditions.
+
+    In addition to these metrics, \textbf{Inference Time} and \textbf{FLOPs} (Floating Point Operations Per Second) or \textbf{GFLOPs} (GigaFLOPs) are crucial for assessing the computational efficiency and performance of the models. Inference time, significantly influenced by the hardware used, serves as a reliable indicator of a model's practical applicability in various scenarios. In this study, the inference time for all models is tested on an NVIDIA V100 GPU, ensuring a consistent and robust basis for comparison. Furthermore, the \textbf{Model Parameters} metric is instrumental in understanding the models' complexity, shedding light on their computational requirements and potential scalability.
+
+
 
 \end{document}
