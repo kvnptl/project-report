@@ -1,0 +1,429 @@
+%!TEX root = ../report.tex
+\documentclass[report.tex]{subfiles}
+\begin{document}
+    \chapter{Methodology}
+        % Dont know where to put DATASET related content
+    % One entire section could be my comparative study on multimodal dataset
+    \section{Available Datasets}
+
+    % \begin{itemize}
+    %     \item The majority of deep multimodal perception approaches rely on supervised learning, and therefore necessitate multimodal datasets with labeled ground truth for training deep neural networks. While several multimodal datasets are available, many of these datasets are collected under clear weather conditions or do not include all sensors, such as cameras, LiDAR, and radar. Unfortunately, the availability of multimodal datasets collected under adverse weather conditions with all three sensors are limited. Table 1 summarizes some of the available multimodal datasets for evaluating the performance of deep multimodal perception techniques in adverse weather conditions. Of these datasets, only the recently released K-Radar \cite{Paek2022Jun} incorporates a high-resolution 4D-radar sensor. In the table, C-R-L-N-F denotes the Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively.
+    %         \begin{table}[h]
+    %             \centering
+    %             \caption{List multimodal datasets with adverse weather conditions}
+    %             \label{tab:my-table}
+    %             \begin{tabular}{|l|l|l|l|}
+    %                 \hline
+    %                 \textbf{Name}       & \textbf{Sensors} & \textbf{Reference}               & \textbf{Year} \\ \hline
+    %                 DENSE               & CRLNF            & \cite{bijelic2020seeing}    & 2020          \\ \hline
+    %                 EU Long-term        & CRL              & \cite{yan2020eu}            & 2020          \\ \hline
+    %                 nuScenes            & CRL              & \cite{caesar2020nuscenes}   & 2020          \\ \hline
+    %                 The Oxford RobotCar & CRL              & \cite{barnes2020oxford}     & 2020          \\ \hline
+    %                 RADIATE             & CRL              & \cite{sheeny2021radiate}    & 2021          \\ \hline
+    %                 K-Radar             & CRL              & \cite{Paek2022Jun}          & 2022          \\ \hline
+    %                 aiMotive            & CRL              & \cite{matuszka2022aimotive} & 2022          \\ \hline
+    %                 Boreas              & CRL              & \cite{burnett2022boreas}    & 2022          \\ \hline
+    %                 WADS                & CRLNF            & \cite{kurup2022winter}      & 2023          \\ \hline
+    %             \end{tabular}
+    %         \end{table}
+
+    %         \begin{figure}[h]
+    %             \centering
+    %             \includegraphics[width=1.0\textwidth]{images/all_sensors_in_adverse_weather.png}
+    %             \caption{\centering Samples of K-Radar datasets for various weather conditions \cite{Paek2022Jun}}
+    %             \label{fig:all_sensors_in_adverse_weather}
+    %         \end{figure}
+    %     \end{itemize}
+
+
+    The majority of deep multimodal perception approaches rely on supervised learning, which necessitates the use of high-quality, large-scale multimodal datasets with labeled ground truth for training deep neural networks. Several multimodal datasets, such as KITTI \cite{geiger2012we}, ApolloScape \cite{huang2019apolloscape}, and Waymo \cite{sun2020scalability}, are prevalent in the domain of LiDAR-camera fusion. However, a significant number of these datasets are collected under clear weather conditions or lack a comprehensive array of sensors, including cameras, LiDAR, and Radar. A notable limitation is the scarcity of multimodal datasets that are collected under adverse weather conditions and incorporate at least all three of these essential sensors. Table \ref{datasets} summarizes some of the available multimodal datasets\footnote{For all the datasets, formal registration form is required to fill to access the dataset} for evaluating the performance of deep multimodal perception techniques in adverse weather conditions. The dataset are sorted in ascending order with respect to year.
+
+    \begin{table}[!ht]
+        \centering
+        \caption{Multimodal adverse weather conditions datasets. Sensors†: C-R-L-N-F denote Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively. Weather conditions‡: F-SN-R-O-SL-N denote Fog, Snow, Rain, Overcast, Sleet, and Night conditions, respectively. Note that highlighted datasets are used for the project.}
+        \begin{tabular}{|l|l|l|l|l|l|l|}
+        \hline
+            \textbf{Name} & \textbf{Sensors†} & \textbf{Weather Cond.‡} & \textbf{Size (GB)} & \textbf{Year} & \textbf{Citation Cnt.} & \textbf{Ref.} \\ \hline
+            \textbf{DENSE} & \textbf{CRLNF} & \textbf{F, SN, R, O, N} & \textbf{582} & \textbf{2020} & \textbf{269} & \textbf{\cite{bijelic2020seeing}} \\ \hline
+            \textbf{nuScenes} & \textbf{CRL} & \textbf{R, N} & \textbf{400} & \textbf{2020} & \textbf{3459} & \textbf{\cite{caesar2020nuscenes}} \\ \hline
+            The Oxford RobotCar & CRL & R, SN, F & 4700 & 2020 & 317 & \cite{barnes2020oxford} \\ \hline
+            EU Long-term & CRL & SN, R, O, N & NA & 2020 & 72 & \cite{yan2020eu} \\ \hline
+            RADIATE & CRL & F, SN, R, O, SL, N & NA & 2021 & 132 & \cite{sheeny2021radiate} \\ \hline
+            K-Radar & CRL & F, R, SN & 13000 & 2022 & 15 & \cite{Paek2022Jun} \\ \hline
+            Boreas & CRL & SN, R, O, N & 4400 & 2022 & 38 & \cite{burnett2022boreas} \\ \hline
+            aiMotive & CRL & R, O, N & 85 & 2023 & 3 & \cite{matuszka2022aimotive} \\ \hline
+        \end{tabular}
+        \label{datasets}
+    \end{table}
+
+
+    % The datasets for the project are selected based on the following criteria:
+    % - Available Sensors, at least it should have camera, radar, and lidar
+    % - Adverse weather conditions,
+    % - Dataset documentation and accessibility,
+    % - Usage by publicly available methods (so that comparison is possible)
+    % - Perception Task, eg. Object Detection
+    % - Radar datatype, the data should be available in point cloud format
+    % - Time-synchronized and calibrated data
+
+    % After considering above criteria, the following datasets are selected (also highlighted in the table): 
+    % - DENSE
+    % - nuScenes
+
+    The selection of appropriate datasets is crucial. The criteria for selecting datasets cover several key areas, focusing on the availability of diverse sensors, specifically cameras, radar, and lidar, which are crucial for robust object detection in challenging environments. Additionally, the datasets must represent adverse weather conditions effectively, as this is a critical aspect of the research. Furthermore, the accessibility and thorough documentation of the datasets are considered, ensuring that the data can be easily understood and utilized in the research process. Another vital criterion is the dataset's popularity in existing research, as this allows for comparative analysis with publicly available methods, thereby validating the research findings. Moreover, the specific perception task, in this case, object detection, and the type of radar data, particularly in point cloud format, are essential considerations. The requirement for time-synchronized and calibrated data is also emphasized to ensure accuracy and reliability in sensor fusion and object detection algorithms.
+
+    After a comprehensive evaluation of these criteria, two datasets have been chosen for this research: DENSE and nuScenes. The DENSE dataset is particularly suited for this study as it includes data from various sensors under adverse weather conditions, which is crucial for testing the efficacy of multimodal sensor fusion in challenging environments. The nuScenes dataset, on the other hand, is widely used in the field, providing a rich source of data with camera, radar, and lidar sensors. Its extensive use in the community allows for a meaningful comparison with existing methods. Both datasets provide time-synchronized and calibrated data, which is essential for the accuracy of object detection algorithms in adverse weather conditions. The selection of these datasets aligns perfectly with the research objectives, offering a comprehensive platform for exploring and advancing the capabilities of data-driven multimodal sensor fusion in object detection under challenging weather scenarios.
+
+    \subsection{DENSE dataset}
+
+    % The Dense dataset \cite{bijelic2020seeing} focused on evaluating multi-modal fusion algorithms under adverse weather. In addition to LiDAR and a stereo camera, it is also equipped with several all-weather sensors, including one frontal long-range radar, one gated camera working on the NIR band, one FIR camera, and one weather station sensor. The data are captured in various natural weather conditions, including rain, snow, light fog, and heavy fog, as well as in a controlled lab environment in a fog chamber. However, the dataset only provides sparse radar targets with limited FoV and low resolution. 
+    % - The dataset is recorded in urban city, suburban, highway, and tunnel areas. 
+    % - It coveres several weather conditions like light fog, dense fog, rain, snow, and night. The dataset is used by several multimodal sensor fusion publications for object detection. 
+    % - Table \ref{tab:dataset_comparison} higlihts the sensor setup and dataset statistics for each dataset. 
+    % - Geographical coverage of the data collection campaign covering two months and 10,000 km in Germany, Sweden, Denmark, and Finland. 
+    % - DENSE dataset provides Radar targets in point cloud format.
+    % - As Radar data points are inherently noisy, so the both datasets have already been preprocessed to remove the false points.
+    % - Radar data directly provide 3D information consisting of range, azimuth, and velocity. As an additional note, new generation Radar sensors provide 4D data with range, azimuth, velocity, and elevation.
+    % - It provides 2D annotations in COCO style format, where bbox format is x, y, width, height.
+    The DENSE dataset, as detailed in Bijelic et al. (2020) \cite{bijelic2020seeing}, is a critical asset for evaluating multi-modal fusion algorithms in adverse weather conditions. Its standout feature is the extensive sensor array, including LiDAR, a stereo camera, a frontal long-range radar, a gated camera operating in the NIR band, a FIR camera, and a weather station sensor, as illustrated in Figure \ref{fig:dense_test_vehicle_setup}. These sensors allow for detailed data capture under various adverse weather conditions, such as rain, snow, light fog, and dense fog. Notably, the DENSE dataset uniquely offers a split for light and dense fog conditions, essential for assessing the detection performance of Lidar and Radar in varying visibility scenarios. The range of these conditions and their distribution are visually depicted in Figure \ref{fig:dense_distribution_of_weather_conditions}. Additionally, the dataset includes data from a controlled lab environment within a fog chamber, offering a distinct view of sensor performance under simulated conditions. However, it's important to note that for the purposes of this project, only real-world data from the DENSE dataset is utilized. A few random samples from the dataset are shown in Figure \ref{fig:dense_samples}. Note that LiDAR and Radar points are projected onto the camera image for visualization purposes.
+
+    The dataset covers a broad spectrum of environments, encompassing urban cities, suburban areas, highways, and tunnels. Its geographical scope is extensive, with data collection spanning over two months and covering 10,000 km across Germany, Sweden, Denmark, and Finland. This diverse environmental range enhances the dataset's applicability in various real-world scenarios.
+
+    Technically, the DENSE dataset offers radar targets in a point cloud format, aligning well with the Lidar data. Given the inherent noise in radar data, preprocessing has been performed to eliminate false points, thereby bolstering the dataset's accuracy and reliability. The radar data includes 3D information - range, azimuth, and velocity. Moreover, it's noteworthy that the latest generation of radar sensors in the dataset provides 4D data, adding elevation to the existing dimensions. There are total 3 classes available in the dataset, including car, pedestrian, and cyclist. Object annotations in the DENSE dataset are provided in the COCO style format \cite{lin2014microsoft}, with bounding box (bbox) parameters specified as x, y, width, and height. The annotation processed is well described in the supplementary material from the paper \cite{heide2023adverseweatherfusion}. This meticulous approach to data collection, processing, and annotation positions the DENSE dataset as a powerful and adaptable tool for research in adverse weather conditions, especially in the domain of data-driven multimodal sensor fusion.
+
+        % \begin{figure}[h]
+        %         \centering
+        %         \includegraphics[width=0.5\textwidth]{images/datasets/dense/test_vehicle_setup.png}
+        %         \caption{Test Vehicle Setup \cite{bijelic2020seeing}}
+        %         \label{fig:dense_test_vehicle_setup}
+        % \end{figure}
+
+        % \begin{figure}[h]
+        %         \centering
+        %         \includegraphics[width=0.5\textwidth]{images/datasets/dense/distribution_of_weather_conditions.pdf}
+        %         \caption{Distribution of Weather Conditions \cite{bijelic2020seeing}}
+        %         \label{fig:dense_distribution_of_weather_conditions}
+        % \end{figure}
+
+        \begin{figure}[h]
+            \centering
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/datasets/dense/test_vehicle_setup.png}
+                \caption{Test vehicle setup \cite{bijelic2020seeing}}
+                \label{fig:dense_test_vehicle_setup}
+            \end{minipage}
+            \hfill
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/datasets/dense/distribution_of_weather_conditions.pdf}
+                \caption{Distribution of weather conditions \cite{bijelic2020seeing}}
+                \label{fig:dense_distribution_of_weather_conditions}
+            \end{minipage}
+        \end{figure}
+        
+
+        % TODO: add Classwise distribution
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=0.9\textwidth]{images/datasets/dense/classwise_distribution.png}
+        %     \caption{Classwise Distribution \cite{bijelic2020seeing}}
+        %     \label{fig:dense_classwise_distribution}
+        % \end{figure}
+
+        \begin{figure}[ht!]
+            \centering
+            % Row 1
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/2018-02-05_12-07-39_00300.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_radar.png}
+          
+            % Row 2
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/2018-10-08_08-10-40_02160.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_radar.png}
+          
+            % % Row 3
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/2018-10-29_15-02-37_00580.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_radar.png}
+          
+            % % Row 4
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/2018-02-07_11-56-57_00520.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_radar.png}
+          
+            % % Row 5
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/2018-02-09_18-50-50_00300.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_lidar.png}\hfill
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_radar.png}
+          
+            \caption{Random samples from the DENSE dataset, where 1st col is Camera with ground truth, 2nd is LiDAR, 3rd is Radar (1st Row: Day, 2nd Row: Light Fog, 3rd Row: Dense Fog, 4th Row: Snow, 5th Row: Night). Note: best viewed in zoomed-in view.}
+            \label{fig:dense_samples}
+          \end{figure}
+          
+
+
+    \subsection{nuScenes dataset}
+
+    % NuScenes \cite{caesar2020nuscenes} is the most popular dataset for its large-scale and diverse scenarios. The capturing vehicle is equipped with a 32-beam LiDAR, 6 cameras, 5 long-range multi-mode radars, and a GPS/IMU system. It provides 3D annotations of 23 classes of road users in 1000 scenes, with a total of 1.3 million frames. 
+    % - Although, the Radar used in nuScenes has a sparse data, but it is good dataset to start with and also well documented. 
+    % - The dataset is recorded in urban city, suburban, and highway areas.
+    % - It coveres less adverse weather conditions compared to DENSE dataset, like rain and night.
+    % - Table \ref{tab:dataset_comparison} higlihts the sensor setup and dataset statistics in comparison to DENSE.
+    % - Geographical coverage of the data collection campaign covering 242 km in Boston and Singapore.
+    % - It provides Radar targets in point cloud format same as DENSE dataset.
+    % - Note that nuscenes dataset doesn't provide 2D annotations so the individual methods create their own 2D annotations based on the 3D annotations.
+    % - After creating 2D annotations, the dataset is converted to COCO style format, where bbox format is x, y, width, height.
+
+    In addition to the DENSE dataset, this project also uses the nuScenes dataset \cite{caesar2020nuscenes} as a benchmark. The nuScenes dataset stands out for its large-scale and diverse scenarios. The data collection vehicle for nuScenes, as depicted in Figure \ref{fig:nuscenes_test_vehicle_setup}, is equipped with a comprehensive set of sensors, including a 32-beam LiDAR, six cameras, five long-range multi-mode radars, and a GPS/IMU system. This dataset provides 3D annotations for 23 classes of road users across 1,000 scenes, accumulating to a total of 1.3 million frames. Although the radar data in nuScenes is sparse, its extensive documentation makes it a good starting point for research in object detection. A few random samples from the dataset are shown in Figure \ref{fig:nuscenes_samples}.
+
+    The nuScenes dataset focuses on urban, suburban, and highway areas, but it covers fewer adverse weather conditions compared to the DENSE dataset, primarily rain and night scenarios, as shown in Figure \ref{fig:nuscenes_distribution_of_weather_conditions}. Like DENSE, nuScenes also provides radar data in point cloud format. There are total 23 classes but it can be categorize into 10 super classes, including car, truck, trailer, bus, construction vehicle, bicycle, motorcycle, pedestrian, traffic cone, and barrier. However, a notable distinction is that nuScenes does not provide 2D annotations. Researchers using this dataset typically generate their own 2D annotations based on the 3D annotations provided. Once these 2D annotations are created, the data is converted into the COCO style format \cite{lin2014microsoft}, similar to DENSE, where the bbox format includes x, y, width, and height dimensions.
+
+
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=0.9\textwidth]{images/datasets/nuscenes/test_vehicle_setup.png}
+        %     \caption{Test Vehicle Setup \cite{bijelic2020seeing}}
+        %     \label{fig:nuscenes_test_vehicle_setup}
+        % \end{figure}
+
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=0.9\textwidth]{images/datasets/nuscenes/distribution_of_weather_conditions.pdf}
+        %     \caption{Distribution of Weather Conditions \cite{bijelic2020seeing}}
+        %     \label{fig:nuscenes_distribution_of_weather_conditions}
+        % \end{figure}
+
+        \begin{figure}[h]
+            \centering
+            \begin{minipage}{0.48\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/datasets/nuscenes/test_vehicle_setup.png}
+                \caption{Test vehicle setup \cite{caesar2020nuscenes}}
+                \label{fig:nuscenes_test_vehicle_setup}
+            \end{minipage}
+            \hfill
+            \begin{minipage}{0.48\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/datasets/nuscenes/distribution_of_weather_conditions.pdf}
+                \caption{Distribution of weather conditions \cite{caesar2020nuscenes}}
+                \label{fig:nuscenes_distribution_of_weather_conditions}
+            \end{minipage}
+        \end{figure}
+        
+
+        % TODO: add Classwise distribution
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=0.9\textwidth]{images/datasets/nuscenes/classwise_distribution.png}
+        %     \caption{Classwise Distribution \cite{bijelic2020seeing}}
+        %     \label{fig:nuscenes_classwise_distribution}
+        % \end{figure}
+
+        % \begin{figure}[ht!]
+        %     \centering
+        %     % Row 1
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/day_cam.png}
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/night_cam.png}
+          
+        %     % Row 2
+        %     \includegraphics[width=0.3\textwidth]{images/datasets/nuscenes/samples/rain_cam.png}
+          
+        %     \caption{A random samples from the nuScenes dataset Note: best viewed in color.}
+        %     \label{fig:dense_samples}
+        %   \end{figure}
+
+          \begin{figure}[ht]
+            \centering
+            % First Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/day_cam.png}
+                \caption{Day time}
+                \label{fig:sub1}
+            \end{subfigure}
+            \hfill
+            % Second Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/night_cam.png}
+                \caption{Night time}
+                \label{fig:sub2}
+            \end{subfigure}
+            \hfill
+            % Third Image
+            \begin{subfigure}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/rain_cam.png}
+                \caption{Rain}
+                \label{fig:sub3}
+            \end{subfigure}
+        
+            \caption{Random samples from the nuScenes dataset}
+            \label{fig:nuscenes_samples}
+        \end{figure}
+        
+
+        Table \ref{tab:dataset_comparison} highlights the overall comparison of the sensor setup and dataset statistics for datasets used in this project.
+
+        \begin{table}[h!]
+            \centering
+            \caption{Comparison of datasets features}
+            \begin{tabular}{|l|c|c|}
+              \hline
+              \textbf{Dataset} & \textbf{NuScenes \cite{caesar2020nuscenes}} & \textbf{DENSE \cite{bijelic2020seeing}} \\
+              \hline
+              RGB Cameras & 6 & 2 \\
+              RGB Resolution & 1600x900 & 1920x1024 \\
+              Lidar Sensors & 1 & 2 \\
+              Lidar Resolution & 32 & 64 \\
+              Radar Sensor & 4 & 1 \\
+              Gated Camera & x & 1 \\
+              FIR Camera & x & 1 \\
+              Frame Rate & 1 Hz/10 Hz & 10 Hz \\
+              \hline
+              \textbf{Dataset Statistics} &  &  \\
+              \hline
+              Labeled Frames & 40K & 13.5K \\
+              Labels & 1.4M & 100K \\
+              Scene Tags & \checkmark & \checkmark \\
+              Night Time & \checkmark & \checkmark \\
+              Light Weather & \checkmark & \checkmark \\
+              Heavy Weather & x & \checkmark \\
+              Fog Chamber & x & \checkmark \\
+              \hline
+            \end{tabular}
+            \label{tab:dataset_comparison}
+          \end{table}
+
+
+    % \section{Setup}
+
+    % \section{Experimental Design}
+
+    \section{Evaluation Metrics}
+
+    % Points:
+    % - Metrics are required to be able to compare the performance of different methods
+    % - In object detection task, Average Precision (AP) is the most commonly used metric
+    %       - IoU
+    %       - Precision
+    %       - Recall
+    %       - NOTE that it is often misunderstood that AP is the average of Precisions, which is not true
+    %         - For simplicity, it can be interpreted as the area under the precision-recall curve
+    %     - There are many different ways to calculate AP
+    %     - Mostly AP is calculated classwise and then averaged over all classes, which is then called mean Average Precision (mAP)
+    %     - Here, in this project, we are using COCO style benchmarking, where AP referred as mAP
+    %       - COCO AP is calculated over different IoU thresholds, and often written as AP[0.5:0.05:0.95] which means it considers multiple IoU thresholds from 0.5 to 0.95 with a step size of 0.05 for calculating AP.
+    %       - Mention formula for COCO AP
+    %       - COCO detection follows the following 12 metrics as shown in Table \ref{tab:coco_metrics}.
+
+    % - Average Recall (AR) is another metric that can be used to compare the performance of different methods
+    %       - Describe importance of AR in just two sentences
+    % - Inference time (it is highly dependent on the hardware)
+    % - FLOPs
+    % - Model parameters
+
+    Metrics provide a standardized scale for comparing various methods in object detection tasks. Among these, Average Precision (AP) and Average Recall (AR) stand out as the most prominent. The understanding and computation of AP and AR are deeply rooted in more fundamental concepts such as Precision and Recall, which form the basis for these advanced metrics.
+    
+    \textbf{Average Precision (AP)} is a pivotal metric in object detection tasks, offering a comprehensive measure of a model's precision and recall at various thresholds. A common misconception is that AP represents the average of Precision values, which is not accurate. A more precise interpretation of AP is that it reflects the area under the Precision-Recall curve. Precision and recall are fundamental concepts in this context, defined as follows:
+
+    \textbf{Precision (P)} is the ratio of correctly predicted positive observations to the total predicted positive observations, formulated as 
+    \[
+    P = \frac{TP}{TP + FP},
+    \]
+    where \( TP \) is the number of true positives and \( FP \) is the number of false positives.
+
+    \textbf{Recall (R)} is the ratio of correctly predicted positive observations to all observations in the actual class, given by 
+    \[
+    R = \frac{TP}{TP + FN},
+    \]
+    with \( FN \) representing the number of false negatives.
+
+    In addition to these metrics, the COCO benchmark categorizes objects based on their size: small, medium, and large. Specifically, an object is considered \textit{small} if its bounding box area is less than \( 32^2 \) pixels, allowing for more detailed assessment of model performance across different object scales.
+
+    AP can be calculated in numerous ways, but in the realm of object detection, it is typically computed class-wise and then averaged over all classes, yielding the mean Average Precision (mAP). In this project, we adopt the COCO style benchmarking, where mAP is referred to as AP. The COCO AP is calculated over a range of Intersection over Union (IoU) thresholds and is often denoted as \( AP@[0.5:0.05:0.95] \), indicating multiple IoU thresholds from 0.5 to 0.95 with a step size of 0.05. The formula for calculating COCO AP is defined as:
+    \[
+    AP@[0.5:0.05:0.95] = \frac{AP_{0.5} + AP_{0.55} + \ldots + AP_{0.95}}{10},
+    \]
+    where \( AP_{0.5} \) is the area under the Precision-Recall curve for IoU \(\geq 0.5\). 
+
+    
+    The COCO detection benchmark encompasses 12 distinct metrics, as illustrated in Table \ref{tab:coco_metrics}.
+
+    \begin{table}[!ht]
+        \centering
+        \caption{COCO metrics \cite{lin2014microsoft}}
+        \begin{tabular}{ll}
+        \hline
+            \textbf{Metric} & \textbf{Description} \\ \hline
+            Average Precision (AP): & ~ \\ \hline
+            AP\textsuperscript{IoU=.50:.05:.95} & AP at IoU=.50:.05:.95 (primary COCO metric) \\
+            AP\textsuperscript{IoU=.50} & AP at IoU=.50 (PASCAL VOC metric) \\
+            AP\textsuperscript{IoU=.75} & AP at IoU=.75 (strict metric) \\
+            ~ & ~ \\ \hline
+            AP Across Scales: & ~ \\ \hline
+            AP\textsuperscript{small} & AP for small objects: area $<$ $32^2$ \\
+            AP\textsuperscript{medium} & AP for medium objects: $32^2$ $<$ area $<$ $96^2$ \\
+            AP\textsuperscript{large} & AP for large objects: area $>$ $96^2$ \\
+            ~ & ~ \\ \hline
+            Average Recall (AR): & ~ \\ \hline
+            AR\textsuperscript{max=1} & AR given 1 detection per image \\ 
+            AR\textsuperscript{max=10} & AR given 10 detections per image \\ 
+            AR\textsuperscript{max=100} & AR given 100 detections per image \\ 
+            ~ & ~ \\ \hline
+            AR Across Scales: & ~ \\ \hline
+            AR\textsuperscript{small} & AR for small objects: area $<$ $32^2$ \\
+            AR\textsuperscript{medium} & AR for medium objects: $32^2$ $<$ area $<$ $96^2$ \\
+            AR\textsuperscript{large} & AR for large objects: area $>$ $96^2$ \\
+        \end{tabular}
+        \label{tab:coco_metrics}
+    \end{table}
+
+    \textbf{Average Recall (AR)} offers a vital alternative perspective to AP in the assessment of object detection models. AR evaluates the ability of a model to accurately recognize \textit{all} relevant examples of the specified categories, disregarding the incidence of false positives. In the COCO benchmark, AR is calculated with varying numbers of detections per image, specifically 1, 10, or 100. Notably, AR at 1 considers only the detection with the highest confidence score for each image, focusing on the model's precision in identifying the most probable object. This contrasts with AR at 10 or 100, where multiple detections per image are considered, reflecting the model's capability to identify numerous objects with varying confidence levels. The importance of achieving a high recall in all categories, as indicated by AR, is particularly critical in scenarios where overlooking an object could lead to severe consequences. For instance, in the context of self-driving vehicles operating under adverse weather conditions such as fog or heavy rain, the failure to detect a pedestrian or an approaching vehicle could pose a threat to human life. AR, by focusing exclusively on the rate of detection and excluding considerations of precision, emphasizes these types of missed detections that might be neglected when only considering AP. Consequently, AR provides crucial insights about the reliability and effectiveness of object detection systems, complementing the focus on precision embodied by AP.
+
+    Given the project's focus on object detection in adverse weather conditions, we will extend the evaluation of AP and AR to include performance under specific weather scenarios like fog, rain, and snow. This will provide a more comprehensive understanding of the model's robustness and effectiveness in varying environmental conditions.
+
+    In addition to these metrics, \textbf{Inference Time} and \textbf{FLOPs} (Floating Point Operations Per Second) or \textbf{GFLOPs} (GigaFLOPs) are crucial for assessing the computational efficiency and performance of the models. Inference time, significantly influenced by the hardware used, serves as a reliable indicator of a model's practical applicability in various scenarios. In this study, the inference time for all models is tested on an NVIDIA V100 GPU, ensuring a consistent and robust basis for comparison. Furthermore, the \textbf{Model Parameters} metric is instrumental in understanding the models' complexity, shedding light on their computational requirements and potential scalability.
+
+
+    \section{Selected Methods}
+
+    - majority of the deep multimodal sensor fusion architectures are based on two modalities which are camera and lidar. Mostly because of the prevalent availability of camera and lidar based datasets.
+    - There exists a very few methods that combines all three modalities, camera, lidar, and radar.
+    - As this project focuses on 2D object detection, so the methods are selected accordingly.
+    - Another objective of the research is to explore tightly-coupled fusion architectures in comparison to early and middle fusion architectures.
+    - The methods are chosen based on how many multiple modalities it can handle in the architecture, and type of fusion architecture.
+        - For this project minimum number of modalities is 2 and it should be feature or tightly-coupled fusion architectures.
+    
+
+    \subsection{Method 1: SAF-FCOS}
+
+    % My chosen method 1, SAF-FCOS
+    The paper by Chang et al. \cite{chang2020spatial} introduces a novel method for enhancing obstacle detection in autonomous driving systems. This method, called spatial attention fusion (SAF), effectively integrates data from two modalities, namely millimeter-wave (mmWave) radar and camera sensors. SAF addresses the sparsity of radar points by generating an attention weight matrix that distinctively fuses vision features, diverging from traditional concatenation or element-wise addition fusion methods. This method can be integrated into the feature-extraction stage of existing deep learning object detection frameworks, facilitating end-to-end training. The method follows the middle or feature fusion approach in the paper, as it extracts features from both modalities and fuses them in the middle layer. Additionally, the paper presents a generation model that converts radar points into images for neural network training. This type of image projection called radar imagery. The paper's findings indicate that this fusion approach significantly improves performance on nuScenes \cite{caesar2020nuscenes} dataset.
+
+    Loss function:
+    \[
+        L(c_i, t_i) = \frac{1}{N_{\text{pos}}} \sum_{i} L_{\text{cls}}(c_i, c_i^*) + \frac{\lambda}{N_{\text{pos}}} \sum_{i} \mathds{1}_{c_i^*>0}L_{\text{reg}}(t_i, t_i^*)
+    \]
+
+    
+
+
+
+    \subsection{Method 2: HRFuser}
+        
+    %     % My chosen method 2, HRFuser
+    %     \item Another work by Broedermann et al. \cite{broedermann2022hrfuser} presents an extended work on HRNet \cite{wang2020deep} and HRFormer \cite{yuan2021hrformer} to integrate multimodal sensors into a single network. It introduces HRFuser, a versatile, multi-resolution, multi-sensor fusion architecture that can efficiently integrate an arbitrary number of sensors like lidar, radar, and gated cameras, alongside standard cameras. HRFuser is built on the HRNet and HRFormer paradigms, preserving high-resolution representations and incorporating a novel multi-window cross-attention (MWCA) block for effective fusion across multiple resolutions. The system's generic design allows for easy scalability with various sensors without the need for specialized components for each sensor. Extensive testing on major autonomous driving datasets, including nuScenes \cite{caesar2020nuscenes}, and DENSE \cite{bijelic2020seeing}, demonstrates HRFuser's superior performance over existing camera-only networks and sensor fusion methods, proving its efficacy in both standard and adverse weather conditions. HRFuser's adaptability to different sensor sets and its ability to selectively focus on relevant features from high-resolution data of additional sensors mark a significant advancement in the field of 2D object detection.
+    
+    \subsection{Method 3: MT-DETR}
+
+    %     % My chosen method 3, MT-DETR
+    %     \item Recent work by Chu et al. \cite{chu2023mt} proposes a novel end-to-end multimodal multistage object detection network called MT-DETR (MulTi-sensor MulTimodal DTtection TRansformer) that leverages data from multiple sensors - camera, lidar, radar and time - to achieve robust detection, especially in adverse weather conditions. Here time modality is an additional binary image input to inform model about day or night. It employs specialized fusion modules - Residual Fusion Module (RFM) and Confidence Fusion Module (CFM) for hierarchical cross-modal feature fusion. The network also uses a Residual Enhancement Module (REM) to strengthen individual sensor branches. A multi-stage loss function further regularizes feature learning across modalities. Extensive experiments on the publicly available DENSE \cite{bijelic2020seeing} dataset demonstrate that MT-DETR significantly outperforms existing unimodal and multimodal detection methods. Notably, when additionally trained on realistic synthetic foggy data generated by a novel camera-lidar synthesis algorithm, the performance boost is even higher.
+
+    
+
+
+
+\end{document}
