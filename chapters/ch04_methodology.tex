@@ -46,7 +46,7 @@
             \textbf{Name} & \textbf{Sensors†} & \textbf{Weather Cond.‡} & \textbf{Size (GB)} & \textbf{Year} & \textbf{Citation Cnt.} & \textbf{Ref.} \\ \hline
             \textbf{DENSE} & \textbf{CRLNF} & \textbf{F, SN, R, O, N} & \textbf{582} & \textbf{2020} & \textbf{269} & \textbf{\cite{bijelic2020seeing}} \\ \hline
             \textbf{nuScenes} & \textbf{CRL} & \textbf{R, N} & \textbf{400} & \textbf{2020} & \textbf{3459} & \textbf{\cite{caesar2020nuscenes}} \\ \hline
-            The Oxford RobotCar & CRL & R, SN, F & 4700 & 2020 & 317 & \cite{barnes2020oxford} \\ \hline
+            Oxford RobotCar & CRL & R, SN, F & 4700 & 2020 & 317 & \cite{barnes2020oxford} \\ \hline
             EU Long-term & CRL & SN, R, O, N & NA & 2020 & 72 & \cite{yan2020eu} \\ \hline
             RADIATE & CRL & F, SN, R, O, SL, N & NA & 2021 & 132 & \cite{sheeny2021radiate} \\ \hline
             K-Radar & CRL & F, R, SN & 13000 & 2022 & 15 & \cite{Paek2022Jun} \\ \hline
@@ -110,7 +110,7 @@
             \begin{minipage}{0.45\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/dense/test_vehicle_setup.png}
-                \caption{Test vehicle setup \cite{bijelic2020seeing}}
+                \caption{Test vehicle setup (Image source \cite{bijelic2020seeing})}
                 \label{fig:dense_test_vehicle_setup}
             \end{minipage}
             \hfill
@@ -136,29 +136,29 @@
             % Row 1
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/2018-02-05_12-07-39_00300.png}\hfill
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_lidar.png}\hfill
-            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_radar.png}
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/day/clean_radar_annotated.png}
           
             % Row 2
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/2018-10-08_08-10-40_02160.png}\hfill
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_lidar.png}\hfill
-            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_radar.png}
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/light_fog/light_fog_radar_ann.png}
           
             % % Row 3
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/2018-10-29_15-02-37_00580.png}\hfill
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_lidar.png}\hfill
-            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_radar.png}
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/dense_fog/dense_radar_ann.png}
           
             % % Row 4
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/2018-02-07_11-56-57_00520.png}\hfill
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_lidar.png}\hfill
-            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_radar.png}
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/snow/snow_radar_ann.png}
           
             % % Row 5
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/2018-02-09_18-50-50_00300.png}\hfill
             \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_lidar.png}\hfill
-            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_radar.png}
+            \includegraphics[width=0.3\textwidth]{images/datasets/dense/samples/night/night_radar_ann.png}
           
-            \caption{Random samples from the DENSE dataset, where 1st col is Camera with ground truth, 2nd is LiDAR, 3rd is Radar (1st Row: Day, 2nd Row: Light Fog, 3rd Row: Dense Fog, 4th Row: Snow, 5th Row: Night). Note: best viewed in zoomed-in view.}
+            \caption{Random samples from the DENSE dataset, where 1st column is Camera with ground truth, 2nd is LiDAR, 3rd is Radar (1st Row: Day, 2nd Row: Light Fog, 3rd Row: Dense Fog, 4th Row: Snow, 5th Row: Night). Note: Radar sparse points are highlighted with a red ellipse. Best viewed in zoomed-in view.}
             \label{fig:dense_samples}
           \end{figure}
           
@@ -200,7 +200,7 @@
             \begin{minipage}{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{images/datasets/nuscenes/test_vehicle_setup.png}
-                \caption{Test vehicle setup \cite{caesar2020nuscenes}}
+                \caption{Test vehicle setup (Image source \cite{caesar2020nuscenes})}
                 \label{fig:nuscenes_test_vehicle_setup}
             \end{minipage}
             \hfill
@@ -269,7 +269,7 @@
 
         \begin{table}[h!]
             \centering
-            \caption{Comparison of datasets features}
+            \caption{Comparison of datasets features (Table adapted from \cite{bijelic2020seeing})}
             \begin{tabular}{|l|c|c|}
               \hline
               \textbf{Dataset} & \textbf{NuScenes \cite{caesar2020nuscenes}} & \textbf{DENSE \cite{bijelic2020seeing}} \\
@@ -354,7 +354,7 @@
 
     \begin{table}[!ht]
         \centering
-        \caption{COCO metrics \cite{lin2014microsoft}}
+        \caption{COCO metrics (Table adapted from \cite{lin2014microsoft})}
         \begin{tabular}{ll}
         \hline
             \textbf{Metric} & \textbf{Description} \\ \hline
