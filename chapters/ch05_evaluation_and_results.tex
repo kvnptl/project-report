@@ -11,6 +11,15 @@
 
     Describe your experimental setup in detail.
 
+
+    % For SAF FCOS
+        %  Use this in experiment section
+        % - Training Implementation
+
+        %     - It uses SGD with momentum and weight decay, and train for 12 epochs. The official implementation uses batch size of 16 with LR of 0.01 but due to computational limitations, we have used LR 0.001 with reduced batch size 8. It uses warmup scheme for the first few iterations of training.
+
+        %     The training process involves Stochastic Gradient Descent (SGD) with momentum and weight decay, spanning 12 epochs. While the official implementation opts for a batch size of 16 and a learning rate of 0.01, computational constraints led us to use a reduced batch size of 8 and a learning rate of 0.001. A warmup scheme is employed during the initial iterations of training.
+
     \section{Results}
 
     Describe the results of your experiments in detail.

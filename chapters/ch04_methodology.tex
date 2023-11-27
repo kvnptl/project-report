@@ -303,6 +303,7 @@
     % \section{Experimental Design}
 
     \section{Evaluation Metrics}
+    \label{sec:metrics}
 
     % Points:
     % - Metrics are required to be able to compare the performance of different methods
@@ -330,23 +331,23 @@
     \textbf{Average Precision (AP)} is a pivotal metric in object detection tasks, offering a comprehensive measure of a model's precision and recall at various thresholds. A common misconception is that AP represents the average of Precision values, which is not accurate. A more precise interpretation of AP is that it reflects the area under the Precision-Recall curve. Precision and recall are fundamental concepts in this context, defined as follows:
 
     \textbf{Precision (P)} is the ratio of correctly predicted positive observations to the total predicted positive observations, formulated as 
-    \[
-    P = \frac{TP}{TP + FP},
-    \]
+    \begin{equation}
+        P = \frac{TP}{TP + FP},
+    \end{equation}
     where \( TP \) is the number of true positives and \( FP \) is the number of false positives.
 
     \textbf{Recall (R)} is the ratio of correctly predicted positive observations to all observations in the actual class, given by 
-    \[
-    R = \frac{TP}{TP + FN},
-    \]
+    \begin{equation}
+        R = \frac{TP}{TP + FN},
+    \end{equation}
     with \( FN \) representing the number of false negatives.
 
     In addition to these metrics, the COCO benchmark categorizes objects based on their size: small, medium, and large. Specifically, an object is considered \textit{small} if its bounding box area is less than \( 32^2 \) pixels, allowing for more detailed assessment of model performance across different object scales.
 
     AP can be calculated in numerous ways, but in the realm of object detection, it is typically computed class-wise and then averaged over all classes, yielding the mean Average Precision (mAP). In this project, we adopt the COCO style benchmarking, where mAP is referred to as AP. The COCO AP is calculated over a range of Intersection over Union (IoU) thresholds and is often denoted as \( AP@[0.5:0.05:0.95] \), indicating multiple IoU thresholds from 0.5 to 0.95 with a step size of 0.05. The formula for calculating COCO AP is defined as:
-    \[
-    AP@[0.5:0.05:0.95] = \frac{AP_{0.5} + AP_{0.55} + \ldots + AP_{0.95}}{10},
-    \]
+    \begin{equation}
+        AP@[0.5:0.05:0.95] = \frac{AP_{0.5} + AP_{0.55} + \ldots + AP_{0.95}}{10},
+    \end{equation}
     where \( AP_{0.5} \) is the area under the Precision-Recall curve for IoU \(\geq 0.5\). 
 
     
@@ -390,26 +391,249 @@
 
     \section{Selected Methods}
 
-    - majority of the deep multimodal sensor fusion architectures are based on two modalities which are camera and lidar. Mostly because of the prevalent availability of camera and lidar based datasets.
-    - There exists a very few methods that combines all three modalities, camera, lidar, and radar.
-    - As this project focuses on 2D object detection, so the methods are selected accordingly.
-    - Another objective of the research is to explore tightly-coupled fusion architectures in comparison to early and middle fusion architectures.
-    - The methods are chosen based on how many multiple modalities it can handle in the architecture, and type of fusion architecture.
-        - For this project minimum number of modalities is 2 and it should be feature or tightly-coupled fusion architectures.
+    % - majority of the deep multimodal sensor fusion architectures are based on two modalities which are camera and lidar. Mostly because of the prevalent availability of camera and lidar based datasets.
+    % - There exists a very few methods that combines all three modalities, camera, lidar, and radar.
+    % - As this project focuses on 2D object detection, so the methods are selected accordingly.
+    % - Another objective of the research is to explore tightly-coupled fusion architectures in comparison to early and middle fusion architectures.
+    % - The methods are chosen based on how many multiple modalities it can handle in the architecture, and type of fusion architecture.
+    %     - For this project minimum number of modalities is 2 and it should be feature or tightly-coupled fusion architectures.
+    % - The 3 selected methods for this project are listed below in Table \ref{tab:selected_methods}.
+
+    In the field of deep multimodal sensor fusion, most architectures focus on combining two key modalities: camera and lidar. This trend is largely because camera and lidar data are readily available. However, it's less common to find methods that use all three modalities: camera, lidar, and radar. This project, which aims at 2D object detection, has carefully chosen methods that are best suited for this area.
+
+    This research also looks into tightly-coupled fusion architectures, a different approach compared to the more typical early and middle/feature fusion architectures. The methods selected for this project had to meet two main criteria: they must be able to handle at least two modalities and must use either feature fusion or tightly-coupled fusion techniques. We have identified three methods that meet these criteria for in-depth analysis in this study, as shown in Table \ref{tab:selected_methods}. All methods follow PyTorch framework. These methods are at the forefront of multimodal sensor fusion, designed to work in adverse weather conditions. The following sections provide a detailed overview of each method, highlighting its key features and contributions to the field.
+
+        \begin{table}[h]
+            \centering
+            \caption{Selected methods. Sensors†: C-R-L denote Camera, Radar, and LiDAR sensors, respectively}
+            \begin{tabular}{|l|l|l|l|l|l|l|}
+            \hline
+            \textbf{Name} & \textbf{Sensors†} & \textbf{Dataset Used} & \textbf{Fusion Architecture} & \textbf{Anchors Free?} & \textbf{Year} & \textbf{Ref.}\\ \hline
+            \textbf{SAF-FCOS} & CR & nuScenes & Middle/Feature-level & Yes & 2020 & \cite{chang2020spatial} \\ \hline
+            \textbf{HRFuser} & CRL & nuScenes, DENSE & Tightly-coupled & No & 2023 & \cite{broedermann2022hrfuser} \\ \hline
+            \textbf{MT-DETR} & CRL & DENSE & Tightly-coupled & Yes & 2023 & \cite{chu2023mt} \\ \hline
+            \end{tabular}
+            \label{tab:selected_methods}
+        \end{table}
+
     
 
     \subsection{Method 1: SAF-FCOS}
 
     % My chosen method 1, SAF-FCOS
-    The paper by Chang et al. \cite{chang2020spatial} introduces a novel method for enhancing obstacle detection in autonomous driving systems. This method, called spatial attention fusion (SAF), effectively integrates data from two modalities, namely millimeter-wave (mmWave) radar and camera sensors. SAF addresses the sparsity of radar points by generating an attention weight matrix that distinctively fuses vision features, diverging from traditional concatenation or element-wise addition fusion methods. This method can be integrated into the feature-extraction stage of existing deep learning object detection frameworks, facilitating end-to-end training. The method follows the middle or feature fusion approach in the paper, as it extracts features from both modalities and fuses them in the middle layer. Additionally, the paper presents a generation model that converts radar points into images for neural network training. This type of image projection called radar imagery. The paper's findings indicate that this fusion approach significantly improves performance on nuScenes \cite{caesar2020nuscenes} dataset.
+    \paragraph{Overview}
+    
+    The paper by Chang et al. \cite{chang2020spatial} introduces a novel method for enhancing obstacle detection in autonomous driving systems. This method, called spatial attention fusion (SAF), effectively integrates data from two modalities, namely millimeter-wave (mmWave) radar and camera sensors. SAF addresses the sparsity of radar points by generating an attention weight matrix that distinctively fuses vision features, diverging from traditional concatenation or element-wise addition fusion methods. This method can be integrated into the feature-extraction stage of existing deep learning object detection frameworks, facilitating end-to-end training. The method follows the middle or feature fusion approach in the paper, as it extracts features from both modalities and fuses them in the middle layer. 
+    % Additionally, the paper presents a generation model that converts radar points into images for neural network training. This type of image projection called radar imagery. The paper's findings indicate that this fusion approach significantly improves performance on nuScenes \cite{caesar2020nuscenes} dataset.
 
-    Loss function:
-    \[
-        L(c_i, t_i) = \frac{1}{N_{\text{pos}}} \sum_{i} L_{\text{cls}}(c_i, c_i^*) + \frac{\lambda}{N_{\text{pos}}} \sum_{i} \mathds{1}_{c_i^*>0}L_{\text{reg}}(t_i, t_i^*)
-    \]
+    % - In this paper, the authors introduce a new spatial attention fusion (SAF) method for obstacle detection using mmWave radar and vision sensor, where the sparsity of radar points are considered in the proposed SAF.
+    % - Problem with element-wise Operations
+    %     - The feature-level fusion scheme \cite{chadwick2019distant} was the element-wise add operation between radar feature map and vision feature map. However, the element-wise add operation was not suitable for heterogeneous feature maps, which was confirmed in our experiments.
+
+    One of the critical challenges identified in middle fusion schemes, such as the element-wise add operation between radar and vision feature maps, was their inadequacy in handling heterogeneous data \cite{chadwick2019distant}. Experiments revealed that such operations were unsuitable, primarily due to the distinct characteristics of radar and vision feature maps. The SAF-FCOS framework, built upon the Fully Convolutional One-Stage (FCOS) object detection system \cite{tian2019fcos}, provides a solution to this challenge.
+    
+    
+    % - 2D GT annotations
+    %     - The labeled bounding boxes are 3D, and they are not proper for the 2D detection framework FCOS \cite{tian2019fcos}, which is used as detection backbone in this paper. As a result, we should convert the 3D labeled bounding boxes to 2D annotations. Moreover, all generated 2D annotations by FCOS are roughly examined and adjusted by human.
+    %     - For the 2D annotations of obstacles, we do not use the tool provided by nuScenes dataset \cite{caesar2020nuscenes} to convert the 3D bounding boxes to 2D annotations. Because the 2D annotations converted by 3D annotations are not well labeled, which can be noticed in the Figure 3. Instead, we generate the 2D annotations by enhanced version of FCOS with the ResNet-101. In addition, all generated 2D annotations are roughly examined and adjusted by us.
+    %     - The paper uses only front camera from nuScenes dataset.
+    %     - As described in the Figure \ref{fig:saffcos_annotations}, the reason why it uses a custom method to create 2D annotations. They used it for entire the entire dataset in nuScenes (only front camera).
+
+
+    % As nuScenes annotations are available only in the 3D bounding box format, we need to convert the 3D annotations to 2D annotations. The method uses an enhanced version of FCOS integrated with ResNet-101 to generate 2D annotations and then later examined and adjusted with hand. The method only focuses on front camera from nuScenes dataset. The annotations samples are displayed in Figure \ref{fig:saffcos_annotations}, which shows challenges with typical 3D to 2D conversion with custom approach.
+
+    % \textbf{2D annotations}: 
+    \paragraph{2D Annotations}
+
+    The nuScenes dataset provides annotations exclusively in a 3D bounding box format, necessitating a conversion to 2D for compatibility with FCOS-based detection framework. This research utilizes an enhanced version of the Fully Convolutional One-Stage (FCOS) detector \cite{tian2019fcos}, augmented with ResNet-101 \cite{he2016deep}, to facilitate the generation of 2D annotations. These annotations undergo a meticulous manual examination and adjustment process to ensure accuracy and reliability. The effectiveness of this custom approach is illustrated in Figure \ref{fig:saffcos_annotations}, which depicts the comparative quality of annotations derived through this refined methodology \cite{chang2020spatial}. The results are evaluated using the COCO benchmark, as detailed in Section~\ref{sec:metrics}.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\textwidth]{images/methods/saf_fcos/annotations of front camera in nuScenes dataset.png}
+        \caption{2D annotations comparison of front camera in nuScenes dataset. Top row: the original annotations provided by the nuScenes, which are 3D bounding boxes colored by black. Middle row: the generated 2D annotations by converting the 3D bounding boxes. Bottom row: the 2D annotations generated by SAF-FCOS method. (Image source \cite{chang2020spatial})}
+        \label{fig:saffcos_annotations}
+    \end{figure}
+
+    % - Limited classes
+    % - we only keep the generated 2D annotations with class labels of bicycle, car, motorcycle, bus, train, truck, which are collectively identified as obstacle category. As a result, there are six classes of objects are treated as obstacles in road.
+    % The method does not include pedestrian because "As for pedestrian, we do not take them into account for the reason that the radar signal of pedestrian is poor."
+
+    % The method limits the classes to only big obstacles such as bicycles, cars, motorcycles, buses, trains, and trucks. It treats all classes as a single class named vehicle. The authors didn't include pedestrian as the radar signal for pedestrian is very poor in the nuScenes dataset.
+
+
+    % The method narrows its focus to larger obstacles, specifically bicycles, cars, motorcycles, buses, trains, and trucks. These are collectively treated under a unified category named `vehicle', simplifying the classification process. Notably, pedestrians are excluded from this categorization due to the inadequacy of radar signals for pedestrian detection in the nuScenes dataset. It is focused on the front camera data from the nuScenes dataset. Dataset split is shown in Figure \ref{fig:saffcos_data_split}.
+
+    % \textbf{Dataset split}: 
+    \paragraph{Dataset Split}
+    The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.5\textwidth]{images/methods/saf_fcos/data_split.pdf}
+        \caption{Data split of nuScenes dataset. Total samples: 40157. Note: this is a custom dataset split chosen by the authors.}
+        \label{fig:saffcos_data_split}
+    \end{figure}
+
+
+
+    % - Main contributions or Key Points about this method
+    %    - A spatial attention fusion (SAF) block to integrate radar data and vision data is proposed, which is built on the FCOS vision detection framework; 
+    %     - We generate the 2D annotations of nuScenes dataset for model training and inference; 
+    %     - An improved generation model to transform the radar information to an RGB image is proposed, which is used as the input data of our proposed SAF block; 
+    %     - A lot of experiments to select the optimal hyperparameters involved in the radar image generation model are carried out;
+    % - Radar imagery
+    %     - Process of translating radar data into visual representations.
+    %     - This describes the its unique process to create a radar image which is important for the neural network model.
+    %     - First, the radar points in 3D radar coordinate are transformed into camera coordinate of front camera by the function ${X_i = X_r R + T}$. The input data is ${X_r}$, which represents the 3D position information in radar coordinate. Using the calibration matrixes, ${R}$ (rotation matrix) and ${T}$ (translation matrix), we can get the radar point location Xi in the camera coordinate. After the transformation, we convert the depth ${d}$, longitudinal velocity ${v_x}$ and lateral velocity ${v_y}$ to a real pixel value in different channels (R,G,B). The equation is in the image attached.
+
+    %     \begin{equation}
+    %         R = \frac{128d}{250} + {127}, \quad G = \frac{128(v_x + 20)}{40} + {127}, \quad B = \frac{128(v_y + 20)}{40} + {127}
+    %     \end{equation}
+            
+    %     In this context, ``rendering'' refers to the way individual radar data points are drawn or represented in the image.
+
+    %     \begin{itemize}
+    %         \item Here's an explanation of the two cases depicted in Figure 5:
+    %         \begin{itemize}
+    %             \item \textbf{Rendering Case A}: When two radar points, \( M \) and \( N \), are far apart on the image plane (specifically, if the distance \( l \) between them is more than two times the rendering radius \( r \)), they are rendered independently with no overlap. This means that each radar point is visualized as a circle (or some shape) with radius \( r \), and these circles do not touch or intersect because the points are sufficiently far apart.
+    %             \item \textbf{Rendering Case B}: When two radar points, \( M \) and \( N \), are closer to each other on the image plane (the distance \( l \) between them is less than two times the rendering radius \( r \)), their rendered shapes will overlap if we still use the same rendering radius \( r \) for both. In scenarios where there is overlap, a rule is applied based on the ``nearer the larger'' principle. This means that if radar point \( M \) is closer to the radar sensor (has a smaller depth value \( d_M \) compared to \( d_N \) of point \( N \)), it is rendered in such a way that it appears larger or more prominent in the overlap area. This is visually depicted as point \( M \) covering more area in the overlap region than point \( N \).
+    %         \end{itemize}
+    %     \end{itemize}
+
+    % \paragraph*{Radar imagery}
+
+    % Process of translating radar data into visual representations. The Figure \ref{fig:saffcos_radar_image_generation_process} describes its process to create a radar image which is then fed  to the neural network model. First, the radar points in 3D radar coordinate are transformed into camera coordinate of front camera by the function ${X_i = X_r R + T}$. The input data is ${X_r}$, which represents the 3D position information in radar coordinate. Using the calibration matrixes, ${R}$ (rotation matrix) and ${T}$ (translation matrix), we can get the radar point location Xi in the camera coordinate. After the transformation, we convert the depth ${d}$, longitudinal velocity ${v_x}$ and lateral velocity ${v_y}$ to a real pixel value in different channels (R,G,B). The equation is described below.
+
+    % \begin{figure}[h]
+    %     \centering
+    %     \includegraphics[width=0.9\textwidth]{images/methods/saf_fcos/the_radar_image_generation_process.png}
+    %     \caption{Radar image generation model (Image source \cite{chang2020spatial}).}
+    %     \label{fig:saffcos_radar_image_generation_process}
+    % \end{figure}
+
+    % \begin{equation}
+    %     R = \frac{128d}{250} + {127}, \quad G = \frac{128(v_x + 20)}{40} + {127}, \quad B = \frac{128(v_y + 20)}{40} + {127}
+    % \end{equation}
+
+    % In this context, ``rendering'' refers to the way individual radar data points are drawn or represented in the image.
+    % \textbf{Rendering Case A}: When two radar points, \( M \) and \( N \), are far apart on the image plane (specifically, if the distance \( l \) between them is more than two times the rendering radius \( r \)), they are rendered independently with no overlap. This means that each radar point is visualized as a circle (or some shape) with radius \( r \), and these circles do not touch or intersect because the points are sufficiently far apart.
+
+    % \begin{figure}[h]
+    %     \centering
+    %     \includegraphics[width=0.9\textwidth]{images/methods/saf_fcos/radar image rendering condition.png}
+    %     \caption{Radar image rendering condition (Image source \cite{chang2020spatial}).}
+    %     \label{fig:saffcos_radar_image_generation_process}
+    % \end{figure}
+
+    % \textbf{Rendering Case B}: When two radar points, \( M \) and \( N \), are closer to each other on the image plane (the distance \( l \) between them is less than two times the rendering radius \( r \)), their rendered shapes will overlap if we still use the same rendering radius \( r \) for both. In scenarios where there is overlap, a rule is applied based on the ``nearer the larger'' principle. This means that if radar point \( M \) is closer to the radar sensor (has a smaller depth value \( d_M \) compared to \( d_N \) of point \( N \)), it is rendered in such a way that it appears larger or more prominent in the overlap area. This is visually depicted as point \( M \) covering more area in the overlap region than point \( N \).
+
+    \paragraph*{Radar Imagery}
+
+    The process of translating radar data into visual representations is an intricate one, as depicted in Figure \ref{fig:saffcos_radar_image_generation_process}. It involves transforming 3D radar coordinates into camera coordinates and then rendering the radar data points in an image format suitable for neural network training.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/methods/saf_fcos/the_radar_image_generation_process.png}
+        \caption{Radar image generation model (Image source \cite{chang2020spatial}).}
+        \label{fig:saffcos_radar_image_generation_process}
+    \end{figure}
+
+    Initially, the radar points in 3D radar coordinates (denoted as ${X_r}$) are transformed into the front camera's coordinate system using a transformation function, ${X_i = X_r R + T}$. Here, ${R}$ represents the rotation matrix and ${T}$ the translation matrix. This transformation allows us to locate the radar point (${X_i}$) in the camera coordinate system \cite{chang2020spatial}.
+
+    % keep one line empty in latex
+    \vspace{\baselineskip}
+    \vspace{\baselineskip}
+    \vspace{\baselineskip}
+
+    Following this, depth (${d}$), longitudinal velocity (${v_x}$), and lateral velocity (${v_y}$) are converted into real pixel values in different color channels (Red, Green, Blue) using the equation:
+
+    \begin{equation}
+        R = \frac{128d}{250} + {127}, \quad G = \frac{128(v_x + 20)}{40} + {127}, \quad B = \frac{128(v_y + 20)}{40} + {127}
+    \end{equation}
 
     
 
+    The term ``rendering'' in the below context refers to how individual radar data points are visually represented in the image. There are two primary cases to consider:
+
+    \textbf{Rendering Case A}: When two radar points, \( M \) and \( N \), are significantly separated on the image plane (specifically, if the distance \( l \) between them exceeds twice the rendering radius \( r \)), they are rendered independently without overlap. Each radar point is visualized as a circle with radius \( r \), ensuring no intersection between the circles due to sufficient distance \cite{chang2020spatial}.
+
+    \textbf{Rendering Case B}: Conversely, when the distance \( l \) between two radar points, \( M \) and \( N \), is less than twice the rendering radius \( r \), their rendered shapes overlap. In such instances, the ``nearer the larger'' principle is applied. If radar point \( M \) is nearer to the sensor (indicated by a smaller depth value \( d_M \) than \( d_N \) of point \( N \)), it is rendered larger or more prominently in the overlap area. This results in point \( M \) covering a more significant area in the overlap region compared to point \( N \) \cite{chang2020spatial}.
+
+    Both cases are illustrated in Figure \ref{fig:saffcos_radar_image_rendering_condition}.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/methods/saf_fcos/radar image rendering condition.png}
+        \caption{Radar image rendering condition (Image source \cite{chang2020spatial}).}
+        \label{fig:saffcos_radar_image_rendering_condition}
+    \end{figure}
+
+        % - architecture
+        %     The method is built on the FCOS detection framework as detection backbone for the fusion of radar and vision sensor. The proposed fusion block, spatial attention fusion (SAF) to learn the relationship between radar data and vision data, is highlighted in the network architecture in Figure \ref{fig:saffcos_architecture}. The middle fusion detection model is based on FCOS framework \cite{tian2019fcos}. It mainly consists five parts: Radar Branch (feature-extraction model of radar image), Vision Branch (feature-extraction model of vision image), SAF block, Fusion Branch (feature extraction based on fused feature maps), and RetinaNet \cite{tian2019fcos} (the FCOS prediction head is used).
+
+        %     The radar branch and vision image are a modified ResNet-50 \cite{he2016deep}. It has two convolution blocks: Stem and Block1. The Stem is the original stem module of ResNet-50 to process the input data. The Block1 is similar to the first stage in ResNet-50, but it has only a residual block compared to 3 residual blocks in ResNet-50.
+            
+        %     For the SAF block, it encodes the radar image’s feature maps to a spatial attention weight matrix. Then, the feature maps extracted by vision sensor are re-weighted by the spatial attention matrix along all channels. After that, the fused feature maps from radar and vision sensors are extracted by Block2, Block3 and Block4 in Fusion Branch to get multi-scale feature maps, where all of the blocks are the same stages in ResNet-50 backbone, which is used in the FCOS \cite{tian2019fcos} framework.
+        %     The proposed SAF consists of three groups of convolution layers to extract spatial attention matrix. The configurations in layer “Conv 1×1” mean kernel size 1 × 1 × 256 × 1, stride (1, 1), padding [0, 0]. As for the layers of “Conv 3×3” and “Conv 5×5”, the configurations are {3 × 3 × 256 × 1, (1, 1), [1, 1]} and {5 × 5 × 256 × 1, (1, 1), [2, 2]}, respectively. Considering the configurations in the three convolution layers, the number of channel in the radar feature map is reduced to 1, while the output attention matrix has the same height and width as vision feature map. To introduce three different kinds of convolution layers, we hope the generated attention matrix has multi-scale receptive fields to learn the radar points’ representation and the relationship of surroundings, which is used as reasonable attention map to control or enhance the information flow within the vision sensor.
+        %     - WHY SAF block
+        %         - For other fusion blocks shown in Figure \ref{fig:saffcos_different_fusion_blocks_for_feature_fusion}, the add fusion and concatenation fusion are first evaluated in [11]. After that, the work of RVNet [\cite{john2019rvnet} only makes experiments using concatenation fusion, while the add fusion is used in the work of \cite{nobis2019deep}. We think that the fusion blocks used in the three mentioned methods are not the most suitable for feature fusion, because the radar features and vision features are not homogeneous, and the characteristics of radar signal are ignored.
+        %         - For the fusion blocks add, concatenation and multiply, we think that they are not well-designed fusion blocks for radar and vision sensor.
+            
+        %     The method uses radar points as gate cells to control the information flow extracted from vision sensor. With this, the information flow of small objects and blurred objects can be enhanced, to increase the recall rate in detection. The areas without radar points are also considered unlike early or data fusion.
+
+        % - The Vision Branch and Fusion Branch used in SAF-FCOS are first pre-trained on the ImageNet \cite{russakovsky2015imagenet} dataset and all the blocks are finetuned on the nuScenes \cite{caesar2020nuscenes} dataset. The Vision branch is frozen and not updated during the training step. 
+        % - Moreover, the other blocks are initialized with Xavier initialization which is default in the PyTorch framework, except the weights of SAF is initialized by MSRA initialization method \cite{he2015delving}.
+
+    \paragraph*{Model Architecture}
+
+    A significant aspect of this architecture is the introduction of the Spatial Attention Fusion (SAF) block, designed to comprehend the relationship between radar and vision data. This element is prominently featured in the network architecture, as illustrated in Figure \ref{fig:saffcos_model_architecture}. The middle fusion detection model is structured around the FCOS framework \cite{tian2019fcos}, comprising five primary components: the Radar Branch, Vision Branch, SAF block, Fusion Branch, and RetinaNet \cite{tian2019fcos}. The FCOS prediction head is utilized here to make the architecture anchor-free.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/methods/saf_fcos/model_architecture.pdf}
+        \caption{SAF-FCOS model architecture (Image adapted \cite{chang2020spatial}).}
+        \label{fig:saffcos_model_architecture}
+    \end{figure}                
+
+    Both the Radar and Vision Branches employ a modified version of the ResNet-50 \cite{he2016deep} model, consisting of two convolution blocks, namely Stem and Block1. The Stem is the original stem module of ResNet-50, responsible for processing the input data. In contrast, Block1, mirroring the first stage in ResNet-50, differs by having only a single residual block instead of the three found in the standard ResNet-50 structure.
+
+    The Vision Branch and Fusion Branch used in SAF-FCOS are initially pre-trained on the ImageNet \cite{russakovsky2015imagenet} dataset. Subsequently, all components are fine-tuned on the nuScenes \cite{caesar2020nuscenes} dataset. During the training phase, the Vision Branch is frozen and not updated. Additionally, Xavier initialization, which is the default in the PyTorch framework, is used for initializing the other blocks, except for the SAF block, which is initialized using the MSRA method \cite{he2015delving}.
+
+    The SAF block functions by encoding the radar image's feature maps into a spatial attention weight matrix. This matrix is then applied to re-weight the feature maps extracted by the vision sensor across all channels. Subsequently, the fused feature maps from both radar and vision sensors are processed by Block2, Block3, and Block4 in the Fusion Branch. These blocks are identical to the corresponding stages in the ResNet-50 backbone used in the FCOS \cite{tian2019fcos} framework. The SAF block is composed of three groups of convolution layers designed to extract the spatial attention matrix. The layer configurations include `Conv 1×1' with kernel size 1 × 1 × 256 × 1, stride (1, 1), and padding [0, 0]. The `Conv 3×3' and `Conv 5×5' layers have configurations of \{3 × 3 × 256 × 1, (1, 1), [1, 1]\} and \{5 × 5 × 256 × 1, (1, 1), [2, 2]\}, respectively. The design of these layers aims to generate an attention matrix with multi-scale receptive fields, thus facilitating the learning of radar points' representation and their environmental relationships. This matrix serves as a control mechanism to enhance the information flow within the vision sensor.
+
+    The rationale behind the SAF block stems from the inadequacy of other fusion blocks, such as add fusion and concatenation fusion in Figure \ref{fig:saffcos_different_fusion_blocks_for_feature_fusion}, in effectively integrating radar and vision features. Previous studies, including the work of RVNet \cite{john2019rvnet} and Nobis et al. \cite{nobis2019deep}, have experimented with these methods. However, these fusion techniques do not adequately address the non-homogeneous nature of radar and vision features, often neglecting the unique characteristics of radar signals. The SAF block, in contrast, utilizes radar points as gate cells to control the information flow from the vision sensor, thereby enhancing the detection of small or blurred objects and improving the recall rate. This approach differs from early or data fusion methods by considering areas devoid of radar points, thus offering a more comprehensive and effective fusion strategy.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.1\textwidth]{images/methods/saf_fcos/different_fusion_blocks_for_feature_fusion.png}
+        \caption{Different fusion blocks for feature fusion. From the left to right: Multiply Fusion (MUL) Block, Element-Wise Add Fusion (ADD) Block, Concatenation Fusion (CAT) Block and Spatial Attention Fusion (SAF) Block (Image source \cite{chang2020spatial}).}
+        \label{fig:saffcos_different_fusion_blocks_for_feature_fusion}
+    \end{figure}
+
+        % - Loss function
+        %     - where ci is the predicted class label and ci∗ is the ground-truth label for a specific location i in a feature map. In addition, ti is the predicted bounding box, which is assigned a ground-truth bounding box ti∗ . In addition, the Lcls is focal loss as in \cite{lin2017focal} and Lreg is the IOU loss as in UnitBox \cite{yu2016unitbox}. Npos denotes the number of positive samples and λ being 1 in this paper is the balance weight for Lreg . 1ci∗ >0 is the indicator function, being 1 if ci∗ > 0 and 0 otherwise.
+        %     - The loss function is defined as:
+        %     \begin{equation}
+        %         L(c_i, t_i) = \frac{1}{N_{\text{pos}}} \sum_{i} L_{\text{cls}}(c_i, c_i^*) + \frac{\lambda}{N_{\text{pos}}} \sum_{i} \mathds{1}_{c_i^*>0}L_{\text{reg}}(t_i, t_i^*)
+        %     \end{equation}
+
+    % \paragraph*{Loss Function}
+
+    % The loss function for the model incorporates two main components: the predicted class label \( c_i \) and the corresponding ground-truth label \( c_i^* \) for each spatial location \( i \) on the feature map. Additionally, the model predicts bounding box coordinates \( t_i \), which are compared against the ground-truth bounding box coordinates \( t_i^* \). The classification loss component, \( L_{\text{cls}} \), utilizes the focal loss as outlined in \cite{lin2017focal}, while the regression loss, \( L_{\text{reg}} \), adopts the IOU loss from UnitBox \cite{yu2016unitbox}. The variable \( N_{\text{pos}} \) represents the count of positive samples. In this work, the balance weight for \( L_{\text{reg}} \), denoted by \( \lambda \), is set to 1. The indicator function \( \mathds{1}_{c_i^*>0} \) equals 1 when \( c_i^* > 0 \) and 0 otherwise.
+
+    % The computation of the loss function is formalized as follows:
+    % \begin{equation}
+    %     L(c_i, t_i) = \frac{1}{N_{\text{pos}}} \left( \sum_{i} L_{\text{cls}}(c_i, c_i^*) + \lambda \sum_{i} \mathds{1}_{c_i^*>0}L_{\text{reg}}(t_i, t_i^*) \right)
+    % \end{equation}
+
+    \paragraph*{Loss Function}
+
+    The loss function of the model is formulated with two principal components: the classification loss and the bounding box regression loss. For each spatial location \( i \) on the feature map, the classification loss compares the predicted class label \( c_i \) with the ground-truth label \( c_i^* \). Simultaneously, the bounding box regression loss measures the discrepancy between the predicted bounding box coordinates \( t_i \) and the ground-truth bounding box \( t_i^* \). The classification loss, \( L_{\text{cls}} \), is computed using the focal loss method as detailed in \cite{lin2017focal}, while the bounding box regression loss, \( L_{\text{reg}} \), employs the IOU loss as per the UnitBox approach \cite{yu2016unitbox}. Here, \( N_{\text{pos}} \) signifies the number of positive samples. In this work, the balancing weight \( \lambda \) for \( L_{\text{reg}} \) is set to 1. The indicator function \( \mathds{1}_{c_i^*>0} \) is 1 if \( c_i^* > 0 \), and 0 otherwise \cite{chang2020spatial}.
+
+    The computation of the loss function is formalized as follows:
+    \begin{equation}
+        L(c_i, t_i) = \frac{1}{N_{\text{pos}}} \left( \sum_{i} L_{\text{cls}}(c_i, c_i^*) + \lambda \sum_{i} \mathds{1}_{c_i^*>0} L_{\text{reg}}(t_i, t_i^*) \right)
+    \end{equation}
 
 
     \subsection{Method 2: HRFuser}
