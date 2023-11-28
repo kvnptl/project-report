@@ -401,15 +401,15 @@
 
     In the field of deep multimodal sensor fusion, most architectures focus on combining two key modalities: camera and lidar. This trend is largely because camera and lidar data are readily available. However, it's less common to find methods that use all three modalities: camera, lidar, and radar. This project, which aims at 2D object detection, has carefully chosen methods that are best suited for this area.
 
-    This research also looks into tightly-coupled fusion architectures, a different approach compared to the more typical early and middle/feature fusion architectures. The methods selected for this project had to meet two main criteria: they must be able to handle at least two modalities and must use either feature fusion or tightly-coupled fusion techniques. We have identified three methods that meet these criteria for in-depth analysis in this study, as shown in Table \ref{tab:selected_methods}. All methods follow PyTorch framework. These methods are at the forefront of multimodal sensor fusion, designed to work in adverse weather conditions. The following sections provide a detailed overview of each method, highlighting its key features and contributions to the field.
+    This research also looks into tightly-coupled fusion architectures, a different approach compared to the more typical early and middle/feature fusion architectures. The methods selected for this project had to meet two main criteria: they must be able to handle at least two modalities and must use either feature fusion or tightly-coupled fusion techniques. We have identified three methods that meet these criteria for in-depth analysis in this study, as shown in Table \ref{tab:selected_methods}. Note that some literature also refers to middle-level fusion as feature fusion. All methods follow PyTorch framework. These methods are at the forefront of multimodal sensor fusion, designed to work in adverse weather conditions. The following sections provide a detailed overview of each method, highlighting its key features and contributions to the field.
 
         \begin{table}[h]
             \centering
             \caption{Selected methods. Sensors†: C-R-L denote Camera, Radar, and LiDAR sensors, respectively}
             \begin{tabular}{|l|l|l|l|l|l|l|}
             \hline
-            \textbf{Name} & \textbf{Sensors†} & \textbf{Dataset Used} & \textbf{Fusion Architecture} & \textbf{Anchors Free?} & \textbf{Year} & \textbf{Ref.}\\ \hline
-            \textbf{SAF-FCOS} & CR & nuScenes & Middle/Feature-level & Yes & 2020 & \cite{chang2020spatial} \\ \hline
+            \textbf{Name} & \textbf{Sensors†} & \textbf{Dataset Used} & \textbf{Fusion Arch.} & \textbf{Anchors Free?} & \textbf{Year} & \textbf{Ref.}\\ \hline
+            \textbf{SAF-FCOS} & CR & nuScenes & Middle-level & Yes & 2020 & \cite{chang2020spatial} \\ \hline
             \textbf{HRFuser} & CRL & nuScenes, DENSE & Tightly-coupled & No & 2023 & \cite{broedermann2022hrfuser} \\ \hline
             \textbf{MT-DETR} & CRL & DENSE & Tightly-coupled & Yes & 2023 & \cite{chu2023mt} \\ \hline
             \end{tabular}
@@ -703,7 +703,9 @@
 
         % We repeatable fuse the sensors at multiple levels and at all resolutions of the camera branch. To facilitate this, we propose a novel multi-window cross-attention (MWCA) block. This block efficiently performs an attention-based fusion of the camera with each additional sensor in parallel, reducing the quadratic complexity of attention via multiple non-overlapping spatial windows. MWCA efficiently attends to the useful features of each sensor while ignoring noise, resulting in improved performance from all added sensors, even from radar, which is highly noisy.
     
-    The paper proposes an architecture named HRFuser, consists of a multi-resolution multi-sensor fusion architecture for 2D detection. The structure of HRFuser is based on the paradigm of preserving high-resolution representations throughout all layers of the backbone \cite{wang2020hrnet} \cite{yuan2021hrformer}. It extends this architectural paradigm to multiple modalities and propose an efficient fusion design for our HRFuser, which scales well with the number of sensors. In particular, HRFuser includes parallel lightweight branches for each of the secondary input modalities. Solely the primary camera branch constructs additional high-dimensional lower-resolution features. The annotated architecture is shown in Figure \ref{fig:hrfuser_architecture} \cite{broedermann2022hrfuser}.
+    % The paper proposes an architecture named HRFuser, consists of a multi-resolution multi-sensor fusion architecture for 2D detection. The structure of HRFuser is based on the paradigm of preserving high-resolution representations throughout all layers of the backbone \cite{wang2020hrnet} \cite{yuan2021hrformer}. It extends this architectural paradigm to multiple modalities and propose an efficient fusion design for our HRFuser, which scales well with the number of sensors. In particular, HRFuser includes parallel lightweight branches for each of the secondary input modalities. Solely the primary camera branch constructs additional high-dimensional lower-resolution features. The annotated architecture is shown in Figure \ref{fig:hrfuser_architecture} \cite{broedermann2022hrfuser}.
+
+    The paper presents HRFuser, a design combining different resolutions and sensors for 2D object detection. The key idea of HRFuser is to keep high-quality, detailed images at every level of the processing steps, following the approach used in earlier research \cite{wang2020hrnet} \cite{yuan2021hrformer}. This design is expanded to work with different types of data inputs such as lidar, radar, and it introduces an effective way to fuse data from various sensors. HRFuser stands out by having separate, simplified processing paths for each non-primary data input. The primary camera input, on the other hand, produces extra detailed, but less sharp features. The structure and details of HRFuser are illustrated in Figure \ref{fig:hrfuser_architecture} \cite{broedermann2022hrfuser}.
 
     \begin{figure}[h]
         \centering
@@ -731,8 +733,8 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/mwca_block_annotated.png}
-        \caption{Proposed multi-window cross-attention block (Image adapted from \cite{broedermann2022hrfuser}).}
+        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/mwca_block_annotated_2.png}
+        \caption{Proposed multi-window cross-attention block followed by a feed-forward network. DW conv. denotes depth-wise convolution. (Image adapted from \cite{broedermann2022hrfuser}).}
         \label{fig:hrfuser_mwca_block}
     \end{figure}
 
@@ -745,11 +747,18 @@
 
     % More formally, the input feature map \( X \) of the primary modality \( \alpha \) into a grid of \( P \) non-overlapping spatial windows: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). Exactly the same partition is applied to the feature maps \( Y^\beta \) of all secondary modalities \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \). All input feature maps are vectorized across the spatial dimensions and have the same shape \( X, Y \in \mathbb{R}^{N \times D} \), where \( N \) denotes the total number of spatial positions and \( D \) denotes the number of channels, and each window is of size \( K \times K \).
 
-    To elaborate in more detail, the primary modality's input feature map, denoted as \( X \) for modality \( \alpha \), is segmented into \( P \) distinct spatial windows without any overlap: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). This identical division is also implemented on the feature maps \( Y^\beta \) of every secondary modality \( \beta \), which encompasses \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \). The vectorization of all these input feature maps occurs across spatial dimensions, ensuring they possess the uniform shape \( X, Y \in \mathbb{R}^{N \times D} \). Here, \( N \) signifies the aggregate number of spatial locations, while \( D \) represents the channel count, with each window having dimensions \( K \times K \) \cite{broedermann2022hrfuser}.
+    % To elaborate in more detail, the primary modality's input feature map, denoted as \( X \) for modality \( \alpha \), is segmented into \( P \) distinct spatial windows without any overlap: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). This identical division is also implemented on the feature maps \( Y^\beta \) of every secondary modality \( \beta \), which encompasses \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \), where ${M}$ denotes the total number of secondary modalities. The vectorization of all these input feature maps occurs across spatial dimensions, ensuring they possess the uniform shape \( X, Y \in \mathbb{R}^{N \times D} \). Here, \( N \) signifies the aggregate number of spatial locations, while \( D \) represents the channel count, with each window having dimensions \( K \times K \) \cite{broedermann2022hrfuser}.
+
+    To elaborate in more detail, the primary modality's input feature map, denoted as \( X \) for modality \( \alpha \), is segmented into \( P \) distinct spatial windows without any overlap: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). Each window is vectorized, transforming the \( K \times K \) spatial dimensions into a sequence of vectors, resulting in a total of \( K^2 \) spatial locations per window. The identical division and vectorization are also implemented on the feature maps \( Y^\beta \) of every secondary modality \( \beta \), which encompasses \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \), where \( M \) denotes the total number of secondary modalities.
+
+    The vectorization of all these input feature maps occurs across spatial dimensions, ensuring they possess the uniform shape \( X, Y \in \mathbb{R}^{N \times D} \). Here, \( N \) signifies the aggregate number of spatial locations after vectorization across all windows, while \( D \) represents the channel count. Specifically, for \( P \) windows each with \( K \times K \) dimensions, \( N = P \times K^2 \), representing the total number of vectorized spatial locations available for attention mechanisms \cite{broedermann2022hrfuser}.
+
 
     % A local transformer applies parallel cross-attention to each corresponding set of windows independently. Parallel cross-attention on the set of ${p_th}$ windows is formulated as follows:
 
-    A localized transformer executes cross-attention concurrently across each matching group of windows separately, a zoomed-in view of parallel cross-attention is illustrated in Fig. \ref{fig:parallel_cross_attention}. This parallel cross-attention on set of \( p \)-th can be formulated in the following manner \cite{broedermann2022hrfuser}:
+    % A localized transformer executes cross-attention concurrently across each matching group of windows separately, a zoomed-in view of parallel cross-attention is illustrated in Fig. \ref{fig:hrfuser_cross_attention_block}. This parallel cross-attention on set of \( p \)-th can be formulated in the following manner \cite{broedermann2022hrfuser}:
+
+    A localized transformer concurrently conducts cross-attention processes on individual, corresponding window groups. This approach of parallel cross-attention is demonstrated in detail in Fig. \ref{fig:hrfuser_cross_attention_block}. The method for applying this parallel cross-attention to the p-th set of windows is outlined as follows \cite{broedermann2022hrfuser}:
 
     \begin{equation}
         \text{MultiHead}(X^{\alpha}_p, Y^{\beta}_p) = \text{Concat}[head(X^{\alpha}_p, Y^{\beta}_p)_1, \ldots, head(X^{\alpha}_p, Y^{\beta}_p)_H] \in \mathbb{R}^{K^2 \times D},
