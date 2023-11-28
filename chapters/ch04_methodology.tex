@@ -89,7 +89,7 @@
 
     The dataset covers a broad spectrum of environments, encompassing urban cities, suburban areas, highways, and tunnels. Its geographical scope is extensive, with data collection spanning over two months and covering 10,000 km across Germany, Sweden, Denmark, and Finland. This diverse environmental range enhances the dataset's applicability in various real-world scenarios.
 
-    Technically, the DENSE dataset offers radar targets in a point cloud format, aligning well with the Lidar data. Given the inherent noise in radar data, preprocessing has been performed to eliminate false points, thereby bolstering the dataset's accuracy and reliability. The radar data includes 3D information - range, azimuth, and velocity. Moreover, it's noteworthy that the latest generation of radar sensors in the dataset provides 4D data, adding elevation to the existing dimensions. There are total 3 classes available in the dataset, including car, pedestrian, and cyclist. Object annotations in the DENSE dataset are provided in the COCO style format \cite{lin2014microsoft}, with bounding box (bbox) parameters specified as x, y, width, and height. The annotation processed is well described in the supplementary material from the paper \cite{heide2023adverseweatherfusion}. This meticulous approach to data collection, processing, and annotation positions the DENSE dataset as a powerful and adaptable tool for research in adverse weather conditions, especially in the domain of data-driven multimodal sensor fusion.
+    Technically, the DENSE dataset offers radar targets in a point cloud format, aligning well with the Lidar data. Given the inherent noise in radar data, preprocessing has been performed to eliminate false points, thereby bolstering the dataset's accuracy and reliability. The radar data includes 3D information - range, azimuth, and velocity. Moreover, it's noteworthy that the latest generation of radar sensors in the dataset provides 4D data, adding elevation to the existing dimensions. There are total 3 classes available in the dataset, including car, pedestrian, and cyclist. Object annotations in the DENSE dataset are provided in 2D as well in 3D format, and follow the COCO style format \cite{lin2014microsoft}, with bounding box (bbox) parameters specified as x, y, width, and height. The annotation processed is well described in the supplementary material from the paper \cite{heide2023adverseweatherfusion}. This meticulous approach to data collection, processing, and annotation positions the DENSE dataset as a powerful and adaptable tool for research in adverse weather conditions, especially in the domain of data-driven multimodal sensor fusion.
 
         % \begin{figure}[h]
         %         \centering
@@ -241,7 +241,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/day_cam.png}
                 \caption{Day time}
-                \label{fig:sub1}
+                \label{fig:day_cam}
             \end{subfigure}
             \hfill
             % Second Image
@@ -249,7 +249,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/night_cam.png}
                 \caption{Night time}
-                \label{fig:sub2}
+                \label{fig:night_cam}
             \end{subfigure}
             \hfill
             % Third Image
@@ -257,7 +257,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{images/datasets/nuscenes/samples/rain_cam.png}
                 \caption{Rain}
-                \label{fig:sub3}
+                \label{fig:rain_cam}
             \end{subfigure}
         
             \caption{Random samples from the nuScenes dataset}
@@ -419,9 +419,10 @@
     
 
     \subsection{Method 1: SAF-FCOS}
+    \label{sec:method_1}
 
     % My chosen method 1, SAF-FCOS
-    \paragraph{Overview}
+    \paragraph*{Overview}
     
     The paper by Chang et al. \cite{chang2020spatial} introduces a novel method for enhancing obstacle detection in autonomous driving systems. This method, called spatial attention fusion (SAF), effectively integrates data from two modalities, namely millimeter-wave (mmWave) radar and camera sensors. SAF addresses the sparsity of radar points by generating an attention weight matrix that distinctively fuses vision features, diverging from traditional concatenation or element-wise addition fusion methods. This method can be integrated into the feature-extraction stage of existing deep learning object detection frameworks, facilitating end-to-end training. The method follows the middle or feature fusion approach in the paper, as it extracts features from both modalities and fuses them in the middle layer. 
     % Additionally, the paper presents a generation model that converts radar points into images for neural network training. This type of image projection called radar imagery. The paper's findings indicate that this fusion approach significantly improves performance on nuScenes \cite{caesar2020nuscenes} dataset.
@@ -443,7 +444,7 @@
     % As nuScenes annotations are available only in the 3D bounding box format, we need to convert the 3D annotations to 2D annotations. The method uses an enhanced version of FCOS integrated with ResNet-101 to generate 2D annotations and then later examined and adjusted with hand. The method only focuses on front camera from nuScenes dataset. The annotations samples are displayed in Figure \ref{fig:saffcos_annotations}, which shows challenges with typical 3D to 2D conversion with custom approach.
 
     % \textbf{2D annotations}: 
-    \paragraph{2D Annotations}
+    \paragraph*{2D Annotations}
 
     The nuScenes dataset provides annotations exclusively in a 3D bounding box format, necessitating a conversion to 2D for compatibility with FCOS-based detection framework. This research utilizes an enhanced version of the Fully Convolutional One-Stage (FCOS) detector \cite{tian2019fcos}, augmented with ResNet-101 \cite{he2016deep}, to facilitate the generation of 2D annotations. These annotations undergo a meticulous manual examination and adjustment process to ensure accuracy and reliability. The effectiveness of this custom approach is illustrated in Figure \ref{fig:saffcos_annotations}, which depicts the comparative quality of annotations derived through this refined methodology \cite{chang2020spatial}. The results are evaluated using the COCO benchmark, as detailed in Section~\ref{sec:metrics}.
 
@@ -463,8 +464,9 @@
 
     % The method narrows its focus to larger obstacles, specifically bicycles, cars, motorcycles, buses, trains, and trucks. These are collectively treated under a unified category named `vehicle', simplifying the classification process. Notably, pedestrians are excluded from this categorization due to the inadequacy of radar signals for pedestrian detection in the nuScenes dataset. It is focused on the front camera data from the nuScenes dataset. Dataset split is shown in Figure \ref{fig:saffcos_data_split}.
 
+    % TODO: MOVE this section to experiment setup section
     % \textbf{Dataset split}: 
-    \paragraph{Dataset Split}
+    \paragraph*{Dataset Split}
     The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
 
     \begin{figure}[h!]
@@ -605,7 +607,7 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=1.1\textwidth]{images/methods/saf_fcos/different_fusion_blocks_for_feature_fusion.png}
+        \includegraphics[width=1.0\textwidth]{images/methods/saf_fcos/different_fusion_blocks_for_feature_fusion.png}
         \caption{Different fusion blocks for feature fusion. From the left to right: Multiply Fusion (MUL) Block, Element-Wise Add Fusion (ADD) Block, Concatenation Fusion (CAT) Block and Spatial Attention Fusion (SAF) Block (Image source \cite{chang2020spatial}).}
         \label{fig:saffcos_different_fusion_blocks_for_feature_fusion}
     \end{figure}
@@ -639,7 +641,168 @@
     \subsection{Method 2: HRFuser}
         
     %     % My chosen method 2, HRFuser
-    %     \item Another work by Broedermann et al. \cite{broedermann2022hrfuser} presents an extended work on HRNet \cite{wang2020deep} and HRFormer \cite{yuan2021hrformer} to integrate multimodal sensors into a single network. It introduces HRFuser, a versatile, multi-resolution, multi-sensor fusion architecture that can efficiently integrate an arbitrary number of sensors like lidar, radar, and gated cameras, alongside standard cameras. HRFuser is built on the HRNet and HRFormer paradigms, preserving high-resolution representations and incorporating a novel multi-window cross-attention (MWCA) block for effective fusion across multiple resolutions. The system's generic design allows for easy scalability with various sensors without the need for specialized components for each sensor. Extensive testing on major autonomous driving datasets, including nuScenes \cite{caesar2020nuscenes}, and DENSE \cite{bijelic2020seeing}, demonstrates HRFuser's superior performance over existing camera-only networks and sensor fusion methods, proving its efficacy in both standard and adverse weather conditions. HRFuser's adaptability to different sensor sets and its ability to selectively focus on relevant features from high-resolution data of additional sensors mark a significant advancement in the field of 2D object detection.
+        % \item Another work by Broedermann et al. \cite{broedermann2022hrfuser} presents an extended work on HRNet \cite{wang2020deep} and HRFormer \cite{yuan2021hrformer} to integrate multimodal sensors into a single network. It introduces HRFuser, a versatile, multi-resolution, multi-sensor fusion architecture that can efficiently integrate an arbitrary number of sensors like lidar, radar, and gated cameras, alongside standard cameras. HRFuser is built on the HRNet and HRFormer paradigms, preserving high-resolution representations and incorporating a novel multi-window cross-attention (MWCA) block for effective fusion across multiple resolutions. The system's generic design allows for easy scalability with various sensors without the need for specialized components for each sensor. Extensive testing on major autonomous driving datasets, including nuScenes \cite{caesar2020nuscenes}, and DENSE \cite{bijelic2020seeing}, demonstrates HRFuser's superior performance over existing camera-only networks and sensor fusion methods, proving its efficacy in both standard and adverse weather conditions. HRFuser's adaptability to different sensor sets and its ability to selectively focus on relevant features from high-resolution data of additional sensors mark a significant advancement in the field of 2D object detection.
+    
+    \paragraph*{Overview}
+
+    Another work by Broedermann et al. \cite{broedermann2022hrfuser} presents an extended work on HRNet \cite{wang2020hrnet} and HRFormer \cite{yuan2021hrformer} to integrate multimodal sensors into a single network. It introduces HRFuser, a versatile, multi-resolution, multi-sensor fusion architecture that can efficiently integrate an arbitrary number of sensors like lidar, radar, and gated cameras, alongside standard cameras. HRFuser is built on the HRNet and HRFormer paradigms, preserving high-resolution representations and incorporating a novel multi-window cross-attention (MWCA) block for effective fusion across multiple resolutions. The system's generic design allows for easy scalability with various sensors without the need for specialized components for each sensor. Extensive testing on major autonomous driving datasets, including nuScenes \cite{caesar2020nuscenes}, and DENSE \cite{bijelic2020seeing}, demonstrates HRFuser's superior performance over existing camera-only networks and sensor fusion methods, proving its efficacy in both standard and adverse weather conditions.
+
+    \paragraph*{2D Annotations}
+    
+    In addition to cameras, lidar sensors are also greatly impacted by harsh weather, as explored in Section~\ref{sec:weather_influence_on_sensors}. Such weather conditions lead to incomplete lidar-generated 3D object annotations. Figure \ref{fig:hrfuser_2d_vs_3d_annotations} showcases both 2D and 3D tags from the DENSE dataset \cite{bijelic2020seeing}, illustrating that a substantial portion of objects (41.91\% in the “dense fog” division of DENSE \cite{bijelic2020seeing}) are only marked with 2D annotations, owing to the absence of accurate lidar readings caused by environmental elements like fog or rain. These factors result in inadequate and untrustworthy signals for generating 3D annotations. Nevertheless, detecting all critical safety objects is essential in challenging driving scenarios, even when their exact 3D placement is unattainable \cite{broedermann2022hrfuser}. Therefore, the approach utilizes 2D annotations from the DENSE dataset. 
+    
+    % For nuScenes, to create 2D annotations, it projects the 3D bounding boxes onto each image plane by computing a rectangle convex hull of the projected corners, similar to \cite{nabati2020radar}. In this process, 3D annotations and point clouds are first aligned to the vehicle's coordinate system. Then, 3D annotations are converted into 2D bounding boxes by projecting them onto an image plane. Whereby, it discards annotations that are labeled with the lowest visibility bin, thereby filtering out occluded boxes. For the evaluation, the paper uses the KITTI style benchmarking \cite{geiger2012we} on the DENSE dataset and for nuScenes, it uses the COCO style benchmarking \cite{lin2014microsoft}.
+    For the nuScenes dataset \cite{caesar2020nuscenes}, the creation of 2D annotations involves projecting 3D bounding boxes onto each image plane. This is done by calculating a convex hull rectangle from the corners of the projected boxes, a technique similar to that described in \cite{nabati2020radar}. Initially, both the 3D annotations and point clouds are aligned with the vehicle's coordinate system. Subsequently, these 3D annotations are transformed into 2D bounding boxes through projection onto an image plane. During this process, any annotations categorized in the lowest visibility bin are discarded, effectively filtering out occluded boxes. For evaluation purposes, the paper adopts the KITTI style benchmarking \cite{geiger2012we} when analyzing the DENSE dataset. In contrast, for nuScenes, it employs the COCO style benchmarking method \cite{lin2014microsoft}.
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/2d vs 3d annotations.png}
+        \caption{A scene from DENSE \cite{bijelic2020seeing} illustrates (on the left) 2D and (on the right) 3D object labels. Due to adverse weather conditions affecting the (middle) point cloud, numerous critical objects are unaccounted for, resulting in them only being marked with 2D annotations and not in 3D. (Image source \cite{broedermann2022hrfuser}).}
+        \label{fig:hrfuser_2d_vs_3d_annotations}
+    \end{figure}
+
+    \paragraph*{Radar and Lidar Imagery}
+
+    % Before feeding inputs to HRFuser, the method projects all secondary modalities onto the image plane of the camera. This yields an exact spatial correspondence between the input feature maps of different modalities. For this purposes, the approach utilizes a combination of depth, height, and pulse intensity for the lidar image input, rather than just depth. In the case of the radar image, it operates under the assumption that the radar scans in a two-dimensional plane, which is perpendicular to the image plane and aligned with the image's horizontal axis. This leads to the assumption that the radar remains consistent along the vertical axis of the image, resulting in the replication of scans in this direction. The suggested method of input encoding facilitates a process that is dependent on both position and intensity, and allows for precise matching of pixels across different data streams. Table \ref{tab:sensor_projection_parameterssensor_projection_parameters} highlights overview of sensor projection parameters used from both datasets. Note that areas where measurements are absent are filled in with zeroes. A sample image from the nuScenes is shown in Figure \ref{fig:hrfuser_projection_image}.
+
+    % Before inputs are fed into HRFuser, the method projects all secondary modalities onto the camera's image plane. This process achieves precise spatial correspondence between the input feature maps of different modalities. For this purpose, the approach utilizes a combination of depth, height, and pulse intensity for the lidar image input, as opposed to solely relying on depth. Regarding radar imagery, the method assumes that the radar scans in a two-dimensional plane orthogonal to the image plane and aligned with the image's horizontal axis. Consequently, it is presumed that radar consistency is maintained along the vertical axis of the image, leading to the replication of scans in this vertical direction. The proposed method of input encoding enables a process that is dependent on both depth and velocity for DENSE dataset and additional Radar Cross Section (RCS) for nuScenes, facilitating accurate pixel matching across various data streams. Table \ref{tab:sensor_projection_parameters} provides an overview of the sensor projection parameters used in both datasets. It is important to note that areas lacking measurements are encoded with zero values. Figure \ref{fig:hrfuser_projection_image} displays a sample image from the nuScenes dataset.
+
+    Before inputs are fed into HRFuser, the method projects all secondary modalities onto the camera's image plane. This projection ensures precise spatial correspondence between the input feature maps of various modalities. To achieve this, the approach combines depth, height, and pulse intensity for lidar image input, rather than relying solely on depth. In the case of radar imagery, the method posits that the radar scans in a two-dimensional plane orthogonal to the image plane and aligned with the horizontal axis of the image. This alignment implies that radar consistency is preserved along the image's vertical axis, necessitating the duplication of scans vertically. The proposed method for input encoding depends on both depth and velocity for the DENSE dataset, and includes Radar Cross Section (RCS) for the nuScenes dataset, enabling precise pixel matching across different data streams. Table \ref{tab:sensor_projection_parameters} outlines the sensor projection parameters employed in both datasets. Notably, areas where measurements are missing are encoded with zero values. A representative image from the nuScenes dataset is illustrated in Figure \ref{fig:hrfuser_projection_image}.
+
+    \begin{table}[h]
+        \centering
+        \caption{Overview of sensor projection parameters. RCS stands for Radar Cross Section.}
+        \begin{tabular}{|l|c|c|}
+        \hline
+        \cline{2-3}
+               & DENSE           & nuScenes                        \\
+        \hline
+        \textbf{Sensor Imagery} & \multicolumn{2}{c|}{\textbf{Sensor Parameters}} \\
+        \hline
+        Radar & Distance, Velocity & Distance, Velocity, RCS \\
+        \hline
+        Lidar & Distance, Intensity, Height & Distance, Intensity, Height \\
+        \hline
+        \end{tabular}
+        \label{tab:sensor_projection_parameters}
+    \end{table}
+    
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/sample_projection_image.png}
+        \caption{An example projection image from nuScenes \cite{caesar2020nuscenes}. Viewing sequence: RGB image, lidar point projection, radar point projection. Best viewed in zoomed-in view. (Image adapted from \cite{broedermann2022hrfuser}).}
+        \label{fig:hrfuser_projection_image}
+    \end{figure}
+
+
+    \paragraph*{Model Architecture}
+
+        % We repeatable fuse the sensors at multiple levels and at all resolutions of the camera branch. To facilitate this, we propose a novel multi-window cross-attention (MWCA) block. This block efficiently performs an attention-based fusion of the camera with each additional sensor in parallel, reducing the quadratic complexity of attention via multiple non-overlapping spatial windows. MWCA efficiently attends to the useful features of each sensor while ignoring noise, resulting in improved performance from all added sensors, even from radar, which is highly noisy.
+    
+    The paper proposes an architecture named HRFuser, consists of a multi-resolution multi-sensor fusion architecture for 2D detection. The structure of HRFuser is based on the paradigm of preserving high-resolution representations throughout all layers of the backbone \cite{wang2020hrnet} \cite{yuan2021hrformer}. It extends this architectural paradigm to multiple modalities and propose an efficient fusion design for our HRFuser, which scales well with the number of sensors. In particular, HRFuser includes parallel lightweight branches for each of the secondary input modalities. Solely the primary camera branch constructs additional high-dimensional lower-resolution features. The annotated architecture is shown in Figure \ref{fig:hrfuser_architecture} \cite{broedermann2022hrfuser}.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/architecture_annotated.png}
+        \caption{HRFuser architecture (Image adapted from \cite{broedermann2022hrfuser}).}
+        \label{fig:hrfuser_architecture}
+    \end{figure}
+
+
+    % In order to fuse secondary branch into the primary camera branch, the method introduces a novel multi-window cross-attention (MWCA) block to fuse features across multiple resolutions. The Figure \ref{fig:hrfuser_mwca_block} illustrates the proposed MWCA block. The architecture repeatable fuses the sensors at multiple levels and at all resolutions of the camera branch. To facilitate this, it proposes a novel multi-window cross-attention (MWCA) block. This transformer-based block efficiently performs an attention-based fusion of the camera with each additional sensor in parallel, reducing the quadratic complexity of attention via multiple non-overlapping spatial windows. MWCA efficiently attends to the useful features of each sensor while ignoring noise, resulting in improved performance from all added sensors, even from radar, which is highly noisy. For each, additional fusion branch, it takes only up to +9.7\% flops and +1.9\% parameters.
+
+    % The research introduces a unique multi-window cross-attention (MWCA) block, central to merging the secondary branches with the primary camera branch for feature fusion across multiple resolutions. This MWCA block, depicted in Figure \ref{fig:hrfuser_mwca_block}, is a core component of the architecture. Different from conventional feature fusion like concatenation, addition, or element-wise multiplication. It enables the systematic integration of sensors at various levels and across all camera branch resolutions. The MWCA block, rooted in transformer technology, adeptly conducts parallel, attention-based fusion between the camera and each additional sensor. This method significantly reduces the quadratic complexity typically associated with attention mechanisms by employing multiple, distinct spatial windows. Such an approach ensures that MWCA selectively concentrates on relevant sensor features while effectively filtering out noise. This targeted focus enhances the overall performance across all integrated sensors, including those with high noise levels like radar. Notably, the addition of each extra fusion branch incurs a minimal increase in computational load, amounting to just +9.7\% in floating-point operations (flops) and +1.9\% in parameters.
+
+    % The study introduces the multi-window cross-attention (MWCA) block, a key component for integrating secondary sensors with the primary camera branch, enabling effective feature fusion at various resolutions. Illustrated in Figure \ref{fig:hrfuser_mwca_block}, MWCA diverges from conventional fusion techniques like concatenation, addition or element-wise multiplication, employing transformer-based approach for more efficient integration. This method reduces the quadratic complexity often found in attention mechanisms by using distinct spatial windows, which allows for focused attention on relevant sensor features and efficient noise filtering. As a result, the performance of all sensors, particularly those prone to high noise such as radar, is significantly enhanced. The addition of each fusion branch results in a modest computational increase of +9.7\% in floating-point operations (flops) and +1.9\% in parameters, striking a balance between efficiency and functionality.
+
+    % We propose a novel multi-window cross-attention (MWCA) block to fuse all modalities in parallel by applying multi-head cross-attention (CA) on multiple small non-overlapping local windows. In particular, MWCA limits the spatial extent of the cross-attention to small windows, addressing the quadratic complexity of attention and reducing the computational cost of each attention operation and allows to apply this operation to high-resolution feature maps. For each window, this results in ${K^2}$ tokens with dimensionality D, depending on the number of channels of the stream we fuse into. Compared to self-attention, CA fuses two modalities by applying attention with queries from the primary modality \alpha and keys and values from the secondary modality \beta.
+
+
+    % How to fuse high resolution secondary branch with consequently reducing primary branch? The authors come up with a solution to downsample the secondary high-resolution branch by applying 7x7 convolution so that it matches with primary branch. This allows to keep detail in all modalities with the high-resolution stream, while efficiently fusing via local windows and still taking local and more global relationships into account.
+
+    % /////////////////////////////////////
+
+
+    The study introduces the multi-window cross-attention (MWCA) block, a key component for integrating secondary sensors with the primary camera branch, enabling effective feature fusion at various resolutions. Illustrated in Figure \ref{fig:hrfuser_mwca_block}, MWCA diverges from conventional fusion techniques like concatenation, addition or element-wise multiplication, employing transformer-based approach for more efficient integration. This approach efficiently combines features at various resolutions while addressing the quadratic complexity typically associated with attention mechanisms. By employing multi-head cross-attention on small, non-overlapping local windows, MWCA significantly reduces computational costs, making it feasible for high-resolution feature maps. Each window processes \( K^2 \) tokens of dimensionality ${D}$, based on the channel number of the fused stream, allowing for focused attention on pertinent sensor features and enhanced noise filtering. This method improves the performance of all sensors, especially those susceptible to high noise like radar. The computational overhead of this integration is relatively low, with only a +9.7\% increase in floating-point operations (flops) and +1.9\% in parameters \cite{broedermann2022hrfuser}.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/methods/hrfuser/mwca_block_annotated.png}
+        \caption{Proposed multi-window cross-attention block (Image adapted from \cite{broedermann2022hrfuser}).}
+        \label{fig:hrfuser_mwca_block}
+    \end{figure}
+
+    To address the challenge of fusing high-resolution secondary branches with a lower resolution primary branch, as depicted in the annotated architecture in Fig. \ref{fig:hrfuser_architecture}, it downsample the secondary branch with 7x7 convolutions. This approach ensures that the high-resolution branch aligns with the primary branch, preserving detail across all modalities. By leveraging local windows for fusion, the MWCA block efficiently combines local and more global relationships among different sensor data \cite{broedermann2022hrfuser}.
+
+    % Backbone and neck explanation
+    % The HRFuser backbone illustrated in Fig. \ref{fig:hrfuser_architecture} is followed by a neck which forms a feature pyramid by concatenating the upsampled outputs of all streams \cite{wang2020hrnet}. This neck is in turn followed by a Cascade R-CNN head \cite{cai2018cascade}, following the widely used two-stage detector architecture. Cascade R-CNN introduces a sequence of detectors trained with increasing Intersection over Union (IoU) thresholds, setting a strong baseline for any given backbone. Note that the anchor-based Cascade R-CNN head can be replaced by other anchor-free detectors, such as FCOS \cite{tian2019fcos}.
+
+    The HRFuser structure, depicted in Figure \ref{fig:hrfuser_architecture}, incorporates a 'neck' that creates a feature pyramid. This is achieved by merging the enlarged outputs from all channels \cite{wang2020hrnet}. Following the neck is a Cascade R-CNN head \cite{cai2018cascade}, adhering to the common two-stage detection framework. Cascade R-CNN enhances detection by using a series of detectors, each trained at progressively higher Intersection over Union (IoU) thresholds, thus establishing a robust benchmark for the backbone \cite{broedermann2022hrfuser}. It's important to note that the anchor-based Cascade R-CNN head can be substituted with anchor-free detection systems like FCOS \cite{tian2019fcos}.
+
+    % More formally, the input feature map \( X \) of the primary modality \( \alpha \) into a grid of \( P \) non-overlapping spatial windows: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). Exactly the same partition is applied to the feature maps \( Y^\beta \) of all secondary modalities \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \). All input feature maps are vectorized across the spatial dimensions and have the same shape \( X, Y \in \mathbb{R}^{N \times D} \), where \( N \) denotes the total number of spatial positions and \( D \) denotes the number of channels, and each window is of size \( K \times K \).
+
+    To elaborate in more detail, the primary modality's input feature map, denoted as \( X \) for modality \( \alpha \), is segmented into \( P \) distinct spatial windows without any overlap: \( X^\alpha \xrightarrow{\text{Split}} \{X^\alpha_1, X^\alpha_2, \ldots, X^\alpha_P\} \). This identical division is also implemented on the feature maps \( Y^\beta \) of every secondary modality \( \beta \), which encompasses \( \beta \in \{1, \ldots, M\} \): \( Y^\beta \xrightarrow{\text{Split}} \{Y^\beta_1, Y^\beta_2, \ldots, Y^\beta_P\} \). The vectorization of all these input feature maps occurs across spatial dimensions, ensuring they possess the uniform shape \( X, Y \in \mathbb{R}^{N \times D} \). Here, \( N \) signifies the aggregate number of spatial locations, while \( D \) represents the channel count, with each window having dimensions \( K \times K \) \cite{broedermann2022hrfuser}.
+
+    % A local transformer applies parallel cross-attention to each corresponding set of windows independently. Parallel cross-attention on the set of ${p_th}$ windows is formulated as follows:
+
+    A localized transformer executes cross-attention concurrently across each matching group of windows separately, a zoomed-in view of parallel cross-attention is illustrated in Fig. \ref{fig:parallel_cross_attention}. This parallel cross-attention on set of \( p \)-th can be formulated in the following manner \cite{broedermann2022hrfuser}:
+
+    \begin{equation}
+        \text{MultiHead}(X^{\alpha}_p, Y^{\beta}_p) = \text{Concat}[head(X^{\alpha}_p, Y^{\beta}_p)_1, \ldots, head(X^{\alpha}_p, Y^{\beta}_p)_H] \in \mathbb{R}^{K^2 \times D},
+        \end{equation}
+        
+        \begin{equation}
+        head(X^{\alpha}_p, Y^{\beta}_p)_h = \text{Softmax}\left( \frac{(X^{\alpha}_p W^{h,\beta}_q)(Y^{\beta}_p W^{h,\beta}_k)^T}{\sqrt{D/H}} \right) Y^{\beta}_p W^{h,\beta}_v \in \mathbb{R}^{K^2 \times D/H},
+        \end{equation}
+        
+        \begin{equation}
+        \hat{X}_p = X^{\alpha}_p + \sum_{\beta=1}^{M} \left[ Y^{\beta}_p + \text{MultiHead}(X^{\alpha}_p, Y^{\beta}_p)W^{\beta}_o \right] \in \mathbb{R}^{K^2 \times D}
+        \end{equation}
+        
+        % where \( W^{\beta}_o \in \mathbb{R}^{D \times D} \) and \( W^{h,\beta}_q, W^{h,\beta}_k, W^{h,\beta}_v \in \mathbb{R}^{D \times \frac{D}{H}} \) for \( h \in \{1, \ldots, H\} \) are weight matrices implemented by trainable linear projections. \( H \) denotes the number of heads and \( \hat{X}_p \) denotes the output of the parallel CA for the set of \( p \)-th windows.
+
+        % We arrange the outputs from all \( P \) sets of windows back into a single feature map to get the final output of MWCA, \( X_{\text{MWCA}} \).
+
+        where \( W^{\beta}_o \) is defined as \( W^{\beta}_o \in \mathbb{R}^{D \times D} \), and the matrices \( W^{h,\beta}_q, W^{h,\beta}_k, W^{h,\beta}_v \) for each head \( h \), where \( h \in \{1, \ldots, H\} \), are represented as \( W^{h,\beta}_q, W^{h,\beta}_k, W^{h,\beta}_v \in \mathbb{R}^{D \times \frac{D}{H}} \). These are the weight matrices, implemented by trainable linear projections. Here, \( H \) represents the total count of heads, and \( \hat{X}_p \) is the resultant output from the concurrent cross-attention operations applied to the \( p \)-th window set.
+
+        The process culminates by reassembling the output from every set of \( P \) windows into a unified feature map, yielding the final MWCA output, denoted as \( X_{\text{MWCA}} \) \cite{broedermann2022hrfuser}.
+
+        \begin{equation}
+            \{\hat{X}_1, \hat{X}_2, \ldots, \hat{X}_P\} \xrightarrow{\text{Merge}} X_{\text{MWCA}}.
+        \end{equation}
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{images/methods/hrfuser/cross_attention_block_annotated.png}
+        \caption{Parallel cross-attention block (Image adapted from \cite{broedermann2022hrfuser}).}
+        \label{fig:hrfuser_cross_attention_block}
+    \end{figure}
+
+
+    \paragraph*{Loss Function}
+
+    % The loss function is nearly same as SAF-FCOS \ref{sec:method_1}. Here, this method uses CrossEntropy as the classification loss and SmoothL1 as the regression loss. The loss function is defined as \cite{cai2018cascade}:
+
+    % \begin{equation}
+    %     L(p_i, t_i) = \frac{1}{N_{\text{cls}}} \sum_i L_{\text{CE}}(p_i, p_i^*) + \lambda \frac{1}{N_{\text{reg}}} \sum_i p_i^* L_{\text{SmoothL1}}(t_i, t_i^*).
+    %     \end{equation}
+
+    % where \( p_i \) refers to the predicted probability of the \( i^{th} \) anchor being an object. The term \( p_i^* \) denotes the ground truth label, with a value of 1 indicating a positive (object present) anchor and 0 a negative (no object present) anchor. The vector \( t_i \) represents the set of predicted bounding box parameters, whereas \( t_i^* \) corresponds to the ground truth bounding box parameters. The symbol \( L_{\text{CE}} \) signifies the cross-entropy loss used for classification, and \( L_{\text{SmoothL1}} \) indicates the Smooth L1 loss applied for bounding box regression. The normalization factors \( N_{\text{cls}} \) and \( N_{\text{reg}} \) are used to average the classification and regression losses, respectively. Lastly, the parameter \( \lambda \) serves to balance the contribution of the classification loss against the regression loss in the overall objective function.
+
+    The loss function aligns closely with the one delineated in SAF-FCOS \ref{sec:method_1}. In this framework, CrossEntropy is employed for the calculation of classification loss, whereas SmoothL1 is utilized for regression loss. The formulation of the objective function is as follows \cite{cai2018cascade}:
+
+    \begin{equation}
+        L(p_i, t_i) = \frac{1}{N_{\text{cls}}} \sum_i L_{\text{CE}}(p_i, p_i^*) + \lambda \frac{1}{N_{\text{reg}}} \sum_i p_i^* L_{\text{SmoothL1}}(t_i, t_i^*).
+        \end{equation}
+
+    In this formula, \( p_i \) represents the probability estimate for the \( i^{th} \) anchor's objectness. Conversely, \( p_i^* \) is the actual ground truth score, assigned 1 for anchors with objects and 0 for those without. The parameter vector \( t_i \) captures the predicted dimensions and location of the bounding box, while \( t_i^* \) holds this information for the actual bounding box. The term \( L_{\text{CE}} \) denotes the cross-entropy loss for the classification task, and \( L_{\text{SmoothL1}} \) refers to the Smooth L1 loss for regression. Normalization is achieved via \( N_{\text{cls}} \) for classification and \( N_{\text{reg}} \) for regression. The scalar \( \lambda \) is instrumental in equilibrating the impact of the classification and regression losses within the total loss computation.
+
+
+        
+
     
     \subsection{Method 3: MT-DETR}
 
