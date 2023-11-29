@@ -904,13 +904,34 @@
 
     MT-DETR processes image data sourced from various sensors through its backbone, which yields multi-scale features as a result of multimodal fusion. The structural design of MT-DETR, illustrated in Fig. \ref{fig:mt_detr_architecture}, encompasses four primary elements: a feature extraction unit, a fusion module, an enhancement module, and a detection head. Within this framework, ConvNeXt \cite{liu2022convnet} is employed for feature extraction in distinct unimodal branches. These branches' outputs are then integrated in the fusion module. The enhancement module works by amalgamating these fused features with those from the unimodal branches, thereby enriching the unimodal features before the next scale of feature extraction. In the final stage, the detection head receives the integrated features from each scale, processed by the fusion module, to carry out the object prediction task.
 
-
     \begin{figure}[h]
         \centering
         \includegraphics[width=1.0\textwidth]{images/methods/mtdetr/mtdetr_architecture.png}
         \caption{MT-DETR model architecture (Image source \cite{chu2023mt}).}
         \label{fig:mt_detr_architecture}
     \end{figure}
+
+    % As depicted in the model architecture, in one of the model architecture variations, it uses an additional time image as a 4th input. The time image is a simple binary image for guiding model for day and night time. A sample images are shown in Figure \ref{fig:mt_detr_day} and \ref{fig:mt_detr_night}.
+
+    In the model architecture, as depicted in one of its variations, an additional 'time image' is used as the fourth input, same dimension as the image. This time image is a straightforward binary representation designed to guide the model in differentiating between day and night. Examples of this can be seen in Figures \ref{fig:mt_detr_day} and \ref{fig:mt_detr_night}.
+
+    \begin{figure}[h]
+        \centering
+        \begin{minipage}{0.4\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/methods/mtdetr/2018-10-29_15-09-31_01940_day.png}
+            \caption{Day time image}
+            \label{fig:mt_detr_day}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/methods/mtdetr/2018-02-03_22-04-43_00200_night.png}
+            \caption{Night time image}
+            \label{fig:mt_detr_night}
+        \end{minipage}
+    \end{figure}
+
 
     % Hierarchical Fusion Mechanism
     % Combining features from all branches simultaneously may lose the relationship and priority between sensors. Thus the hierarchical fusion mechanism is proposed. Because the data types of lidar and radar are similar, fusing them first can capture more thorough and accurate depth information. Therefore, when mixing modalities, we fuse lidar and radar into the depth feature, combining it with the camera and time branch. With the hierarchical fusion mechanism, the model can understand the depth of knowledge more clearly.
