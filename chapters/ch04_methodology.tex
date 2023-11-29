@@ -5,6 +5,7 @@
         % Dont know where to put DATASET related content
     % One entire section could be my comparative study on multimodal dataset
     \section{Available Datasets}
+    \label{sec:available_datasets}
 
     % \begin{itemize}
     %     \item The majority of deep multimodal perception approaches rely on supervised learning, and therefore necessitate multimodal datasets with labeled ground truth for training deep neural networks. While several multimodal datasets are available, many of these datasets are collected under clear weather conditions or do not include all sensors, such as cameras, LiDAR, and radar. Unfortunately, the availability of multimodal datasets collected under adverse weather conditions with all three sensors are limited. Table 1 summarizes some of the available multimodal datasets for evaluating the performance of deep multimodal perception techniques in adverse weather conditions. Of these datasets, only the recently released K-Radar \cite{Paek2022Jun} incorporates a high-resolution 4D-radar sensor. In the table, C-R-L-N-F denotes the Camera, Radar, LiDAR, Near-infrared, and Far-infrared sensors, respectively.
@@ -75,6 +76,7 @@
     After a comprehensive evaluation of these criteria, two datasets have been chosen for this research: DENSE and nuScenes. The DENSE dataset is particularly suited for this study as it includes data from various sensors under adverse weather conditions, which is crucial for testing the efficacy of multimodal sensor fusion in challenging environments. The nuScenes dataset, on the other hand, is widely used in the field, providing a rich source of data with camera, radar, and lidar sensors. Its extensive use in the community allows for a meaningful comparison with existing methods. Both datasets provide time-synchronized and calibrated data, which is essential for the accuracy of object detection algorithms in adverse weather conditions. The selection of these datasets aligns perfectly with the research objectives, offering a comprehensive platform for exploring and advancing the capabilities of data-driven multimodal sensor fusion in object detection under challenging weather scenarios.
 
     \subsection{DENSE dataset}
+    \label{subsec:dense_dataset}
 
     % The Dense dataset \cite{bijelic2020seeing} focused on evaluating multi-modal fusion algorithms under adverse weather. In addition to LiDAR and a stereo camera, it is also equipped with several all-weather sensors, including one frontal long-range radar, one gated camera working on the NIR band, one FIR camera, and one weather station sensor. The data are captured in various natural weather conditions, including rain, snow, light fog, and heavy fog, as well as in a controlled lab environment in a fog chamber. However, the dataset only provides sparse radar targets with limited FoV and low resolution. 
     % - The dataset is recorded in urban city, suburban, highway, and tunnel areas. 
@@ -165,6 +167,7 @@
 
 
     \subsection{nuScenes dataset}
+    \label{subsec:nuscenes_dataset}
 
     % NuScenes \cite{caesar2020nuscenes} is the most popular dataset for its large-scale and diverse scenarios. The capturing vehicle is equipped with a 32-beam LiDAR, 6 cameras, 5 long-range multi-mode radars, and a GPS/IMU system. It provides 3D annotations of 23 classes of road users in 1000 scenes, with a total of 1.3 million frames. 
     % - Although, the Radar used in nuScenes has a sparse data, but it is good dataset to start with and also well documented. 
@@ -390,6 +393,7 @@
 
 
     \section{Selected Methods}
+    \label{sec:selected_methods}
 
     % - majority of the deep multimodal sensor fusion architectures are based on two modalities which are camera and lidar. Mostly because of the prevalent availability of camera and lidar based datasets.
     % - There exists a very few methods that combines all three modalities, camera, lidar, and radar.

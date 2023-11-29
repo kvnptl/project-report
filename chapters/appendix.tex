@@ -2,8 +2,32 @@
 \documentclass[report.tex]{subfiles}
 \begin{document}
 
-    \chapter{Design Details}
-    Your first appendix
+    \chapter{GPU details}
+    \label{appendix:gpu_details}
+
+    \begin{table}[h]
+        \centering
+        \caption{Comparison of GPUs and Work Stations Specifications}
+        \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Work Stations} & \textbf{WR12, WR16-19} & \textbf{Work lab PC} & \textbf{WR20-25} \\ \hline
+        \textbf{GPUs} & V100 & RTX 3090 & A100 \\ \hline
+        \textbf{Architecture} & Volta & Ampere & Ampere \\ \hline
+        \textbf{CUDA Cores} & 5120 & 10496 & 6912 \\ \hline
+        \textbf{Tensor Cores} & 640 & 328 & 432 \\ \hline
+        \textbf{Single-Precision} & 14 TFLOPS & 35.6 TFLOPS & 19.5 TFLOPS \\ \hline
+        \textbf{Double-Precision} & 7 TFLOPS & 0.556 TFLOPS (not optimized) & 9.7 TFLOPS \\ \hline
+        \textbf{Memory Size} & 16 GB/32 GB HBM2 & 24 GB GDDR6X & 40 GB/80 GB HBM2 \\ \hline
+        \textbf{Memory Bandwidth} & 900 GB/s & 936 GB/s & 1555 GB/s \\ \hline
+        \textbf{Power Consumption} & ~250W-300W & ~350W & ~400W \\ \hline
+        \textbf{Release Year} & 2017 & 2020 & 2020 \\ \hline
+        \end{tabular}
+        
+        \label{tab:gpu_comparison}
+    \end{table}
+    
+    
+
 
     \chapter{Parameters}
     Your second chapter appendix

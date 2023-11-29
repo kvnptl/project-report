@@ -27,45 +27,206 @@
 
     \paragraph*{Relevance to Adverse Weather Conditions}
 
-    % Adverse weather conditions, such as heavy rain, fog, and snow, pose significant challenges to the accuracy of object detection systems. This research directly addresses these challenges by integrating multimodal sensor data, which is crucial for enhancing the robustness and reliability of object detection in such environments. The approach adopted in this study is anticipated to make a substantial contribution to fields that are critically dependent on weather conditions, like autonomous navigation and outdoor surveillance, by improving operational efficiency and safety in diverse weather scenarios.
-
-    % - Certain commonly used sensors like Camera and Lidar face significant problems in working with inclement weather conditions like heavy rain, fog, and snow. Where as radar proves to be robust to these weather conditions. This research directly addresses these challenges by integrating multimodal sensor data, which is crucial for overall robustness and reliability of object detection in such environments. The approaches adopted in this study is anticipated to make a substantial overview to fields that are critically dependent on weather conditions, like autonomous navigation and outdoor surveillance, by improving operational efficiency and safety in diverse weather scenarios.
-
     This research tackles the significant challenges posed by adverse weather conditions such as heavy rain, fog, and snow, which greatly affect the accuracy of object detection systems essential in autonomous navigation and outdoor surveillance. Acknowledging the limitations of commonly used sensors like cameras and Lidar in inclement weather, contrasted with the robustness of radar, the study emphasizes integrating multimodal sensor data to bolster the robustness and reliability of object detection in these environments. This study provides a comprehensive overview and detailed analysis of existing top methods, elucidating their efficacy and limitations in diverse weather scenarios, thereby informing best practices in the field.
 
+    \paragraph*{Experiment Overview}
 
-    
+    % TODO: if it is verbose, then shorten it
+    \begin{itemize}
+        \item \textbf{Objective of the Experiments:} The main aim of these experiments is to explore the strengths and weaknesses of using camera-only systems compared to systems that incorporate multiple sensor modalities, especially in challenging weather conditions.
 
+        \item \textbf{Comparative Analysis of Fusion Architectures:} A key focus of the experiments is to compare the performance of tightly-coupled fusion architectures with conventional fusion architectures. This comparison is intended to provide insights into how different fusion methodologies impact the accuracy and reliability of object detection in adverse weather conditions.
+
+        \item \textbf{Datasets Used for Evaluation:} The experiments utilize two major public datasets, namely nuScenes and DENSE, to provide a broad and comprehensive evaluation of the models. These datasets are particularly relevant as they include a variety of adverse weather conditions that pose challenges to object detection systems.
+
+        \item \textbf{Performance Metrics and Evaluation:} The results of the experiments are quantified and presented using COCO style metrics. This choice of metric allows for a standardized comparison of model performance.
+
+        \item \textbf{Weather-Specific Analysis:} Where possible, results are presented in the context of specific weather conditions. This approach helps to highlight how each model performs under various types of adverse weather, providing a more nuanced understanding of their capabilities and limitations.
+
+        \item \textbf{Experiment Setup and Methodology:} Detailed descriptions of the experimental setup, including the specifics of the sensor arrays used, the configuration of the neural network models, and the criteria for evaluating their performance.
+
+        \item \textbf{Interpretation of Results:} A thorough analysis of the experimental results, focusing on the efficacy of multimodal sensor fusion in improving object detection in adverse weather, and discussing the implications of these findings for the field of autonomous vehicles.
+    \end{itemize}
 
     \section{Experimental Setup}
 
-    Describe your experimental setup in detail.
+        \subsection{Hardware and Software Configuration}
+        \begin{itemize}
+            \item \textbf{Sensor Array Configuration:} The experiments utilized two multimodal datasets, which primarily comprise the following sensors:
+                \begin{itemize}
+                    \item RGB camera
+                    \item LiDAR
+                    \item Radar
+                \end{itemize}
+                These sensors were selected due to their varied capabilities in capturing environmental data under different weather conditions, as detailed in the respective dataset descriptions.
 
-    %  Include 
-    % - dataset split
-    % - training settings
-    % - hardware used
+            \item \textbf{Computational Resources:} The experiments were conducted using HBRS University's High Performance Scientific Computing (HPC) \cite{hbrs_scientificComputing2023}, equipped multiple GPU devices, such as:
+                \begin{itemize}
+                    \item NVIDIA V100 GPU with 16GB memory
+                    \item NVIDIA A100 GPU with 80GB memory
+                \end{itemize}
+                Additionally, for debugging purposes, lab computing resources featuring an NVIDIA RTX 3090 GPU with 24GB memory were utilized. For more details, please refer to the appendix \ref{appendix:gpu_details}. 
+
+            \item \textbf{Software Environment:} The experiments employed the PyTorch framework for training and evaluation of the three methods. Specifically, two methods were implemented using the MMDetection framework, built on top of PyTorch, to facilitate the development of object detection models. Below Table \ref{tab:pytorch_versions} shows the PyTorch versions used for each method.
+            
+            \begin{table}[h]
+                \centering
+                \caption{PyTorch and CUDA versions}
+                \begin{tabular}{|l|l|l|}
+                \hline
+                \textbf{Methods} & \textbf{PyTorch} & \textbf{CUDA} \\ \hline
+                SAF-FCOS & 1.12 & 11.6 \\ \hline
+                HRFuser & 1.10 & 10.2 / 11.1 \\ \hline
+                MT-DETR & 1.10 & 11.1 \\ \hline
+                \end{tabular}
+                \label{tab:pytorch_versions}
+            \end{table}
+        \end{itemize}
+
+        \subsection{Datasets}
+        \begin{itemize}
+            \item \textbf{Dataset Description:} A detailed description of the datasets used in the experiments is provided in Section~\ref{sec:available_datasets}. It is important to note that, although both datasets offer 360-degree perception coverage, the methods employed in this study utilized only the front-view sensors for training.
+
+            \item \textbf{Data Preprocessing:} In addition to the projection methods outlined in Section~\ref{sec:selected_methods}, the experiments incorporated basic data augmentation techniques: RandomFlip, RandomCrop, and RandomDrop. Note that `RandomDrop' is an augmentation method where sensor streams in multimodal architectures are randomly omitted with a specified probability. The table below outlines the specific augmentation techniques employed for each method in the experiments:
+                \begin{table}[h]
+                    \centering
+                    \caption{Methods and augmentation techniques}
+                    \begin{tabular}{|l|l|}
+                    \hline
+                    \textbf{Methods} & \textbf{Augmentation Techniques} \\ \hline
+                    SAF-FCOS & RandomFlip, Crop, Resize \\ \hline
+                    HRFuser & RandomFlip, Crop, Resize, RandomDrop \\ \hline
+                    MT-DETR & RandomFlip, RandomCrop, Resize \\ \hline
+                    \end{tabular}
+                    \label{tab:methods_augmentation}
+                \end{table}
+
+            \item \textbf{Dataset Split:} 
+            
+            \paragraph*{SAF-FCOS}
+
+            The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
+
+            \begin{figure}[h!]
+                \centering
+                \includegraphics[width=0.6\textwidth]{images/methods/saf_fcos/data_split.pdf}
+                \caption{Data split of nuScenes dataset. Total samples: 40157. Note: this is a custom dataset split chosen by the authors.}
+                \label{fig:saffcos_data_split}
+            \end{figure}
+
+            \paragraph*{HRFuser}
+
+            The original HRFuser approach employs ten superclasses derived from the nuScenes dataset for its training and evaluation protocols. Table \ref{tab:hrfuser_classes_nuscenes} delineates the correspondence between nuScenes and HRFuser class categorizations. To facilitate a direct comparison with SAF-FCOS, we adopted identical class designations and data partitions as delineated in SAF-FCOS. This alignment extends to the annotation process. As detailed in Section \ref{subsec:nuscenes_dataset}, the nuScenes dataset omits 2D annotations for its test set. Consequently, the SAF-FCOS framework generated proprietary annotations for this subset by leveraging an augmented version of FCOS supplemented with manual adjustments. To synchronize our performance metrics, we have created a custom annotation conversion script that reformats SAF-FCOS annotations into the HRFuser schema. This utility underscores the variance in annotation formats within multimodal datasets, despite both methodologies utilizing COCO-style annotations. The conversion script is accessible in our code repository for replication and further research endeavors.
+
+            \begin{table}[h]
+                \centering
+                \caption{Mapping from nuScenes classes to HRFuser classes \cite{caesar2020nuscenes}}
+                \begin{tabular}{|l|l|}
+                \hline
+                \textbf{NuScenes Class} & \textbf{Mapped Class} \\ \hline
+                vehicle.car & car \\ \hline
+                vehicle.truck & truck \\ \hline
+                vehicle.trailer & trailer \\ \hline
+                vehicle.bus.bendy & bus \\ \hline
+                vehicle.bus.rigid & bus \\ \hline
+                vehicle.construction & construction\_vehicle \\ \hline
+                vehicle.bicycle & bicycle \\ \hline
+                vehicle.motorcycle & motorcycle \\ \hline
+                human.pedestrian.child & pedestrian \\ \hline
+                human.pedestrian.adult & pedestrian \\ \hline
+                human.pedestrian.construction\_worker & pedestrian \\ \hline
+                human.pedestrian.police\_officer & pedestrian \\ \hline
+                movable\_object.trafficcone & traffic\_cone \\ \hline
+                movable\_object.barrier & barrier \\ \hline
+                \end{tabular}
+                \label{tab:hrfuser_classes_nuscenes}
+            \end{table}
+                
+
+            For DENSE dataset, the method uses 3 classes for training and evaluation, namely Car, Pedestrian, and Cyclist, Table \ref{tab:hrfuser_classes_dense} shows the mapping from DENSE classes to HRFuser classes. The dataset split is shown in Figure \ref{fig:hrfuser_data_split_dense}.
+
+            \begin{table}[h]
+                \centering
+                \caption{Mapping from DENSE classes to HRFuser classes \cite{broedermann2022hrfuser}}
+                \begin{tabular}{|l|l|}
+                \hline
+                \textbf{DENSE Class} & \textbf{Mapped Class} \\ \hline
+                PassengerCar         & Car                   \\ \hline
+                Pedestrian           & Pedestrian            \\ \hline
+                RidableVehicle       & Cyclist               \\ \hline
+                Large Vehicle        & Car                   \\ \hline
+                DontCare             & DontCare              \\ \hline
+                \end{tabular}
+                
+                \label{tab:hrfuser_classes_dense}
+            \end{table}
+
+            \begin{figure}[h!]
+                \centering
+                \includegraphics[width=0.7\textwidth]{images/datasets/dense/dataset_split.pdf}
+                \caption{Data split for DENSE dataset. Total samples: 12888. Note: all methods use clear weather data for training and validation, and use adverse weather data for testing.}
+                \label{fig:hrfuser_data_split_dense}
+            \end{figure}
+
+            \paragraph*{MT-DETR}
+
+            The MT-DETR model adopts a distinct class categorization for training and evaluation purposes, on the DENSE dataset. Specifically, it combines the 'Car' and 'Cyclist' classes into a unified 'Vehicle' category while maintaining 'Pedestrian' as a standalone class. Consequently, the MT-DETR conducts its training and evaluation processes on these two distinct classes. It is important to note that MT-DETR follows the same dataset partitioning as utilized in the HRFuser framework, which is delineated in Figure \ref{fig:hrfuser_data_split_dense}.
+
+                
+        \end{itemize}
+
+        \subsection{Model Configuration and Training}
+        \begin{itemize}
+            
+            \item \textbf{Training Parameters:} The Table \ref{tab:experiment_training_parameters} below represents typical training configurations for each method employed in this project. However, the original settings varied from these due to GPU computational constraints. In addition, all methods implement learning rate decay and warmup schemes. It should be noted that the asterisk (*) in the table denotes the total batch size when the model is trained across multiple GPUs.
+
+            \begin{table}[h]
+                \centering
+                \caption{Training parameters. (*) denotes total batch size for models trained on multiple GPUs.}
+                \begin{tabular}{|l|l|l|l|l|l|}
+                \hline
+                \textbf{Methods} & \textbf{Optimizer} & \textbf{Learn. Rate} & \textbf{Batch Size} & \textbf{Epochs} & \textbf{Input (WxH)} \\ \hline
+                SAF-FCOS         & SGD                & 0.001                & 8                   & 12              & 1333 x 800           \\ \hline
+                HRFuser (nuScenes) & AdamW             & 0.0003               & 12*                 & 12              & 640x384              \\ \hline
+                HRFuser (DENSE)    & AdamW             & 0.001                & 12*                 & 60              & 1284x384             \\ \hline
+                MT-DETR            & AdamW             & 0.0001               & 1                   & 36              & 1333 x 800           \\ \hline
+                \end{tabular}
+                \label{tab:experiment_training_parameters}
+            \end{table}
+            
+            
+            \item \textbf{Evaluation Metrics:} For the evaluation of the models, the COCO style evaluation metrics were adopted. For each method and its respective configuration, we provide comprehensive details including the total number of model parameters, floating point operations, and the inference time. The details are described in Section~\ref{sec:metrics}.
+        \end{itemize}
+
+        
+
+        
+        \subsection{Experimental Procedure}
+        \begin{itemize}
+            \item \textbf{Testing Protocol:} To facilitate a comprehensive quantitative analysis, all models were evaluated using test sets from both datasets. For comparative purposes, Average Precision (AP) and Average Recall (AR) metrics were employed. Additionally, the models were assessed in terms of complexity, considering aspects such as the number of model parameters, floating-point operations, and inference time. For qualitative analysis, images showcasing model predictions alongside ground truth on the test sets were provided for each comparison.
+            \item \textbf{All Experiments Combinations:} The table referenced as Table \ref{tab:experiment_combinations} presents all the combinations of experiments conducted for each method. In it, each tick mark indicates the combinations available for each respective method. 
+
+            \begin{table}[h!]
+                \centering
+                \caption{Overview of experiment combinations. 'Extra' indicates additional modalities used.}
+                \begin{tabular}{|l|c|c|c|c|c|c|c|}
+                \hline
+                \textbf{Methods} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-coupled} & \textbf{Camera} & \textbf{Radar} & \textbf{Lidar} & \textbf{Extra} \\ \hline
+                SAF-FCOS & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\checkmark$ & $\times$ & $\times$ \\ \hline
+                HRFuser & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Gated \\ \hline
+                MT-DETR & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Time \\ \hline
+                \end{tabular}
+                \label{tab:experiment_combinations}
+                \end{table}
+
+            
+            \textbf{NOTE: The majority of the experiments were carried out utilizing the DENSE dataset in conjunction with the MT-DETR method. Due to computational complexities and resource constraints, it is not feasible to evaluate every possible combination.}
+                
+        \end{itemize}
+        
 
 
-    % For SAF FCOS
-        %  Use this in experiment section
-        % - Training Implementation
 
-        %     - It uses SGD with momentum and weight decay, and train for 12 epochs. The official implementation uses batch size of 16 with LR of 0.01 but due to computational limitations, we have used LR 0.001 with reduced batch size 8. It uses warmup scheme for the first few iterations of training.
-
-        %     The training process involves Stochastic Gradient Descent (SGD) with momentum and weight decay, spanning 12 epochs. While the official implementation opts for a batch size of 16 and a learning rate of 0.01, computational constraints led us to use a reduced batch size of 8 and a learning rate of 0.001. A warmup scheme is employed during the initial iterations of training.
-
-        % % TODO: MOVE this section to experiment setup section
-        % % \textbf{Dataset split}: 
-        % \paragraph*{Dataset Split}
-        % The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
-
-        % \begin{figure}[h!]
-        %     \centering
-        %     \includegraphics[width=0.5\textwidth]{images/methods/saf_fcos/data_split.pdf}
-        %     \caption{Data split of nuScenes dataset. Total samples: 40157. Note: this is a custom dataset split chosen by the authors.}
-        %     \label{fig:saffcos_data_split}
-        % \end{figure}
 
     \section{Results}
 
