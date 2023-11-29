@@ -464,19 +464,6 @@
 
     % The method narrows its focus to larger obstacles, specifically bicycles, cars, motorcycles, buses, trains, and trucks. These are collectively treated under a unified category named `vehicle', simplifying the classification process. Notably, pedestrians are excluded from this categorization due to the inadequacy of radar signals for pedestrian detection in the nuScenes dataset. It is focused on the front camera data from the nuScenes dataset. Dataset split is shown in Figure \ref{fig:saffcos_data_split}.
 
-    % TODO: MOVE this section to experiment setup section
-    % \textbf{Dataset split}: 
-    \paragraph*{Dataset Split}
-    The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
-
-    \begin{figure}[h!]
-        \centering
-        \includegraphics[width=0.5\textwidth]{images/methods/saf_fcos/data_split.pdf}
-        \caption{Data split of nuScenes dataset. Total samples: 40157. Note: this is a custom dataset split chosen by the authors.}
-        \label{fig:saffcos_data_split}
-    \end{figure}
-
-
 
     % - Main contributions or Key Points about this method
     %    - A spatial attention fusion (SAF) block to integrate radar data and vision data is proposed, which is built on the FCOS vision detection framework; 
