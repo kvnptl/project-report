@@ -179,6 +179,8 @@
         \begin{itemize}
             
             \item \textbf{Training Parameters:} The Table \ref{tab:experiment_training_parameters} below represents typical training configurations for each method employed in this project. However, the original settings varied from these due to GPU computational constraints. In addition, all methods implement learning rate decay and warmup schemes. It should be noted that the asterisk (*) in the table denotes the total batch size when the model is trained across multiple GPUs.
+            
+            The model checkpoint with the lowest validation loss is used for evaluation on the test set. The training parameters for each method are detailed below:
 
             \begin{table}[h]
                 \centering
@@ -196,6 +198,8 @@
             
             
             \item \textbf{Evaluation Metrics:} For the evaluation of the models, the COCO style evaluation metrics were adopted. For each method and its respective configuration, we provide comprehensive details including the total number of model parameters, floating point operations, and the inference time. The details are described in Section~\ref{sec:metrics}.
+            
+            For every method and in all experimental combinations, the model inference confidence threshold is set to 0.3, in accordance with the threshold specified in the original paper.
         \end{itemize}
 
         
@@ -224,12 +228,95 @@
                 
         \end{itemize}
         
-
-
-
-
     \section{Results}
 
-    Describe the results of your experiments in detail.
+    \subsection{SAF-FCOS vs. HRFuser}
+
+    In this section, we conduct an evaluation of the performance of two distinct methods on the nuScenes test dataset. The first method, SAF-FCOS, utilizes a Middle Fusion architecture, while the second method, HRFuser, is built upon a Tightly-Coupled Fusion architecture. It is important to note that this Experiment is focused only on the fusion of Camera and Radar sensor data. The results are presented in accordance with COCO-style metrics, as outlined in Table \ref{tab:coco_metrics}.
+
+    \begin{figure}[h!]
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/results/saf_vs_hrfuser/ap_iou.pdf}
+            \caption{Average Precision (AP)}
+            \label{fig:saf_vs_hrfuser_ap_iou}
+        \end{subfigure}
+        \hfill % adds horizontal space between figures
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/results/saf_vs_hrfuser/ap_sml_anno.pdf}
+            \caption{Average Precision (AP) at S, M, L}
+            \label{fig:saf_vs_hrfuser_ap_sml}
+        \end{subfigure}
+        \vspace{1em} % adds vertical space between rows
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/results/saf_vs_hrfuser/ar_anno.pdf}
+            \caption{Average Recall (AR)}
+            \label{fig:saf_vs_hrfuser_ar}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/results/saf_vs_hrfuser/model_complexity.pdf}
+            \caption{Model Complexity}
+            \label{fig:saf_vs_hrfuser_model_complexity}
+        \end{subfigure}
+        \caption{Comparative Analysis: (a) Comparison on Average Precision (AP) at different IoU thresholds. Note AP@0.5:0.05:0.95 is the mean AP across all IoU thresholds. (b) Comparison on Average Precision (AP) at different object sizes. (c) Comparison on Average Recall (AR) with AR(100) and at different object sizes. (d) Comparison in terms of model parameters (M), computational complexity (GFLOPs), and frame rate (FPS).}
+        \label{fig:comparative_analysis}
+    \end{figure}
+
+    % From the quantitative comparison, it can be clearly concluded that SAF-FCOS outperforms HRFuser in all metrics. It is important to note here that despite having slightly more model parameters (+2 M) than HRFuser, the FPS value is significantly higher, 11 vs. 1.9 FPS. The possible reason could be due to the fact that SAF-FCOS uses single-stage detector while HRFuser uses two-stage detector. However, surprisingly, from the model complexity Fig. \ref{fig:saf_vs_hrfuser_model_complexity} (d), it seems that SAF-FCOS having a huge x36 times more floating-point operations than its counterpart HRFuser. One possible reason behind this is that floating-point operations are highly dependent on the input size of the sample. In this comparison, as described in the Table \ref{tab:experiment_training_parameters}, SAF-FCOS is using much larger input than the HRFuser. So for this reason, the GFLOPs value is much higher than HRFuser. Also from the annotated figures \ref{fig:comparative_analysis} (b) and (c), it is observable that the performance gap between SAF-FCOS and HRFuser is much larger for small objects. This points to the advantage of using Spatial Attention Fusion (SAF) block in the SAF-FCOS architecture, which was specifically added to gain as much as information possible from the sparse radar data. So overall, for this particular experiment, it seems that Middle Fusion architecture is more robust than Tightly-Coupled Fusion architecture on nuScenes test dataset.
+
+
+    The comparative analysis demonstrates a clear superiority of SAF-FCOS over HRFuser across all metrics. Notably, SAF-FCOS exhibits a remarkable frame rate of 11 FPS, significantly outstripping HRFuser's 1.9 FPS, despite having a marginally higher model parameter count (+2M). This performance disparity is likely attributable to SAF-FCOS's utilization of a single-stage detector, as opposed to HRFuser's two-stage approach. Contrasting this, an examination of model complexity, as illustrated in Fig. \ref{fig:saf_vs_hrfuser_model_complexity} (d), reveals an unexpected finding: SAF-FCOS requires substantially more floating-point operations — a factor of 36 times greater than HRFuser. A plausible explanation for this discrepancy is the dependency of floating-point operations on input size. As indicated in Table \ref{tab:experiment_training_parameters}, SAF-FCOS processes considerably larger inputs compared to HRFuser, resulting in a heightened GFLOPs value.
+
+    Further scrutiny, particularly of the annotated figures \ref{fig:comparative_analysis} (b) and (c), discloses a more pronounced performance differential in the detection of smaller objects. This observation underscores the efficacy of the Spatial Attention Fusion (SAF) block integrated within the SAF-FCOS framework. The SAF block's inclusion is a strategic enhancement aimed at maximizing the extraction of information from sparse radar data. Consequently, in this specific experimental context using the nuScenes test dataset, the Middle Fusion architecture, exemplified by SAF-FCOS, demonstrates a robustness surpassing that of the Tightly-Coupled Fusion architecture, as represented by HRFuser.
+
+    \paragraph*{Qualitative Analysis}
+
+    The effectiveness of SAF-FCOS and HRFuser methods in different weather conditions is clearly demonstrated in the nuScenes test set. Figure \ref{fig:saf_vs_hrfuser} shows various scenarios. The first row shows how these methods detect objects in bright daylight, where many objects are present. The second row focuses on night conditions, where it's harder to see objects due to low light. The third row shows detection during rain, with the camera lens affected by water, yet both models still successfully identify objects. Importantly, rows four and five compare the detection of small, distant objects. Here, SAF-FCOS proves to be more effective than HRFuser, highlighting its better performance in spotting smaller objects that are far away. This performance underscores the significance of the long detection range of radar sensors, with SAF-FCOS effectively extracting relevant information from these challenging scenarios. This comparison is crucial for understanding how each method performs under different conditions.
+
+    \begin{figure}[h!]
+        \centering
+        % Row 1
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_gt.png}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404.png}
+      
+        % Row 2
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_gt.png}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460.png}
+      
+        % % Row 3
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_gt.png}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404.png}
+      
+        % % Row 4
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_GT.png}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404.png}
+      
+        % % Row 5
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_gt.png}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404.png}
+      
+        \caption{A few samples to showcase the detection results of HRFuser and SAF-FCOS. Where the 1st column is ground truth, 2nd is HRFuser, and 3rd is SAF-FCOS (1st Row: Day, 2nd Row: Night, 3rd Row: Rain, 4th and 5th Row: Small objects). Best viewed in zoomed-in view.}
+        \label{fig:saf_vs_hrfuser}
+      \end{figure}
+    
+
+    \subsection{Multimodal comparison with HRFuser}
+
+    % In this section, we compare importance of different sensors when it comes to detection in adverse weather conditions on the DENSE dataset. As discussed before, the DENSE dataset covers four different sensors for environment perception namely, Camera, Radar, Lidar, and Gated infrared camera. Here, we are comparing how having complementary sensors improves the detection performance in challenging weather conditions. Both quantitative and qualitative analysis are presented in this section. Following are the comparison of only camera vs. camera+radar vs. camera+lidar vs. camera+radar+lidar and camera+radar+lidar+gated infrared camera. The results are presented in accordance with COCO-style metrics, as outlined in Table \ref{tab:coco_metrics}.
+
+    In this analysis, we delve into the significance of varying sensor combinations for object detection under adverse weather conditions, utilizing the DENSE dataset as our benchmark. The DENSE dataset, as previously mentioned, encompasses four distinct types of sensors for environmental perception: Camera, Radar, Lidar, and a Gated Infrared Camera. This comparison focuses on assessing the enhancement in detection performance brought about by the integration of these complementary sensors. We conduct both quantitative and qualitative evaluations, comparing scenarios using only a camera, camera combined with radar, camera with lidar, a trio of camera, radar, and lidar, and finally, an amalgamation of all four sensors including the gated infrared camera. The results of these comparisons are meticulously analyzed using COCO-style metrics. This approach provides a comprehensive understanding of how each sensor contributes to the robustness of object detection in challenging weather conditions, underscoring the value of sensor fusion in enhancing environmental perception.
+    
+
+
 
 \end{document}
