@@ -172,6 +172,8 @@
 
             The MT-DETR model adopts a distinct class categorization for training and evaluation purposes, on the DENSE dataset. Specifically, it combines the 'Car' and 'Cyclist' classes into a unified 'Vehicle' category while maintaining 'Pedestrian' as a standalone class. Consequently, the MT-DETR conducts its training and evaluation processes on these two distinct classes. It is important to note that MT-DETR follows the same dataset partitioning as utilized in the HRFuser framework, which is delineated in Figure \ref{fig:hrfuser_data_split_dense}.
 
+            It is important to emphasize that the methods employing the DENSE dataset are trained exclusively on data from clear weather conditions. However, their testing is conducted on a set that encompasses a variety of extremely challenging weather scenarios. This approach serves to assess the methods' robustness, particularly in situations where one sensor may fail due to adverse conditions. The focus is on how effectively these methods utilize the remaining operational sensors to maintain accurate object detection. Such testing is crucial in understanding the resilience and adaptability of the methods under diverse and unpredictable environmental circumstances.
+
                 
         \end{itemize}
 
@@ -207,28 +209,77 @@
         
         \subsection{Experimental Procedure}
         \begin{itemize}
-            \item \textbf{Testing Protocol:} To facilitate a comprehensive quantitative analysis, all models were evaluated using test sets from both datasets. For comparative purposes, Average Precision (AP) and Average Recall (AR) metrics were employed. Additionally, the models were assessed in terms of complexity, considering aspects such as the number of model parameters, floating-point operations, and inference time. For qualitative analysis, images showcasing model predictions alongside ground truth on the test sets were provided for each comparison.
-            \item \textbf{All Experiments Combinations:} The table referenced as Table \ref{tab:experiment_combinations} presents all the combinations of experiments conducted for each method. In it, each tick mark indicates the combinations available for each respective method. 
+            \item \textbf{Testing Protocol:} To facilitate a comprehensive quantitative analysis, all models were evaluated using test sets from both datasets. For comparative purposes, Average Precision (AP) and Average Recall (AR) metrics were employed. Additionally, the models were assessed in terms of complexity, considering aspects such as the number of model parameters, floating-point operations, and inference time. Here, the inference time (or FPS) is calculated based on the average time it takes to process a single image on the test set. For floating-point operations, it is calculated with batch size 1. For qualitative analysis, images showcasing model predictions alongside ground truth on the test sets were provided for most relevant experiments. In the following experiments, loss curves have not been included. This is because each method employs a distinct loss calculation approach, rendering direct comparisons between them impractical.
+            \item \textbf{All Experiments Combinations:} The table referenced as Table \ref{tab:total_available_configurations} presents all the available configurations for each method. And table below that Table \ref{tab:experiment_combinations}, listed an overview of all the experiments done for this project. Note that only the experiment listed with Sr. 1 is conducted on the nuScenes dataset; the rest are all on the DENSE dataset.
 
             \begin{table}[h!]
                 \centering
-                \caption{Overview of experiment combinations. 'Extra' indicates additional modalities used.}
+                \caption{Available configurations for each method.}
                 \begin{tabular}{|l|c|c|c|c|c|c|c|}
                 \hline
-                \textbf{Methods} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-coupled} & \textbf{Camera} & \textbf{Radar} & \textbf{Lidar} & \textbf{Extra} \\ \hline
-                SAF-FCOS & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\checkmark$ & $\times$ & $\times$ \\ \hline
+                \textbf{Methods} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-coupled} & \textbf{Camera} & \textbf{Lidar} & \textbf{Radar} & \textbf{Extra} \\ \hline
+                SAF-FCOS & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ \\ \hline
                 HRFuser & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Gated \\ \hline
                 MT-DETR & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Time \\ \hline
                 \end{tabular}
-                \label{tab:experiment_combinations}
-                \end{table}
-
+                \label{tab:total_available_configurations}
+            \end{table}
             
+
+                \begin{table}[h!]
+                    \centering
+                    \caption{Overview of experiment combinations. C, L, R, G, and T denote Camera, Lidar, Radar, Gated camera, and Time}
+                    \begin{tabular}{|c|l|l|c|c|c|c|c|c|l|}
+                    \hline
+                    \textbf{Sr.} & \multicolumn{2}{c|}{\textbf{Method}} & \multicolumn{3}{c|}{\textbf{Fusion Architecture}} & \multicolumn{3}{c|}{\textbf{Sensors}} & \textbf{Extra} \\
+                    \cline{2-9}
+                     & \textbf{1} & \textbf{2} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-c.} & \textbf{C} & \textbf{L} & \textbf{R} &  \\
+                    \hline
+                    1 & SAF-FCOS & HRFuser & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    2 & HRFuser & - & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    3 & HRFuser & - & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & G \\
+                    \hline
+                    4 & MT-DETR & - & $\checkmark$ & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    5 & MT-DETR & - & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    6 & MT-DETR & - & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    7 & MT-DETR & - & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    8 & MT-DETR & - & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    9 & MT-DETR & - & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & T \\
+                    \hline
+                    10 & HRFuser & MT-DETR & $\times$ & $\times$ & $\times$ & $\checkmark$ & $\times$ & $\times$ & $\times$ \\
+                    \hline
+                    11 & HRFuser & MT-DETR & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    12 & HRFuser & MT-DETR & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ & $\times$ \\
+                    \hline
+                    13 & HRFuser & MT-DETR & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+                    \hline
+                    14 & HRFuser & MT-DETR & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & G,T \\
+                    \hline
+                    \end{tabular}
+                    \label{tab:experiment_combinations}
+                \end{table}
+                
             \textbf{NOTE: The majority of the experiments were carried out utilizing the DENSE dataset in conjunction with the MT-DETR method. Due to computational complexities and resource constraints, it is not feasible to evaluate every possible combination.}
                 
         \end{itemize}
-        
+    
+    % ####################################################################
+    % #####################################################
+    % ################################################################
+
     \section{Results}
+
+    For all the experiments below, C, L, R, G, and T denote Camera, Lidar, Radar, Gated camera, and Time respectively. For better readability and visibility, legends color code are maintained same for each sensor modality. All plots are best visualized in zoomed-in view.
+
+    To get the complete result table for all the experiments carried out on the DENSE dataset, please refer to Table \ref{tab:complete_results_table}.
 
     \subsection{SAF-FCOS vs. HRFuser}
 
@@ -281,40 +332,433 @@
     \begin{figure}[h!]
         \centering
         % Row 1
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_gt.png}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404_former.jpg}
         \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s3_day_regular/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152655412404.png}
       
         % Row 2
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_gt.png}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460_former.jpg}
         \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s4_night_reg/n015-2018-11-14-19-52-02+0800__CAM_FRONT__1542196675862460.png}
       
         % % Row 3
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_gt.png}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_former.jpg}\hfill
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404_former.jpg}
         \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s5_rain_reg/n008-2018-09-18-14-18-33-0400__CAM_FRONT__1537295031112404.png}
       
         % % Row 4
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_GT.png}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_former.jpg}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404.png}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_GT_2.jpg}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_former_2.jpg}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s1_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152226912404_2.jpg}
       
         % % Row 5
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_gt.png}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_former.jpg}\hfill
-        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404.png}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_gt_2.jpg}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_former_2.jpg}
+        \includegraphics[width=0.3\textwidth]{images/results/saf_vs_hrfuser/samples/s2_small/n008-2018-08-01-15-34-25-0400__CAM_FRONT__1533152641412404_2.jpg}
       
         \caption{A few samples to showcase the detection results of HRFuser and SAF-FCOS. Where the 1st column is ground truth, 2nd is HRFuser, and 3rd is SAF-FCOS (1st Row: Day, 2nd Row: Night, 3rd Row: Rain, 4th and 5th Row: Small objects). Best viewed in zoomed-in view.}
         \label{fig:saf_vs_hrfuser}
       \end{figure}
     
 
-    \subsection{Multimodal comparison with HRFuser}
+    \subsection{Multimodal Sensor Fusion in HRFuser: Tightly-Coupled Fusion}
 
     % In this section, we compare importance of different sensors when it comes to detection in adverse weather conditions on the DENSE dataset. As discussed before, the DENSE dataset covers four different sensors for environment perception namely, Camera, Radar, Lidar, and Gated infrared camera. Here, we are comparing how having complementary sensors improves the detection performance in challenging weather conditions. Both quantitative and qualitative analysis are presented in this section. Following are the comparison of only camera vs. camera+radar vs. camera+lidar vs. camera+radar+lidar and camera+radar+lidar+gated infrared camera. The results are presented in accordance with COCO-style metrics, as outlined in Table \ref{tab:coco_metrics}.
 
-    In this analysis, we delve into the significance of varying sensor combinations for object detection under adverse weather conditions, utilizing the DENSE dataset as our benchmark. The DENSE dataset, as previously mentioned, encompasses four distinct types of sensors for environmental perception: Camera, Radar, Lidar, and a Gated Infrared Camera. This comparison focuses on assessing the enhancement in detection performance brought about by the integration of these complementary sensors. We conduct both quantitative and qualitative evaluations, comparing scenarios using only a camera, camera combined with radar, camera with lidar, a trio of camera, radar, and lidar, and finally, an amalgamation of all four sensors including the gated infrared camera. The results of these comparisons are meticulously analyzed using COCO-style metrics. This approach provides a comprehensive understanding of how each sensor contributes to the robustness of object detection in challenging weather conditions, underscoring the value of sensor fusion in enhancing environmental perception.
+    In this analysis, we delve into the significance of varying sensor combinations for object detection under adverse weather conditions, utilizing the DENSE dataset as our benchmark. The DENSE dataset, as previously mentioned, encompasses four distinct types of sensors for environmental perception: Camera, Radar, Lidar, and a Gated infrared Camera. This comparison focuses on assessing the enhancement in detection performance brought about by the integration of these complementary sensors. We conduct both quantitative and qualitative evaluations, comparing scenarios using only a camera, camera combined with radar, camera with lidar, a trio of camera, radar, and lidar, and finally, an amalgamation of all four sensors including the gated infrared camera. For all experiments on HRFuser, only tightly-coupled fusion architecture is used. The results of these comparisons are meticulously analyzed using COCO-style metrics. This approach provides a comprehensive understanding of how each sensor contributes to the robustness of object detection in challenging weather conditions, underscoring the value of sensor fusion in enhancing environmental perception.
+
+    The presented plots illustrate the impact of weather conditions, as represented on the x-axis. The DENSE dataset encompasses four distinct weather scenarios: Clear Weather, Light Fog, Dense Fog, and Snow/Rain. Within the dataset, each weather condition is further subdivided into 'Day' and 'Night' categories. This categorization is intended to demonstrate a model's performance under varying levels of ambient light. In the following plots, the transition between 'Day' and 'Night' for a specific weather condition is highlighted by the use of bold lines.
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser/ap.pdf}
+        \caption{Performance of the HRFuser model in terms of Average Precision (AP) across various sensor modalities under different weather conditions. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:hrfuser_ap}
+    \end{figure}
+
+    \begin{figure}[]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser/ar.pdf}
+        \caption{Performance of the HRFuser model in terms of Average Recall (AR) across various sensor modalities under different weather conditions. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:hrfuser_ar}
+    \end{figure}
+
+    % The graph provides insights into the balance between computational load and efficiency for varying combinations of sensors.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/hrfuser/model_complexity.pdf}
+        \caption{HRFuser model's complexity and performance, displayed through model parameters (in M), GFLOPs, and FPS, across different sensor modalities. Note: this is a common plot with an additional modality, Gated infrared camera.}
+        \label{fig:hrfuser_model_complexity}
+    \end{figure}
+
+
+
+    Points:
+    - shows day vs night highlighted with bold line, except light fog, there is trend from day to night performance reduction probably due to camera low light
+    - trendline shows the performance of perception system from clear to adverse weather declination
+    - observe that in dense fog, camera+radar performs better than camera+lidar, mainly due to lidar points affecting by fog,  
+    - across all modalities, camera+radar+lidar tops the list, shows the clear advantage fusion of complementary sensors 
+    - only camera performs worst across all modalities
+    - both AP and AR follows the same trend
+
+    \subsubsection{With an Additional Modality}
+    
+    % TODO: udpate figure and tables
+    - With having an additional modality as a Gated infrared camera, HRFuser achieves the best performance in terms of AP and AR, from the model complexity and performance chart, it can be seen that with mere 1.22\% increment in model parameters and 8.98\% increment in GFLOPs and negligible drop in fps, camera+radar+lidar+gated infrared camera tops the list across all modalities. Gated infrared camera also has less impacted in adverse weather conditions as quantitatively shown in the Table, but to its unavailability in majority of the dataset it's not well tested across the diverse scenarios. This also shows that HRFuser can handle arbitrary number of modalities in the same model as described in the section.
+
+    \begin{figure}[]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser/additional_modality/ap_2.pdf}
+        \caption{Performance of the HRFuser model in terms of Average Precision (AP) across various sensor modalities under different weather conditions with an additional sensor Gated infrared camera. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:hrfuser_ap_2}
+    \end{figure}
+
+    \begin{figure}[]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser/additional_modality/ar_2.pdf}
+        \caption{Performance of the HRFuser model in terms of Average Recall (AR) across various sensor modalities under different weather conditions with an additional sensor Gated infrared camera. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:hrfuser_ar_2}
+    \end{figure}
+
+    \paragraph*{Qualitative Analysis: Comparison across Modalities}
+
+    In the DENSE adverse weather dataset, we present samples that emphasize the critical role of multimodal sensors in achieving robust perception under adverse weather conditions. Figure \ref{fig:hrfuser_on_dense} below illustrates the detection results comparing the Camera-only model to the multimodal C+L+R-based Tightly-Coupled Fusion model.
+
+    The data presented in the figure corroborates the findings of the preceding quantitative analysis. Specifically, the camera-only model demonstrates a limitation in object detection under adverse weather conditions, attributed to decreased visibility. In contrast, the multimodal sensor fusion model, which integrates data from various complementary sensors, shows remarkable efficacy in object detection even under challenging conditions. It is noteworthy that all models were initially trained in clear weather scenarios and had no prior exposure to extreme weather conditions. The success of the multimodal model in these situations can be attributed to its feature fusion strategy at multiple levels, utilizing input from diverse sensors. Consequently, when one sensor's effectiveness is compromised due to environmental factors, the other robust sensors compensate, ensuring reliable object detection. This ability to adapt and perform accurately under varied conditions underscores the significant advantage of the multimodal Tightly-Coupled Fusion architecture in object detection tasks.
+
+    \begin{figure}[h!]
+        \centering
+        % Row 1
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/day_snow/2018-02-07_11-54-15_00440.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/day_snow/2018-02-07_11-54-15_00440_former_c.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/day_snow/2018-02-07_11-54-15_00440_former_clr.png}
+      
+        % Row 2
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/clear_night/2018-02-04_18-18-20_00100_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/clear_night/2018-02-04_18-18-20_00100_former_c.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/clear_night/2018-02-04_18-18-20_00100_former_clr.png}
+      
+        % % Row 3
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_camera_fails/2018-10-29_15-02-37_00900_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_camera_fails/2018-10-29_15-02-37_00900_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_camera_fails/2018-10-29_15-02-37_00900_former_clr.png}
+      
+        % % Row 4
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/light_fog_day/2018-02-04_13-26-00_00100_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/light_fog_day/2018-02-04_13-26-00_00100_former_c.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/light_fog_day/2018-02-04_13-26-00_00100_former_clr.png}
+      
+        % % Row 5
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_night/2018-02-07_17-56-35_00110.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_night/2018-02-07_17-56-35_00110_former_c.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser/samples/dense_fog_night/2018-02-07_17-56-35_00110_former_clr.png}
+      
+        \caption{A few samples to showcase the detection results of HRFuser. Where the 1st column is ground truth, 2nd is Camera only, and 3rd is Tightly-Coupled Fusion with C+L+R (Rows show the challenging weather conditions). Best viewed in zoomed-in view.}
+        \label{fig:hrfuser_on_dense}
+      \end{figure}
+    
+    
+
+    \FloatBarrier
+    \subsection{Multimodal Sensor Fusion in MT-DETR: Spanning Early to Tightly-Coupled Fusion}
+
+    Here, experiments are conducted to compare the different modalities with MT-DETR method on the DENSE dataset. As MT-DETR also provides various configurations for its architecture, the experiments are conducted on the following fusion architecture configurations: 'Early', 'Middle', and 'Tightly-coupled' with all available sensors in the dataset. The experiment covers comparison among different combinations of sensors: Camera only (C), Camera+Lidar (C+L), Camera+Radar (C+R) and Camera+Lidar+Radar (C+L+R). In the following plots, the Camera only (C) results are without any fusion, it is a single modality experiment.
+
+    Note that Average Recall (AR) plots are not shown below as they are following the same data trend as Average Precision (AP) plots. 
+
+    In the model complexity plots presented, Frames Per Second (FPS) data are not included. We tested only one configuration on the V100 GPU, which is the MT-DETR Tightly-Coupled Fusion with C+L+R modalities, achieving 1.4 FPS. Other combinations were not tested on the V100 due to time and computational limitations. All model evaluations were conducted on a high-end A100 GPU to facilitate faster computation. However, this difference in hardware used for inference, compared to other methods, means that the results are not directly comparable.
+
+    \FloatBarrier
+    \subsubsection{Early Fusion: C vs. C+R vs. C+L+R}
+
+        \begin{figure}[]
+            \centering
+            \includegraphics[width=1.0\textwidth]{images/results/mtdetr/early/ap.pdf}
+            \caption{Performance of the MT-DETR Early Fusion model in terms of AP across sensor modalities under different weather conditions. Note: C data point values are shown above the line and rest are below the line.}
+            \label{fig:mtdetr_early_ap}
+        \end{figure}
+
+        \begin{figure}[]
+            \centering
+            \includegraphics[width=0.8\textwidth]{images/results/mtdetr/early/model_complexity.pdf}
+            \caption{MT-DETR Early Fusion model's complexity, displayed through model parameters (in M), and GFLOPs across different sensor modalities.}
+            \label{fig:mtdetr_early_model_complexity}
+        \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Middle Fusion: C vs. C+R vs. C+L+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/mtdetr/middle/ap.pdf}
+        \caption{Performance of the MT-DETR Middle Fusion model in terms of AP across sensor modalities under different weather conditions. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:mtdetr_middle_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/mtdetr/middle/model_complexity.pdf}
+        \caption{MT-DETR Middle Fusion model's complexity, displayed through model parameters (in M), and GFLOPs across different sensor modalities.}
+        \label{fig:mtdetr_middle_model_complexity}
+    \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Tightly-Coupled Fusion: C vs. C+R vs. C+L+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/mtdetr/tight/ap.pdf}
+        \caption{Performance of the MT-DETR Tightly-Coupled Fusion model in terms of AP across sensor modalities under different weather conditions. Note: C+L+R data point values are shown above the line and rest are below the line.}
+        \label{fig:mtdetr_tight_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/mtdetr/tight/model_complexity.pdf}
+        \caption{MT-DETR Tightly-Coupled Fusion model's complexity, displayed through model parameters (in M), and GFLOPs across different sensor modalities.}
+        \label{fig:mtdetr_tight_model_complexity}
+    \end{figure}
+
+
+    
+
+    \FloatBarrier
+    \subsubsection{Early vs. Middle vs. Tightly-Coupled Fusion: C+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/mtdetr/EMT_CR/ap.pdf}
+        \caption{Performance of the MT-DETR across the Early, Middle, and Tightly-Coupled Fusion model with C+R in terms of AP across sensor modalities under different weather conditions. Note: Tightly-Coupled data point values are shown above the line and rest are below the line.}
+        \label{fig:mtdetr_emt_cr_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/mtdetr/EMT_CR/model_complexity.pdf}
+        \caption{MT-DETR model's complexity across the Early, Middle, and Tightly-Coupled Fusion with C+R, displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:mtdetr_emt_cr_model_complexity}
+    \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Early vs. Middle vs. Tightly-Coupled Fusion: C+L+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/mtdetr/EMT_CLR/ap.pdf}
+        \caption{Performance of the MT-DETR across the Early, Middle, and Tightly-Coupled Fusion model with C+L+R in terms of AP across sensor modalities under different weather conditions. Note: Tightly-Coupled data point values are shown above the line and rest are below the line.}
+        \label{fig:mtdetr_emt_crl_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/mtdetr/EMT_CLR/model_complexity.pdf}
+        \caption{MT-DETR model's complexity across the Early, Middle, and Tightly-Coupled Fusion with C+L+R, displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:mtdetr_emt_crl_model_complexity}
+    \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Tightly-Coupled Fusion (with Time): C+R vs. C+L+R vs. C+L+R+T}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/mtdetr/T_CLRT/ap.pdf}
+        \caption{Performance of the MT-DETR Tightly-Coupled Fusion with additional Time input in terms of AP across sensor modalities under different weather conditions. Note: C+L+R+T data point values are shown above the line and rest are below the line.}
+        \label{fig:mtdetr_t_clrt_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/mtdetr/T_CLRT/model_complexity.pdf}
+        \caption{MT-DETR Tightly-Coupled Fusion model's complexity across modalities, displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:mtdetr_t_clrt_model_complexity}
+    \end{figure}
+
+    \paragraph*{Qualitative Analysis: Comparison across Fusion Architectures}
+
+    Here, we present the detection results of MT-DETR across different fusion architectures. Figure \ref{fig:mtdetr_on_dense} below illustrates the detection results comparing the Middle and Tightly-Coupled Fusion architectures with the Camera, Lidar and Radar sensor fusion. From the above quantitative analysis, it is clear that Middle Fusion outperforms Early Fusion, hence for qualitative analysis, we only consider the Middle Fusion and Tightly-Coupled Fusion.
+
+    The qualitative analysis reveals that Middle Fusion is generally effective in adverse weather conditions. However, it encounters challenges in certain extreme cases, such as detecting small, distant objects, as illustrated in rows 1, 4, and 5 of Figure \ref{fig:mtdetr_on_dense}. A notable instance of its limitation is presented in row 2, where Middle Fusion incorrectly identifies a car's reflection in a mirror. This error likely stems from its inability to robustly integrate data from the depth sensor with the camera information. Additionally, row 3 highlights another issue where the system successfully detects an object but erroneously categorizes a pedestrian as a vehicle.
+
+    Notice that in the last two samples, despite the absence of ground truth annotations, the Tightly-Coupled Fusion model effectively identifies the objects. This observation is particularly significant given that all models were trained solely in clear weather conditions and had no prior exposure to such extreme and challenging weather scenarios in their training phase. Nevertheless, the models demonstrate robust performance, a testament to the MT-DETR model architecture. This architecture excels in extracting maximal information from all available sensors and integrating it at various stages. This capability highlights the model's proficiency in adapting to and overcoming the limitations posed by unforeseen and adverse environmental conditions.
+
+    
+    \begin{figure}[h!]
+        \centering
+        % Row 1
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow/2018-02-04_12-37-52_00100_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow/2018-02-04_12-37-52_00100_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow/2018-02-04_12-37-52_00100_t_clr.png}
+      
+        % Row 2
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow_2/2018-02-04_11-29-58_00200_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow_2/2018-02-04_11-29-58_00200_mid_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/day_snow_2/2018-02-04_11-29-58_00200_tight_clr.png}
+      
+        % % Row 3
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_dense_fog/2018-02-07_18-26-13_00240_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_dense_fog/2018-02-07_18-26-13_00240_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_dense_fog/2018-02-07_18-26-13_00240_t_clr.png}
+      
+        % % Row 4
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_snow/2018-02-08_17-45-07_00270_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_snow/2018-02-08_17-45-07_00270_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/night_snow/2018-02-08_17-45-07_00270_t_clr.png}
+      
+        % % Row 5
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_1/2018-02-12_09-32-09_00510_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_1/2018-02-12_09-32-09_00510_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_1/2018-02-12_09-32-09_00510_t_clr.png}
+
+        % % Row 6
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_2/2018-02-12_18-05-56_00060_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_2/2018-02-12_18-05-56_00060_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_2/2018-02-12_18-05-56_00060_t_clr.png}
+
+        % % Row 7
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_3/2018-02-12_10-07-06_00200_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_3/2018-02-12_10-07-06_00200_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_3/2018-02-12_10-07-06_00200_t_clr.png}
+        % % Row 8
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_4/2018-02-12_11-00-35_00450_gt.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_4/2018-02-12_11-00-35_00450_m_clr.png}
+        \includegraphics[width=0.3\textwidth]{images/results/mtdetr/samples/snow_4/2018-02-12_11-00-35_00450_t_clr.png}
+      
+        \caption{A few samples to showcase the detection results of MT-DETR. Where the 1st column is ground truth, 2nd is Middle Fusion, and 3rd is Tightly-Coupled Fusion, both are using the same C+L+R (Rows show the extremely challenging weather conditions). Best viewed in zoomed-in view.}
+        \label{fig:mtdetr_on_dense}
+      \end{figure}
+
+
+% ####################################################
+% #####################################################
+% ###################################################
+
+
+    \subsection{MT-DETR vs. HRFuser: Tightly-Coupled Fusion}
+
+    This section shows the comparison between the MT-DETR and HRFuser Tightly-Coupled Fusion models. Both are evaluated on the same test set from the DENSE dataset. Both models are compared across various sensor modalities, including C+R, C+L, C+L+R, and C+L+R+T.
+
+    It is important to note that for a fair comparison of floating-point operations (FLOPs) between HRFuser and MT-DETR, we ensured that both models used the same input dimensions. This is crucial since FLOPs are highly dependent on the size of the input dimension. 
+
+    \FloatBarrier
+    \subsubsection{Compared on C+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser_vs_mtdetr/cr/ap.pdf}
+        \caption{Performance of the MT-DETR vs. HRFuser with Tightly-Coupled Fusion on C+R in terms of AP under different weather conditions. Note: MT-DETR data point values are shown above the line.}
+        \label{fig:hrfuser_vs_mtdetr_cr_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/hrfuser_vs_mtdetr/cr/model_complexity.pdf}
+        \caption{MT-DETR vs. HRFuser: Tightly-Coupled Fusion model's complexity on C+R displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:hrfuser_vs_mtdetr_cr_model_complexity}
+    \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Compared on C+L}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser_vs_mtdetr/cl/ap.pdf}
+        \caption{Performance of the MT-DETR vs. HRFuser with Tightly-Coupled Fusion on C+L in terms of AP under different weather conditions. Note: MT-DETR data point values are shown above the line.}
+        \label{fig:hrfuser_vs_mtdetr_cl_ap}
+    \end{figure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/hrfuser_vs_mtdetr/cl/model_complexity.pdf}
+        \caption{MT-DETR vs. HRFuser: Tightly-Coupled Fusion model's complexity on C+L displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:hrfuser_vs_mtdetr_cl_model_complexity}
+    \end{figure}
+
+    \FloatBarrier
+    \subsubsection{Compared on C+L+R}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser_vs_mtdetr/clr/ap.pdf}
+        \caption{Performance of the MT-DETR vs. HRFuser with Tightly-Coupled Fusion on C+L+R in terms of AP under different weather conditions. Note: MT-DETR data point values are shown above the line.}
+        \label{fig:hrfuser_vs_mtdetr_clr_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/hrfuser_vs_mtdetr/clr/model_complexity.pdf}
+        \caption{MT-DETR vs. HRFuser: Tightly-Coupled Fusion model's complexity on C+L+R displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:hrfuser_vs_mtdetr_clr_model_complexity}
+    \end{figure}
+    \FloatBarrier
+    \subsubsection{Compared on C+L+R+T (MT-DETR) vs. C+L+R+G (HRFuser)}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/results/hrfuser_vs_mtdetr/clr_g_t/ap.pdf}
+        \caption{Performance of the MT-DETR vs. HRFuser with Tightly-Coupled Fusion on C+L+R + additional input(Time vs. Gated) in terms of AP under different weather conditions. Note: MT-DETR data point values are shown above the line.}
+        \label{fig:hrfuser_vs_mtdetr_clr_g_t_ap}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/results/hrfuser_vs_mtdetr/clr_g_t/model_complexity.pdf}
+        \caption{MT-DETR vs. HRFuser: Tightly-Coupled Fusion model's complexity on C+L+R + additional input(Time vs. Gated) displayed through model parameters (in M), and GFLOPs.}
+        \label{fig:hrfuser_vs_mtdetr_clr_g_t_model_complexity}
+    \end{figure}
+
+    \paragraph*{Qualitative Analysis on C+L+R with Tightly-Coupled Fusion}
+
+    This section compares the object detection capabilities of the HRFuser and MT-DETR models on the DENSE dataset under extremely challenging weather conditions. The figure below (\ref{fig:hrfuser_vs_mtdetr_on_dense}) illustrates a qualitative comparison of the detection results between the HRFuser and MT-DETR models. Both models employ a Tightly-Coupled Fusion architecture, integrating multiple sensors at various levels. Quantitative analysis using COCO metrics reveals that MT-DETR significantly outperforms HRFuser.
+
+    The comparative trend is evident in prediction samples from both models. A critical analysis of multiple inference samples from each dataset indicates that HRFuser tends to generate more false positives. This is particularly noticeable in rows 2, 3, 4, and 5 of the figure (\ref{fig:hrfuser_vs_mtdetr_on_dense}). The HRFuser model primarily struggles in conditions of heavy snow or dense fog. This suggests that the fused output from HRFuser is adversely influenced by Lidar features, as Lidar is known to have difficulties in dense fog conditions, leading to false detections (see Figures \ref{fig:lidar} and \ref{fig:lidar_in_fog}). Based on this quantitative and qualitative analysis, it can be concluded that the MT-DETR model is more robust and effective in object detection under adverse weather conditions compared to HRFuser.
+    
+    \begin{figure}[h!]
+        \centering
+        % Row 1
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fgo_night/2018-02-07_18-26-13_00240.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fgo_night/2018-02-07_18-26-13_00240_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fgo_night/2018-02-07_18-26-13_00240_m_cropped.png}
+
+        % Row 2
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fog/2019-01-09_11-02-41_00660.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fog/2019-01-09_11-02-41_00660_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/dense_fog/2019-01-09_11-02-41_00660_m_cropped.png}
+
+        % Row 3
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/night_snow/2018-02-12_18-05-56_00060.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/night_snow/2018-02-12_18-05-56_00060_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/night_snow/2018-02-12_18-05-56_00060_m_cropped.png}
+
+        % Row 4
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_1/2018-12-17_07-36-29_03040.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_1/2018-12-17_07-36-29_03040_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_1/2018-12-17_07-36-29_03040_m_cropped.png}
+
+        % Row 5
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_2/2018-12-17_07-57-00_01500.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_2/2018-12-17_07-57-00_01500_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_2/2018-12-17_07-57-00_01500_m_cropped.png}
+        
+        % Row 6
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_3/2019-01-09_13-23-24_02700.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_3/2019-01-09_13-23-24_02700_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_3/2019-01-09_13-23-24_02700_m_cropped.png}
+
+        % Row 7
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_4/2019-01-09_18-39-19_00300.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_4/2019-01-09_18-39-19_00300_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_4/2019-01-09_18-39-19_00300_m_cropped.png}
+
+        % Row 7
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_day/2018-02-12_10-07-06_00200.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_day/2018-02-12_10-07-06_00200_former.png}
+        \includegraphics[width=0.3\textwidth]{images/results/hrfuser_vs_mtdetr/samples/snow_day/2018-02-12_10-07-06_00200_m_cropped.png}
+        
+      
+        \caption{A few samples to showcase the detection results of HRFuser vs. MT-DETR. Both with Tightly-Coupled Fusion and on the C+L+R. Where the 1st column is ground truth, 2nd is HRFuser, and 3rd is MT-DETR (Rows show the extremely challenging weather conditions). Best viewed in zoomed-in view.}
+        \label{fig:hrfuser_vs_mtdetr_on_dense}
+      \end{figure}
+
+
     
 
 
