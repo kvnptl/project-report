@@ -5,20 +5,99 @@
 
     \section{Contributions}
 
+    % - comprehensive study of three best performing multimodal sensor fusion methods in 2D object detection
+    % - as of now there is no literature on tightly-coupled fusion architectures in 2D object detection, this study provides a comprehensive study on this topic
+    % - Comparing tightly-coupled multimodal sensor fusion on same standard metric which is COCO metrics 
+    % - comparison on  two widely available public datasets in adverse weather conditions
+    % - Differnet methods use different classes and custom data splits for evaluation, so this work managed to compare them on the same classes, and same dataset splits
+    % - Providing both qualitative and quantitative analysis on key experiements, including across modalities and across fusion architectures
+
+    This research presents a comprehensive study of the three most effective multimodal sensor fusion methods for 2D object detection, addressing a notable gap in existing literature. Prior to this work, there was a distinct lack of exploration in tightly-coupled fusion architectures within the domain of 2D object detection. Our study fills this crucial gap, offering an in-depth examination of this emerging area.
+
+    A key contribution of this study is the uniform application of COCO metrics for comparing the performance of tightly-coupled multimodal sensor fusion methods. This standardized approach ensures a fair and consistent evaluation framework, enabling a more accurate assessment of each method's effectiveness.
+
+    Additionally, our research undertakes a comparative analysis using two widely recognized public datasets, out of which one is specifically curated for adverse weather conditions. This not only underscores the robustness of the evaluated methods but also enhances the relevance and applicability of our findings.
+
+    A common challenge in sensor fusion research is the variability in class definitions and data splits used for evaluation. Our work addresses this by harmonizing the evaluation criteria, comparing different methods on identical classes and dataset splits. This standardization removes inconsistencies and biases that often plague comparative studies, providing a clearer insight into the relative strengths and weaknesses of each method.
+
+    Finally, this study offers both qualitative and quantitative analysis across a range of key experiments. This dual approach encompasses a detailed examination of performance across different modalities and fusion architectures, providing a holistic view of the effectiveness of tightly-coupled sensor fusion in adverse weather conditions. The insights gleaned from this analysis contribute significantly to the field, offering valuable guidance for future research and development in multimodal sensor fusion.
+
     \section{Lessons learned}
+
+    Below are some of the lessons learned in this study:
+
+    % - `Linear Scaling Rule' for learning rate adaption w.r.t and batch size
+    %     - it has been observed during experiment phase that learning rate and batch size are interconnected as mentioned in the paper \cite{goyal2017accurate}
+    %     - If we increase reduce the batch size due to some compute limitations then in that case, we should reduce the learning rate too linearly
+    %     - For example for HRFuser on DENSE dataset, the original paper mentioned LR 0.001 with batch size 12, but due to GPU memory limitations, we had to reduce the batch size to 8, so we reduced the learning rate = 0.001 * (8/12) = 0.000666667. This helped in getting compareable results with original paper.
+
+    % - Always making sure before comparing a model to check the exact dataset splits, classes, and benchmarking metric style. In this study, it has been observed that despite using the same datasets and same metric, but models are not directly comparable due to the usage of different data classes or usage of superclasses by mapping. Also important to carefully check the result numbers published in the paper, as despite having common metric style, but sometimes numbers are published in different ways. For example, in COCO metric style, there are AP values at different IoU thresholds, so in some literature, mean AP is used, while other might use AP at some specific IoU threshold, ex. at AP@0.75.
+    
+    % - Using multi-GPUs for training large models on big datasets to reduce the train-test time cycle. This training procedure helped in reducing the training time from 45 hours on single NVIDIA V100 to approx 9 hours on four NVIDIA V100 GPUs. So whenever enough compute is accessible, it is better to explore model with multi-GPUs.
+    
+    % - Using of popular deep learning framework as a base for popular foundation models like Faster RCNN, Cascadded RCNN, DETR (detection transoformer), etc. This helps in faster prototyping and exploring various model configurations with ease, while focusing on the novel research part.
+
+    % In our research on "Object Detection in Adverse Weather Conditions Using Tightly-Coupled Data-Driven Multimodal Sensor Fusion," several key insights were gleaned. These insights not only enhanced our study's effectiveness but also offered valuable guidelines for future research in this domain.
+
+    \begin{enumerate}
+
+        \item \textbf{Adaptation of the Linear Scaling Rule for Learning Rate and Batch Size:} 
+        Our experiments, in alignment with Goyal et al. \cite{goyal2017accurate}, underscored the interdependence of learning rate and batch size. When computational constraints required us to reduce the batch size from 12 to 8 in our work with HRFuser on the DENSE dataset, we correspondingly adjusted the learning rate linearly from 0.001 to 0.000666667 (\(0.001 \times \frac{8}{12}\)), thereby ensuring results comparable to the original settings. Not adhering to this adaptation, as experienced in our work, led to suboptimal performance of the model.
+
+        \item \textbf{Importance of Dataset Splits, Classes, and Benchmarking Metrics in Model Comparison:} 
+        Uniformity in dataset splits, class definitions, and benchmarking metrics is crucial for accurate model comparison. We noted that differences in class definitions and superclass usage, along with varied reporting styles in metrics (e.g., mean AP vs. AP at specific IoU thresholds), necessitate careful examination for accurate comparisons.
+
+        \item \textbf{Leveraging Multi-GPU Setups for Efficient Training:} 
+        Utilizing multi-GPU configurations significantly reduced training times in our study. By employing four NVIDIA V100 GPUs, the training duration was cut from approximately 45 hours to about 9 hours, highlighting the importance of leveraging computational resources in large-scale data and complex model training.
+
+        \item \textbf{Utilization of Popular Deep Learning Frameworks for Foundation Models:} 
+        Employing established deep learning frameworks for foundational models like Faster RCNN, Cascaded RCNN, and DETR expedited prototyping and model configuration exploration. This strategy enabled us to focus on novel research aspects.
+    \end{enumerate}
 
     \section{Future work}
 
-    \textbf{Utilization of 4D Imaging Radar in Adverse Weather}: There is a notable lack of research utilizing 4D imaging radar sensors, especially in adverse weather conditions \cite{Zhou2022May}. Given the potential of these sensors in challenging environments, further exploration in this area is essential. The K-Radar dataset \cite{Paek2022Jun} is a step in the right direction, but yet to be explored.
+    % Below are the few future work direction that are yet to be explored thoroughly.
+
+    % \textbf{Utilization of 4D Imaging Radar in Adverse Weather}: There is a notable lack of research utilizing 4D imaging Radar sensors, especially in adverse weather conditions \cite{Zhou2022May}. Given the potential of these sensors in challenging environments, further exploration in this area is essential. The K-Radar dataset \cite{Paek2022Jun} is a step in the right direction, but yet to be explored.
 
     % TODO: write more on this
     % All these are not yet well explored and very little research is being done on them.
-    - BEV fusion exploration with 360 view
-    - Use of dense radar sensor, use 4D radar
-    - Explore pointcloud and image fusion
-    - Improvement in Radar projection by using Frustum-based approach
-    -Advance perception tasks such as semantic segmentation and object tracking in adverse weather conditions
-    -Apply temporal fusion which also aggregates radar sparse points to get denser points
-    
+    % - BEV fusion exploration with 360 view
+    % - Use of dense Radar sensor, use 4D Radar
+    % - Explore pointcloud and image fusion
+    % - Improvement in Radar projection by using Frustum-based approach
+    % -Advance perception tasks such as semantic segmentation and object tracking in adverse weather conditions
+    % -Apply temporal fusion which also aggregates Radar sparse points to get denser points
+
+    % BEV Fusion and 360-Degree View: Future work could explore the fusion of Bird's Eye View (BEV) with a 360-degree view for comprehensive environmental perception. This fusion could enhance the spatial understanding of autonomous vehicles, allowing for more accurate navigation and decision-making in complex environments.
+
+    % Exploring Pointcloud and Image Fusion: In the current study, the multimodal sensors have been tested by projecting all points cloud based data to the image plane. The future could explore the integrating pointcloud data with images could provide richer environmental data, enhancing object detection and classification capabilities.
+
+    % Improving Radar Projection with Frustum-Based Approach: As explored in the paper \cite{nabati2021centerfusion}, the frustum-based approach for Radar projection could be a promising area of research. This technique might offer more accurate and efficient ways of representing Radar data in 3D space, improving object localization and environmental mapping.
+
+    % Use of 4D Radar data: As discussed in the paper \cite{Zhou2022May}, the use of 4D Radar data in adverse weather conditions could enhance the performance as the next generation 4D Radars are having better resolution compared to the one used in this study. For example, the K-Radar dataset \cite{Paek2022Jun} is a step in the right direction, but yet to be explored.
+
+    % Explore the fusion architecture for advance perception tasks such as semantic segmentation and object tracking in adverse weather conditions.
+
+    % Another exploring could be towards applying temporal fusion which aggregates sparse data points for sensors like Radar to get denser points.
+
+
+    This research has opened several promising avenues for future exploration in the field of object detection in adverse weather conditions using multimodal sensor fusion. Key areas that warrant further investigation include:
+
+    \begin{enumerate}
+        \item \textbf{Integration of BEV Fusion and 360-Degree View}: Future studies could significantly benefit from integrating Bird's Eye View (BEV) with a 360-degree view. This approach would offer a more comprehensive perception of the environment, particularly benefiting autonomous vehicles in complex navigation and decision-making scenarios.
+        
+        \item \textbf{Advancements in Pointcloud and Image Fusion}: The present study primarily focused on projecting point cloud data onto the image plane using multimodal sensors. Future research could delve deeper into the integration of pointcloud data with images. This integration has the potential to provide a more detailed environmental understanding, thereby enhancing the object detection and classification processes.
+        
+        \item \textbf{Enhancing Radar Projection with a Frustum-Based Approach}: Building on the work of Nabati and Qi \cite{nabati2021centerfusion}, further research into the frustum-based approach for Radar projection appears promising. This technique could offer more precise and efficient representation of Radar data in three-dimensional space, thereby improving object localization and environmental mapping.
+        
+        \item \textbf{Utilizing 4D Radar Data}: In light of Zhou et al.'s findings \cite{Zhou2022May}, the application of 4D Radar data, especially in adverse weather conditions, presents a significant opportunity for enhancing detection performance. The next generation of 4D Radars, with improved resolution, as exemplified by the K-Radar dataset \cite{Paek2022Jun}, remains largely unexplored and could be pivotal in future studies.
+        
+        \item \textbf{Exploring Fusion Architecture for Advanced Perception Tasks}: Future research should also focus on the development of fusion architectures tailored for advanced perception tasks. These tasks include, but are not limited to, semantic segmentation and object tracking, especially under challenging weather conditions.
+        
+        \item \textbf{Application of Temporal Fusion for Denser Data Points}: An intriguing area of exploration involves applying temporal fusion to aggregate sparse data points from sensors like Radar. This approach could lead to the generation of denser point clouds, potentially enhancing the accuracy and reliability of the detection systems in varied weather conditions.
+    \end{enumerate}
+
+    Each of these areas presents unique challenges and opportunities. By addressing these, the field can move closer to developing robust, reliable systems for object detection in diverse and adverse environmental conditions.
 
 \end{document}

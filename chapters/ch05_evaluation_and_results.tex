@@ -27,7 +27,7 @@
 
     \paragraph*{Relevance to Adverse Weather Conditions}
 
-    This research tackles the significant challenges posed by adverse weather conditions such as heavy rain, fog, and snow, which greatly affect the accuracy of object detection systems essential in autonomous navigation and outdoor surveillance. Acknowledging the limitations of commonly used sensors like cameras and Lidar in inclement weather, contrasted with the robustness of radar, the study emphasizes integrating multimodal sensor data to bolster the robustness and reliability of object detection in these environments. This study provides a comprehensive overview and detailed analysis of existing top methods, elucidating their efficacy and limitations in diverse weather scenarios, thereby informing best practices in the field.
+    This research tackles the significant challenges posed by adverse weather conditions such as heavy rain, fog, and snow, which greatly affect the accuracy of object detection systems essential in autonomous navigation and outdoor surveillance. Acknowledging the limitations of commonly used sensors like cameras and LiDAR in inclement weather, contrasted with the robustness of Radar, the study emphasizes integrating multimodal sensor data to bolster the robustness and reliability of object detection in these environments. This study provides a comprehensive overview and detailed analysis of existing top methods, elucidating their efficacy and limitations in diverse weather scenarios, thereby informing best practices in the field.
 
     \paragraph*{Experiment Overview}
 
@@ -105,7 +105,7 @@
             
             \paragraph*{SAF-FCOS}
 
-            The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
+            The method limits its focus on detecting vehicular obstacles such as — bicycles, cars, motorcycles, buses, trailer, and trucks—collectively categorized as 'vehicles' for simplified classification. Pedestrians are excluded due to Radar detection limitations in the nuScenes dataset. Emphasis is placed on front camera data from nuScenes, with the dataset split detailed in Figure \ref{fig:saffcos_data_split}.
 
             \begin{figure}[h!]
                 \centering
@@ -217,7 +217,7 @@
                 \caption{Available configurations for each method.}
                 \begin{tabular}{|l|c|c|c|c|c|c|c|}
                 \hline
-                \textbf{Methods} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-coupled} & \textbf{Camera} & \textbf{Lidar} & \textbf{Radar} & \textbf{Extra} \\ \hline
+                \textbf{Methods} & \textbf{Early} & \textbf{Middle} & \textbf{Tightly-coupled} & \textbf{Camera} & \textbf{LiDAR} & \textbf{Radar} & \textbf{Extra} \\ \hline
                 SAF-FCOS & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ \\ \hline
                 HRFuser & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Gated \\ \hline
                 MT-DETR & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & Time \\ \hline
@@ -228,7 +228,7 @@
 
                 \begin{table}[h!]
                     \centering
-                    \caption{Overview of experiment combinations. C, L, R, G, and T denote Camera, Lidar, Radar, Gated camera, and Time}
+                    \caption{Overview of experiment combinations. C, L, R, G, and T denote Camera, LiDAR, Radar, Gated camera, and Time}
                     \begin{tabular}{|c|l|l|c|c|c|c|c|c|l|}
                     \hline
                     \textbf{Sr.} & \multicolumn{2}{c|}{\textbf{Method}} & \multicolumn{3}{c|}{\textbf{Fusion Architecture}} & \multicolumn{3}{c|}{\textbf{Sensors}} & \textbf{Extra} \\
@@ -277,7 +277,7 @@
 
     \section{Results}
 
-    For all the experiments below, C, L, R, G, and T denote Camera, Lidar, Radar, Gated camera, and Time respectively. For better readability and visibility, legends color code are maintained same for each sensor modality. All plots are best visualized in zoomed-in view.
+    For all the experiments below, C, L, R, G, and T denote Camera, LiDAR, Radar, Gated camera, and Time respectively. For better readability and visibility, legends color code are maintained same for each sensor modality. All plots are best visualized in zoomed-in view.
 
     To get the complete result table for all the experiments carried out on the DENSE dataset, please refer to Table \ref{tab:complete_results_table}.
 
@@ -318,16 +318,16 @@
         \label{fig:comparative_analysis}
     \end{figure}
 
-    % From the quantitative comparison, it can be clearly concluded that SAF-FCOS outperforms HRFuser in all metrics. It is important to note here that despite having slightly more model parameters (+2 M) than HRFuser, the FPS value is significantly higher, 11 vs. 1.9 FPS. The possible reason could be due to the fact that SAF-FCOS uses single-stage detector while HRFuser uses two-stage detector. However, surprisingly, from the model complexity Fig. \ref{fig:saf_vs_hrfuser_model_complexity} (d), it seems that SAF-FCOS having a huge x36 times more floating-point operations than its counterpart HRFuser. One possible reason behind this is that floating-point operations are highly dependent on the input size of the sample. In this comparison, as described in the Table \ref{tab:experiment_training_parameters}, SAF-FCOS is using much larger input than the HRFuser. So for this reason, the GFLOPs value is much higher than HRFuser. Also from the annotated figures \ref{fig:comparative_analysis} (b) and (c), it is observable that the performance gap between SAF-FCOS and HRFuser is much larger for small objects. This points to the advantage of using Spatial Attention Fusion (SAF) block in the SAF-FCOS architecture, which was specifically added to gain as much as information possible from the sparse radar data. So overall, for this particular experiment, it seems that Middle Fusion architecture is more robust than Tightly-Coupled Fusion architecture on nuScenes test dataset.
+    % From the quantitative comparison, it can be clearly concluded that SAF-FCOS outperforms HRFuser in all metrics. It is important to note here that despite having slightly more model parameters (+2 M) than HRFuser, the FPS value is significantly higher, 11 vs. 1.9 FPS. The possible reason could be due to the fact that SAF-FCOS uses single-stage detector while HRFuser uses two-stage detector. However, surprisingly, from the model complexity Fig. \ref{fig:saf_vs_hrfuser_model_complexity} (d), it seems that SAF-FCOS having a huge x36 times more floating-point operations than its counterpart HRFuser. One possible reason behind this is that floating-point operations are highly dependent on the input size of the sample. In this comparison, as described in the Table \ref{tab:experiment_training_parameters}, SAF-FCOS is using much larger input than the HRFuser. So for this reason, the GFLOPs value is much higher than HRFuser. Also from the annotated figures \ref{fig:comparative_analysis} (b) and (c), it is observable that the performance gap between SAF-FCOS and HRFuser is much larger for small objects. This points to the advantage of using Spatial Attention Fusion (SAF) block in the SAF-FCOS architecture, which was specifically added to gain as much as information possible from the sparse Radar data. So overall, for this particular experiment, it seems that Middle Fusion architecture is more robust than Tightly-Coupled Fusion architecture on nuScenes test dataset.
 
 
     The comparative analysis demonstrates a clear superiority of SAF-FCOS over HRFuser across all metrics. Notably, SAF-FCOS exhibits a remarkable frame rate of 11 FPS, significantly outstripping HRFuser's 1.9 FPS, despite having a marginally higher model parameter count (+2M). This performance disparity is likely attributable to SAF-FCOS's utilization of a single-stage detector, as opposed to HRFuser's two-stage approach. Contrasting this, an examination of model complexity, as illustrated in Fig. \ref{fig:saf_vs_hrfuser_model_complexity} (d), reveals an unexpected finding: SAF-FCOS requires substantially more floating-point operations — a factor of 36 times greater than HRFuser. A plausible explanation for this discrepancy is the dependency of floating-point operations on input size. As indicated in Table \ref{tab:experiment_training_parameters}, SAF-FCOS processes considerably larger inputs compared to HRFuser, resulting in a heightened GFLOPs value.
 
-    Further scrutiny, particularly of the annotated figures \ref{fig:comparative_analysis} (b) and (c), discloses a more pronounced performance differential in the detection of smaller objects. This observation underscores the efficacy of the Spatial Attention Fusion (SAF) block integrated within the SAF-FCOS framework. The SAF block's inclusion is a strategic enhancement aimed at maximizing the extraction of information from sparse radar data. Consequently, in this specific experimental context using the nuScenes test dataset, the Middle Fusion architecture, exemplified by SAF-FCOS, demonstrates a robustness surpassing that of the Tightly-Coupled Fusion architecture, as represented by HRFuser.
+    Further scrutiny, particularly of the annotated figures \ref{fig:comparative_analysis} (b) and (c), discloses a more pronounced performance differential in the detection of smaller objects. This observation underscores the efficacy of the Spatial Attention Fusion (SAF) block integrated within the SAF-FCOS framework. The SAF block's inclusion is a strategic enhancement aimed at maximizing the extraction of information from sparse Radar data. Consequently, in this specific experimental context using the nuScenes test dataset, the Middle Fusion architecture, exemplified by SAF-FCOS, demonstrates a robustness surpassing that of the Tightly-Coupled Fusion architecture, as represented by HRFuser.
 
     \paragraph*{Qualitative Analysis}
 
-    The effectiveness of SAF-FCOS and HRFuser methods in different weather conditions is clearly demonstrated in the nuScenes test set. Figure \ref{fig:saf_vs_hrfuser} shows various scenarios. The first row shows how these methods detect objects in bright daylight, where many objects are present. The second row focuses on night conditions, where it's harder to see objects due to low light. The third row shows detection during rain, with the camera lens affected by water, yet both models still successfully identify objects. Importantly, rows four and five compare the detection of small, distant objects. Here, SAF-FCOS proves to be more effective than HRFuser, highlighting its better performance in spotting smaller objects that are far away. This performance underscores the significance of the long detection range of radar sensors, with SAF-FCOS effectively extracting relevant information from these challenging scenarios. This comparison is crucial for understanding how each method performs under different conditions.
+    The effectiveness of SAF-FCOS and HRFuser methods in different weather conditions is clearly demonstrated in the nuScenes test set. Figure \ref{fig:saf_vs_hrfuser} shows various scenarios. The first row shows how these methods detect objects in bright daylight, where many objects are present. The second row focuses on night conditions, where it's harder to see objects due to low light. The third row shows detection during rain, with the camera lens affected by water, yet both models still successfully identify objects. Importantly, rows four and five compare the detection of small, distant objects. Here, SAF-FCOS proves to be more effective than HRFuser, highlighting its better performance in spotting smaller objects that are far away. This performance underscores the significance of the long detection range of Radar sensors, with SAF-FCOS effectively extracting relevant information from these challenging scenarios. This comparison is crucial for understanding how each method performs under different conditions.
 
     \begin{figure}[h!]
         \centering
@@ -363,9 +363,9 @@
 
     \subsection{Multimodal Sensor Fusion in HRFuser: Tightly-Coupled Fusion}
 
-    % In this section, we compare importance of different sensors when it comes to detection in adverse weather conditions on the DENSE dataset. As discussed before, the DENSE dataset covers four different sensors for environment perception namely, Camera, Radar, Lidar, and Gated infrared camera. Here, we are comparing how having complementary sensors improves the detection performance in challenging weather conditions. Both quantitative and qualitative analysis are presented in this section. Following are the comparison of only camera vs. camera+radar vs. camera+lidar vs. camera+radar+lidar and camera+radar+lidar+gated infrared camera. The results are presented in accordance with COCO-style metrics, as outlined in Table \ref{tab:coco_metrics}.
+    % In this section, we compare importance of different sensors when it comes to detection in adverse weather conditions on the DENSE dataset. As discussed before, the DENSE dataset covers four different sensors for environment perception namely, Camera, Radar, LiDAR, and Gated infrared camera. Here, we are comparing how having complementary sensors improves the detection performance in challenging weather conditions. Both quantitative and qualitative analysis are presented in this section. Following are the comparison of only camera vs. camera+Radar vs. camera+LiDAR vs. camera+Radar+LiDAR and camera+Radar+LiDAR+gated infrared camera. The results are presented in accordance with COCO-style metrics, as outlined in Table \ref{tab:coco_metrics}.
 
-    In this analysis, we delve into the significance of varying sensor combinations for object detection under adverse weather conditions, utilizing the DENSE dataset as our benchmark. The DENSE dataset, as previously mentioned, encompasses four distinct types of sensors for environmental perception: Camera, Radar, Lidar, and a Gated infrared Camera. This comparison focuses on assessing the enhancement in detection performance brought about by the integration of these complementary sensors. We conduct both quantitative and qualitative evaluations, comparing scenarios using only a camera, camera combined with radar, camera with lidar, a trio of camera, radar, and lidar, and finally, an amalgamation of all four sensors including the gated infrared camera. For all experiments on HRFuser, only tightly-coupled fusion architecture is used. The results of these comparisons are meticulously analyzed using COCO-style metrics. This approach provides a comprehensive understanding of how each sensor contributes to the robustness of object detection in challenging weather conditions, underscoring the value of sensor fusion in enhancing environmental perception.
+    In this analysis, we delve into the significance of varying sensor combinations for object detection under adverse weather conditions, utilizing the DENSE dataset as our benchmark. The DENSE dataset, as previously mentioned, encompasses four distinct types of sensors for environmental perception: Camera, Radar, LiDAR, and a Gated infrared Camera. This comparison focuses on assessing the enhancement in detection performance brought about by the integration of these complementary sensors. We conduct both quantitative and qualitative evaluations, comparing scenarios using only a camera, camera combined with Radar, camera with LiDAR, a trio of camera, Radar, and LiDAR, and finally, an amalgamation of all four sensors including the gated infrared camera. For all experiments on HRFuser, only tightly-coupled fusion architecture is used. The results of these comparisons are meticulously analyzed using COCO-style metrics. This approach provides a comprehensive understanding of how each sensor contributes to the robustness of object detection in challenging weather conditions, underscoring the value of sensor fusion in enhancing environmental perception.
 
     The presented plots illustrate the impact of weather conditions, as represented on the x-axis. The DENSE dataset encompasses four distinct weather scenarios: Clear Weather, Light Fog, Dense Fog, and Snow/Rain. Within the dataset, each weather condition is further subdivided into 'Day' and 'Night' categories. This categorization is intended to demonstrate a model's performance under varying levels of ambient light. In the following plots, the transition between 'Day' and 'Night' for a specific weather condition is highlighted by the use of bold lines.
 
@@ -393,18 +393,18 @@
 
 
 
-    Points:
-    - shows day vs night highlighted with bold line, except light fog, there is trend from day to night performance reduction probably due to camera low light
-    - trendline shows the performance of perception system from clear to adverse weather declination
-    - observe that in dense fog, camera+radar performs better than camera+lidar, mainly due to lidar points affecting by fog,  
-    - across all modalities, camera+radar+lidar tops the list, shows the clear advantage fusion of complementary sensors 
-    - only camera performs worst across all modalities
-    - both AP and AR follows the same trend
+    % Points:
+    % - shows day vs night highlighted with bold line, except light fog, there is trend from day to night performance reduction probably due to camera low light
+    % - trendline shows the performance of perception system from clear to adverse weather declination
+    % - observe that in dense fog, camera+Radar performs better than camera+LiDAR, mainly due to LiDAR points affecting by fog,  
+    % - across all modalities, camera+Radar+LiDAR tops the list, shows the clear advantage fusion of complementary sensors 
+    % - only camera performs worst across all modalities
+    % - both AP and AR follows the same trend
+    The analysis highlights a distinct shift in the performance of the perception system from day to night, marked by a bold line. This trend, barring a light fog, suggests a performance reduction during nighttime, likely attributed to the camera's low-light limitations. Additionally, the trendline indicates a gradual decline in system efficiency from clear to adverse weather conditions. Ideally, the trendline should be straight to showcase the same the performance of the perception system in different weather conditions. Interestingly, in dense fog scenarios, the combination of camera and Radar outperforms camera and LiDAR. This is primarily due to the LiDAR points being adversely affected by fog. When evaluating all modalities, the fusion of camera, Radar, and LiDAR emerges as the most effective, underscoring the benefits of integrating complementary sensors. In contrast, systems relying solely on camera technology exhibit the lowest performance across all tested modalities. Moreover, both Average Precision (AP) and Average Recall (AR) metrics demonstrate a consistent trend, aligning with the overall observations of sensor performance under varying conditions.
 
     \subsubsection{With an Additional Modality}
     
-    % TODO: udpate figure and tables
-    - With having an additional modality as a Gated infrared camera, HRFuser achieves the best performance in terms of AP and AR, from the model complexity and performance chart, it can be seen that with mere 1.22\% increment in model parameters and 8.98\% increment in GFLOPs and negligible drop in fps, camera+radar+lidar+gated infrared camera tops the list across all modalities. Gated infrared camera also has less impacted in adverse weather conditions as quantitatively shown in the Table, but to its unavailability in majority of the dataset it's not well tested across the diverse scenarios. This also shows that HRFuser can handle arbitrary number of modalities in the same model as described in the section.
+    Incorporating a gated infrared camera into the HRFuser model significantly enhances its performance in terms of Average Precision (AP) and Average Recall (AR). As depicted in the model complexity and performance chart (referenced as \ref{fig:hrfuser_model_complexity}), this additional modality results in only a minimal increase in model parameters by 1.22\% and an 8.98\% increment in GFLOPs, while maintaining a negligible drop in frames per second (fps). Consequently, the combination of camera, Radar, LiDAR, and gated infrared camera emerges as the top performer across all modalities. Notably, the gated infrared camera demonstrates reduced impact under adverse weather conditions, a fact quantitatively supported by the data in Table \ref{table:quantitative_effect_of_weather}. However, its effectiveness is not extensively tested across a variety of scenarios due to its limited availability in the majority of the dataset. This finding further indicates that HRFuser is capable of handling an arbitrary number of modalities within the same model framework, as discussed in the relevant section.
 
     \begin{figure}[]
         \centering
@@ -462,7 +462,7 @@
     \FloatBarrier
     \subsection{Multimodal Sensor Fusion in MT-DETR: Spanning Early to Tightly-Coupled Fusion}
 
-    Here, experiments are conducted to compare the different modalities with MT-DETR method on the DENSE dataset. As MT-DETR also provides various configurations for its architecture, the experiments are conducted on the following fusion architecture configurations: 'Early', 'Middle', and 'Tightly-coupled' with all available sensors in the dataset. The experiment covers comparison among different combinations of sensors: Camera only (C), Camera+Lidar (C+L), Camera+Radar (C+R) and Camera+Lidar+Radar (C+L+R). In the following plots, the Camera only (C) results are without any fusion, it is a single modality experiment.
+    Here, experiments are conducted to compare the different modalities with MT-DETR method on the DENSE dataset. As MT-DETR also provides various configurations for its architecture, the experiments are conducted on the following fusion architecture configurations: 'Early', 'Middle', and 'Tightly-coupled' with all available sensors in the dataset. The experiment covers comparison among different combinations of sensors: Camera only (C), Camera+LiDAR (C+L), Camera+Radar (C+R) and Camera+LiDAR+Radar (C+L+R). In the following plots, the Camera only (C) results are without any fusion, it is a single modality experiment.
 
     Note that Average Recall (AR) plots are not shown below as they are following the same data trend as Average Precision (AP) plots. 
 
@@ -470,6 +470,8 @@
 
     \FloatBarrier
     \subsubsection{Early Fusion: C vs. C+R vs. C+L+R}
+
+    The accompanying plots illustrate the performance of the MT-DETR Early Fusion model. It is evident that the 'Camera only' mode outperforms other fusion modalities, particularly in adverse weather conditions. This superior performance can be attributed to the nature of Early Fusion, which is significantly influenced by the quality of input sensor raw data. If one of the sensors fails to detect accurately, it leads to challenges in subsequent feature extraction stages.
 
         \begin{figure}[]
             \centering
@@ -488,6 +490,8 @@
     \FloatBarrier
     \subsubsection{Middle Fusion: C vs. C+R vs. C+L+R}
 
+    In the case of the Middle Fusion or Feature Fusion model, the combination of Camera, LiDAR, and Radar (C+L+R) yields the most effective results. This fusion technique operates by selecting the optimal features from the input modalities. These selections occur after the data has undergone the initial stages of feature extraction, ensuring that only the most relevant and reliable features are utilized for further processing.
+
     \begin{figure}[h!]
         \centering
         \includegraphics[width=1.0\textwidth]{images/results/mtdetr/middle/ap.pdf}
@@ -504,6 +508,8 @@
 
     \FloatBarrier
     \subsubsection{Tightly-Coupled Fusion: C vs. C+R vs. C+L+R}
+
+    In this experiment, it is crucial to highlight that the Camera and Radar (C+R) modality significantly outperforms other configurations, particularly in dense fog weather conditions. This indicates that the MT-DETR Tightly-Coupled Fusion architecture effectively extracts the most relevant features from the sensor least affected by adverse conditions, in this case, the radar. This selective extraction is key to achieving the final, robust results.
 
     \begin{figure}[h!]
         \centering
@@ -524,6 +530,8 @@
 
     \FloatBarrier
     \subsubsection{Early vs. Middle vs. Tightly-Coupled Fusion: C+R}
+
+    The subsequent two experiments involve a comparative analysis of Early, Middle, and Tightly-Coupled Fusion models using various sensor modalities. In both comparative studies, the Tightly-Coupled Fusion model consistently outperforms the other fusion architectures. This consistent superiority underscores the significance of integrating features at multiple stages from diverse input modalities, demonstrating the effectiveness of this approach in enhancing model performance. 
 
     \begin{figure}[h!]
         \centering
@@ -575,7 +583,7 @@
 
     \paragraph*{Qualitative Analysis: Comparison across Fusion Architectures}
 
-    Here, we present the detection results of MT-DETR across different fusion architectures. Figure \ref{fig:mtdetr_on_dense} below illustrates the detection results comparing the Middle and Tightly-Coupled Fusion architectures with the Camera, Lidar and Radar sensor fusion. From the above quantitative analysis, it is clear that Middle Fusion outperforms Early Fusion, hence for qualitative analysis, we only consider the Middle Fusion and Tightly-Coupled Fusion.
+    Here, we present the detection results of MT-DETR across different fusion architectures. Figure \ref{fig:mtdetr_on_dense} below illustrates the detection results comparing the Middle and Tightly-Coupled Fusion architectures with the Camera, LiDAR and Radar sensor fusion. From the above quantitative analysis, it is clear that Middle Fusion outperforms Early Fusion, hence for qualitative analysis, we only consider the Middle Fusion and Tightly-Coupled Fusion.
 
     The qualitative analysis reveals that Middle Fusion is generally effective in adverse weather conditions. However, it encounters challenges in certain extreme cases, such as detecting small, distant objects, as illustrated in rows 1, 4, and 5 of Figure \ref{fig:mtdetr_on_dense}. A notable instance of its limitation is presented in row 2, where Middle Fusion incorrectly identifies a car's reflection in a mirror. This error likely stems from its inability to robustly integrate data from the depth sensor with the camera information. Additionally, row 3 highlights another issue where the system successfully detects an object but erroneously categorizes a pedestrian as a vehicle.
 
@@ -709,7 +717,7 @@
 
     This section compares the object detection capabilities of the HRFuser and MT-DETR models on the DENSE dataset under extremely challenging weather conditions. The figure below (\ref{fig:hrfuser_vs_mtdetr_on_dense}) illustrates a qualitative comparison of the detection results between the HRFuser and MT-DETR models. Both models employ a Tightly-Coupled Fusion architecture, integrating multiple sensors at various levels. Quantitative analysis using COCO metrics reveals that MT-DETR significantly outperforms HRFuser.
 
-    The comparative trend is evident in prediction samples from both models. A critical analysis of multiple inference samples from each dataset indicates that HRFuser tends to generate more false positives. This is particularly noticeable in rows 2, 3, 4, and 5 of the figure (\ref{fig:hrfuser_vs_mtdetr_on_dense}). The HRFuser model primarily struggles in conditions of heavy snow or dense fog. This suggests that the fused output from HRFuser is adversely influenced by Lidar features, as Lidar is known to have difficulties in dense fog conditions, leading to false detections (see Figures \ref{fig:lidar} and \ref{fig:lidar_in_fog}). Based on this quantitative and qualitative analysis, it can be concluded that the MT-DETR model is more robust and effective in object detection under adverse weather conditions compared to HRFuser.
+    The comparative trend is evident in prediction samples from both models. A critical analysis of multiple inference samples from each dataset indicates that HRFuser tends to generate more false positives. This is particularly noticeable in rows 2, 3, 4, and 5 of the figure (\ref{fig:hrfuser_vs_mtdetr_on_dense}). The HRFuser model primarily struggles in conditions of heavy snow or dense fog. This suggests that the fused output from HRFuser is adversely influenced by LiDAR features, as LiDAR is known to have difficulties in dense fog conditions, leading to false detections (see Figures \ref{fig:LiDAR} and \ref{fig:LiDAR_in_fog}). Based on this quantitative and qualitative analysis, it can be concluded that the MT-DETR model is more robust and effective in object detection under adverse weather conditions compared to HRFuser.
     
     \begin{figure}[h!]
         \centering
